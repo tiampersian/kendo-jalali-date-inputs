@@ -1,0 +1,13 @@
+{
+  "name": "@progress/kendo-jalali-date-picker",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^11.0.9",
+    "@angular/core": "^11.0.9"
+  },
+  "dependencies": {
+    "@progress/kendo-angular-intl": "3.0.0",
+    "@progress/kendo-angular-dateinputs": "5.0.0",
+    "tslib": "^2.0.0"
+  }
+}

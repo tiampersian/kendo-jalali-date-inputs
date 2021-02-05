@@ -1,0 +1,102 @@
+import { addMonths, getDate, addDays, dayOfWeek } from '@progress/kendo-date-math';
+import { Injectable } from '@angular/core';
+import { MonthViewService } from '@progress/kendo-angular-dateinputs';
+import { IntlService } from '@progress/kendo-angular-intl';
+import moment from 'jalali-moment';
+import { getToday, isInSelectionRange, range } from './utils';
+const EMPTY_DATA = [[]];
+const CELLS_LENGTH = 7;
+const ROWS_LENGTH = 6;
+
+@Injectable()
+export class JalaliMonthViewService extends MonthViewService {
+  constructor(
+    protected intlService: IntlService
+  ) {
+    super(intlService);
+  }
+
+  value(current) {
+    return current ? moment(current).locale('fa').format('DD').toString() : '';
+  }
+
+  abbrMonthNames2() {
+    return moment().locale('fa').localeData().jMonthsShort();
+  }
+
+  navigationTitle(value) {
+    if (!value) {
+      return '';
+    }
+
+    return this.isRangeStart(value) ? moment(value).locale('fa').format('yyyy') : this.abbrMonthNames2()[moment(value).locale('fa').month()];
+  }
+
+  isRangeStart(value) {
+    if (!value) { return false; }
+    return moment(value).locale('fa').month() === 0;
+  }
+
+  title(current) {
+    return `${moment(current).locale('fa').format('MMMM')} ${moment(current).locale('fa').format('YYYY')}`;
+  }
+
+  datesList(start, count) {
+    return range(0, count).map(i => addMonths(start, i));
+  }
+  data(options) {
+    const { cellUID, focusedDate, isActiveView, max, min, selectedDate, selectionRange = [], viewDate, isDateDisabled = () => false } = options;
+    if (!viewDate) {
+      return EMPTY_DATA;
+    }
+    const xx = moment(viewDate).locale('fa');
+    const firstMonthDate = moment(xx).add(-(xx.date() - 1), 'day').toDate();
+    const firstMonthDay = getDate(firstMonthDate);
+    const lastMonthDate = moment(xx).add(1, 'month').add(-(xx.date()), 'day').toDate();
+    const lastMonthDay = getDate(lastMonthDate);
+    const backward = -1;
+    const isSelectedDateInRange = moment(selectedDate).isBetween(min, max);
+    const date = dayOfWeek(firstMonthDate, this.intlService.firstDay(), backward);
+    const cells = range(0, CELLS_LENGTH);
+    const today = getToday();
+    return range(0, ROWS_LENGTH).map(rowOffset => {
+      const baseDate = addDays(date, rowOffset * CELLS_LENGTH);
+      return cells.map(cellOffset => {
+        const cellDate = this['normalize'](addDays(baseDate, cellOffset), min, max);
+        const cellDay = getDate(cellDate);
+        const otherMonth = cellDay < firstMonthDay || cellDay > lastMonthDay;
+        const outOfRange = cellDate < min || cellDate > max;
+        if (outOfRange) {
+          return null;
+        }
+        const isRangeStart = this.isEqual(cellDate, selectionRange.start);
+        const isRangeEnd = this.isEqual(cellDate, selectionRange.end);
+        const isInMiddle = !isRangeStart && !isRangeEnd;
+        const isRangeMid = isInMiddle && isInSelectionRange(cellDate, selectionRange);
+        return {
+          formattedValue: this.value(cellDate),
+          id: `${cellUID}${cellDate.getTime()}`,
+          isFocused: this.isEqual(cellDate, focusedDate),
+          isSelected: isActiveView && isSelectedDateInRange && this.isEqual(cellDate, selectedDate),
+          isWeekend: this.isWeekend(cellDate),
+          isRangeStart,
+          isRangeMid,
+          isRangeEnd,
+          isRangeSplitStart: isRangeMid && this.isEqual(cellDate, firstMonthDate),
+          isRangeSplitEnd: isRangeMid && this.isEqual(cellDate, lastMonthDate),
+          isToday: this.isEqual(cellDate, today),
+          title: this.cellTitle(cellDate),
+          value: cellDate,
+          isDisabled: isDateDisabled(cellDate),
+          isOtherMonth: otherMonth
+        };
+      });
+    });
+  }
+  // data(options: any): any[][] {
+  //   debugger
+  //   const x=moment(options.viewData).locale('fa')
+  //   x.jMonth()
+  //   return super.data(options);
+  // }
+}
