@@ -1,7 +1,7 @@
 import { addMonths, getDate, addDays, dayOfWeek } from '@progress/kendo-date-math';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { MonthViewService } from '@progress/kendo-angular-dateinputs';
-import { IntlService } from '@progress/kendo-angular-intl';
+import { CldrIntlService, IntlService } from '@progress/kendo-angular-intl';
 import moment from 'jalali-moment';
 import { getToday, isInSelectionRange, range } from './utils';
 const EMPTY_DATA = [[]];
@@ -11,17 +11,20 @@ const ROWS_LENGTH = 6;
 @Injectable()
 export class JalaliMonthViewService extends MonthViewService {
   constructor(
-    protected intlService: IntlService
+    @Inject(IntlService) protected intlService: CldrIntlService
   ) {
     super(intlService);
   }
 
   value(current) {
-    return current ? moment(current).locale('fa').format('DD').toString() : '';
+    return current ? moment(current).locale(this.intlService.localeId).format('DD').toString() : '';
   }
 
   abbrMonthNames2() {
-    return moment().locale('fa').localeData().jMonthsShort();
+    if (this.intlService.localeId === 'fa') {
+      return moment().locale(this.intlService.localeId).localeData().jMonthsShort();
+    }
+    return moment().locale(this.intlService.localeId).localeData().monthsShort();
   }
 
   navigationTitle(value) {
@@ -29,16 +32,19 @@ export class JalaliMonthViewService extends MonthViewService {
       return '';
     }
 
-    return this.isRangeStart(value) ? moment(value).locale('fa').format('yyyy') : this.abbrMonthNames2()[moment(value).locale('fa').month()];
+    if (this.isRangeStart(value)) {
+      return moment(value).locale(this.intlService.localeId).format('yyyy');
+    }
+    return this.abbrMonthNames2()[moment(value).locale(this.intlService.localeId).month()];
   }
 
   isRangeStart(value) {
     if (!value) { return false; }
-    return moment(value).locale('fa').month() === 0;
+    return moment(value).locale(this.intlService.localeId).month() === 0;
   }
 
   title(current) {
-    return `${moment(current).locale('fa').format('MMMM')} ${moment(current).locale('fa').format('YYYY')}`;
+    return `${moment(current).locale(this.intlService.localeId).format('MMMM')} ${moment(current).locale(this.intlService.localeId).format('YYYY')}`;
   }
 
   datesList(start, count) {
@@ -49,7 +55,7 @@ export class JalaliMonthViewService extends MonthViewService {
     if (!viewDate) {
       return EMPTY_DATA;
     }
-    const xx = moment(viewDate).locale('fa');
+    const xx = moment(viewDate).locale(this.intlService.localeId);
     const firstMonthDate = moment(xx).add(-(xx.date() - 1), 'day').toDate();
     const firstMonthDay = getDate(firstMonthDate);
     const lastMonthDate = moment(xx).add(1, 'month').add(-(xx.date()), 'day').toDate();

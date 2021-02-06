@@ -2,12 +2,18 @@ import { addDecades } from '@progress/kendo-date-math';
 import { CenturyViewService, DateInputComponent } from '@progress/kendo-angular-dateinputs';
 import moment from 'jalali-moment';
 import { firstDecadeOfCentury, firstYearOfDecade, getToday, isInRange, isInSelectionRange, lastDecadeOfCentury, range } from './utils';
+import { Inject, Injectable } from '@angular/core';
 const EMPTY_DATA = [[]];
 const CELLS_LENGTH = 5;
 const ROWS_LENGTH = 2;
+import { CldrIntlService, IntlService } from '@progress/kendo-angular-intl';
 
+@Injectable()
 export class JalaliCenturyViewService extends CenturyViewService {
-  constructor() {
+
+  constructor(
+    @Inject(IntlService) private intlService: CldrIntlService
+  ) {
     super();
   }
 
@@ -15,11 +21,12 @@ export class JalaliCenturyViewService extends CenturyViewService {
     if (!current) {
       return '';
     }
-    const temp = moment(lastDecadeOfCentury(current)).locale('fa').format('YYYY');
-    return `${moment(firstDecadeOfCentury(current)).locale('fa').format('YYYY')} - ${temp}`;
+
+    const temp = moment(lastDecadeOfCentury(current, this.intlService.localeId)).locale(this.intlService.localeId).format('YYYY');
+    return `${moment(firstDecadeOfCentury(current, this.intlService.localeId)).locale(this.intlService.localeId).format('YYYY')} - ${temp}`;
   }
   navigationTitle(value) {
-    return `${moment(firstDecadeOfCentury(value)).locale('fa').format('YYYY')}`;
+    return `${moment(firstDecadeOfCentury(value, this.intlService.localeId)).locale(this.intlService.localeId).format('YYYY')}`;
   }
 
 
@@ -30,8 +37,8 @@ export class JalaliCenturyViewService extends CenturyViewService {
     }
     console.log(super.data(options))
     const cells = range(0, CELLS_LENGTH);
-    const firstDate = firstDecadeOfCentury(viewDate);
-    const lastDate = lastDecadeOfCentury(viewDate);
+    const firstDate = firstDecadeOfCentury(viewDate, this.intlService.localeId);
+    const lastDate = lastDecadeOfCentury(viewDate, this.intlService.localeId);
     const isSelectedDateInRange = isInRange(selectedDate, min, max);
     const today = getToday();
     const data = range(0, ROWS_LENGTH).map(rowOffset => {
@@ -45,7 +52,7 @@ export class JalaliCenturyViewService extends CenturyViewService {
         const isRangeEnd = this.isEqual(cellDate, selectionRange.end);
         const isInMiddle = !isRangeStart && !isRangeEnd;
         const isRangeMid = isInMiddle && isInSelectionRange(cellDate, selectionRange);
-        const title = moment(cellDate).locale('fa').format('YYYY');
+        const title = moment(cellDate).locale(this.intlService.localeId).format('YYYY');
 
         return {
           formattedValue: title,
@@ -70,9 +77,9 @@ export class JalaliCenturyViewService extends CenturyViewService {
   }
 
   isInRange(candidate, min, max) {
-    const year = firstYearOfDecade(candidate).getFullYear();
-    const aboveMin = !min || firstYearOfDecade(min).getFullYear() <= year;
-    const belowMax = !max || year <= firstYearOfDecade(max).getFullYear();
+    const year = firstYearOfDecade(candidate, this.intlService.localeId).getFullYear();
+    const aboveMin = !min || firstYearOfDecade(min, this.intlService.localeId).getFullYear() <= year;
+    const belowMax = !max || year <= firstYearOfDecade(max, this.intlService.localeId).getFullYear();
     return aboveMin && belowMax;
   }
 }

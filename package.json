@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve",
+    "start2": "node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve --port 4202",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -25,6 +26,7 @@
     "@progress/kendo-angular-l10n": "3.0.0",
     "@progress/kendo-angular-common": "2.0.0",
     "@progress/kendo-angular-popup": "4.0.0",
+    "@progress/kendo-theme-default": "4.13.0",
     "jalali-moment": "3.3.8",
     "@angular/localize": "11.0.4",
     "rxjs": "~6.6.0",

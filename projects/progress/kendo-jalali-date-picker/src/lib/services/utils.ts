@@ -21,13 +21,13 @@ export const isInSelectionRange = (value, selectionRange) => {
 export const isInRange = (dt, min, max) => {
   return moment(dt).isBetween(min, max);
 }
-export const firstYearOfDecade = (dt) => {
-  const x = moment(dt).locale('fa').year();
-  return moment(dt).locale('fa').add(-(x % 10), 'year').toDate();
+export const firstYearOfDecade = (dt, localeId) => {
+  const x = moment(dt).locale(localeId).year();
+  return moment(dt).locale(localeId).add(-(x % 10), 'year').toDate();
 }
-export const lastYearOfDecade = (dt) => {
-  const x = moment(dt).locale('fa').year();
-  return moment(dt).locale('fa').add((10 - (x % 10)), 'year').toDate();
+export const lastYearOfDecade = (dt, localeId) => {
+  const x = moment(dt).locale(localeId).year();
+  return moment(dt).locale(localeId).add((10 - (x % 10)), 'year').toDate();
 
 }
 // export const addMonths2 = (date, offset) => {
@@ -37,13 +37,13 @@ export const lastYearOfDecade = (dt) => {
 //   newDate.setMonth(newDate.getMonth() + offset);
 //   return normalize(adjust_dst_1.adjustDST(newDate, date.getHours()), expectedMonth);
 // };
-export const firstDecadeOfCentury = (dt) => {
-  const x = moment(dt).locale('fa').year();
-  return moment(dt).locale('fa').add((-(x % 100)) + 100, 'year').toDate();
+export const firstDecadeOfCentury = (dt, localeId) => {
+  const x = moment(dt).locale(localeId).year();
+  return moment(dt).locale(localeId).add((-(x % 100)) + 100, 'year').toDate();
 }
-export const lastDecadeOfCentury = (dt) => {
-  const x = moment(dt).locale('fa').year();
-  return moment(dt).locale('fa').add((-(x % 100)) + 190, 'year').toDate();
+export const lastDecadeOfCentury = (dt, localeId) => {
+  const x = moment(dt).locale(localeId).year();
+  return moment(dt).locale(localeId).add((-(x % 100)) + 190, 'year').toDate();
 
 }
 

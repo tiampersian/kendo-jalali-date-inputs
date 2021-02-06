@@ -1,4 +1,6 @@
+import { Inject, Injectable } from '@angular/core';
 import { DecadeViewService } from '@progress/kendo-angular-dateinputs';
+import { CldrIntlService, IntlService } from '@progress/kendo-angular-intl';
 import { addYears } from '@progress/kendo-date-math';
 import moment from 'jalali-moment';
 import { firstYearOfDecade, getToday, isInRange, isInSelectionRange, lastYearOfDecade, range } from './utils';
@@ -6,22 +8,25 @@ const EMPTY_DATA = [[]];
 const CELLS_LENGTH = 5;
 const ROWS_LENGTH = 2;
 
+@Injectable()
 export class JalaliDecadeViewService extends DecadeViewService {
-  constructor() {
-    super()
+  constructor(
+    @Inject(IntlService) private intlService: CldrIntlService
+  ) {
+    super();
   }
 
   title(value) {
     if (!value) {
       return '';
     }
-    return `${moment(firstYearOfDecade(value)).locale('fa').format('YYYY')} - ${moment(lastYearOfDecade(value)).locale('fa').format('YYYY')}`;
+    return `${moment(firstYearOfDecade(value, this.intlService.localeId)).locale(this.intlService.localeId).format('YYYY')} - ${moment(lastYearOfDecade(value,this.intlService.localeId)).locale(this.intlService.localeId).format('YYYY')}`;
   }
   navigationTitle(value) {
     if (!value) {
       return '';
     }
-    return `${moment(firstYearOfDecade(value)).locale('fa').format('YYYY')}`;
+    return `${moment(firstYearOfDecade(value, this.intlService.localeId)).locale(this.intlService.localeId).format('YYYY')}`;
 
   }
   data(options) {
@@ -30,8 +35,8 @@ export class JalaliDecadeViewService extends DecadeViewService {
       return EMPTY_DATA;
     }
     const cells = range(0, CELLS_LENGTH);
-    const firstDate = firstYearOfDecade(viewDate);
-    const lastDate = lastYearOfDecade(viewDate);
+    const firstDate = firstYearOfDecade(viewDate, this.intlService.localeId);
+    const lastDate = lastYearOfDecade(viewDate, this.intlService.localeId);
     const isSelectedDateInRange = isInRange(selectedDate, min, max);
     const today = getToday();
     const data = range(0, ROWS_LENGTH).map(rowOffset => {
@@ -45,7 +50,7 @@ export class JalaliDecadeViewService extends DecadeViewService {
         const isRangeEnd = this.isEqual(cellDate, selectionRange.end);
         const isInMiddle = !isRangeStart && !isRangeEnd;
         const isRangeMid = isInMiddle && isInSelectionRange(cellDate, selectionRange);
-        const title = moment(cellDate).locale('fa').format('YYYY');
+        const title = moment(cellDate).locale(this.intlService.localeId).format('YYYY');
         return {
           formattedValue: title,
           id: `${cellUID}${cellDate.getTime()}`,

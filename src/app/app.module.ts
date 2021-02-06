@@ -1,8 +1,12 @@
-import { KendoJalaliDatePickerModule } from '@progress/kendo-jalali-date-picker';
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule, Injectable } from '@angular/core';
 import '@angular/localize/init';
+import { BrowserModule } from '@angular/platform-browser';
+import { KendoJalaliDatePickerModule } from '@progress/kendo-jalali-date-picker';
 import { AppComponent } from './app.component';
+import '@progress/kendo-angular-intl/locales/fa/all';
+import '@progress/kendo-angular-intl/locales/tr/all';
+
+
 
 @NgModule({
   declarations: [
@@ -12,7 +16,8 @@ import { AppComponent } from './app.component';
     BrowserModule,
     KendoJalaliDatePickerModule
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
