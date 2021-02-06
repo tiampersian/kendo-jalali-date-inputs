@@ -17,6 +17,7 @@ import '@progress/kendo-angular-intl/locales/tr/all';
     KendoJalaliDatePickerModule
   ],
   providers: [
+    // { provide: LOCALE_ID, useValue: 'fa-IR' }
   ],
   bootstrap: [AppComponent]
 })

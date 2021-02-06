@@ -4,6 +4,7 @@ import { MonthViewService } from '@progress/kendo-angular-dateinputs';
 import { CldrIntlService, IntlService } from '@progress/kendo-angular-intl';
 import moment from 'jalali-moment';
 import { getToday, isInSelectionRange, range } from './utils';
+import { JalaliCldrIntlService } from './locale.service';
 const EMPTY_DATA = [[]];
 const CELLS_LENGTH = 7;
 const ROWS_LENGTH = 6;
@@ -11,17 +12,21 @@ const ROWS_LENGTH = 6;
 @Injectable()
 export class JalaliMonthViewService extends MonthViewService {
   constructor(
-    @Inject(IntlService) protected intlService: CldrIntlService
+    @Inject(IntlService) protected intlService: JalaliCldrIntlService
   ) {
     super(intlService);
   }
 
   value(current) {
-    return current ? moment(current).locale(this.intlService.localeId).format('DD').toString() : '';
+    if (!current) {
+      return '';
+    }
+    const res = moment(current).locale(this.intlService.localeId).format('DD').toString();
+    return res;
   }
 
   abbrMonthNames2() {
-    if (this.intlService.localeId === 'fa') {
+    if (this.intlService.isIranTimezone) {
       return moment().locale(this.intlService.localeId).localeData().jMonthsShort();
     }
     return moment().locale(this.intlService.localeId).localeData().monthsShort();

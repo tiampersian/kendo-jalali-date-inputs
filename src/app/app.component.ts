@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Inject, LOCALE_ID, Injector } from '@angular/core';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { JalaliCldrIntlService } from '@progress/kendo-jalali-date-picker';
+import { DatePickerType, JalaliCldrIntlService } from '@progress/kendo-jalali-date-picker';
 
 @Component({
   selector: 'app-root',
@@ -14,24 +14,22 @@ export class AppComponent {
   title = 'kendo-jalali-datepicker';
   public value: Date = new Date();
   rerender = true;
-  locales = ['en-US', 'fa'];
+  locales = Object.values(DatePickerType);
   locale = '';
   constructor(
     private localeService: IntlService,
     private injector: Injector,
     private cdr: ChangeDetectorRef
   ) {
-    this.locale = (localeService as JalaliCldrIntlService).localeId;
+    this.locale = (localeService as JalaliCldrIntlService).isJalali ? DatePickerType.jalali : DatePickerType.gregorian;
   }
 
   changeLocale(value) {
     localStorage.setItem('locale', value);
-    // location.reload()
-    (this.localeService as JalaliCldrIntlService).localeId = value;
-    this.rerender = false;
+    this.locale = value;
+    (this.localeService as JalaliCldrIntlService).toggleType();
 
     this.cdr.detectChanges();
-    this.rerender = true;
 
   }
 }

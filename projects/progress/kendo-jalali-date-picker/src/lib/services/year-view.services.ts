@@ -3,6 +3,7 @@ import { YearViewService } from '@progress/kendo-angular-dateinputs';
 import { CldrIntlService, IntlService } from '@progress/kendo-angular-intl';
 import { addMonths } from '@progress/kendo-date-math';
 import moment from 'jalali-moment';
+import { JalaliCldrIntlService } from './locale.service';
 import { EMPTY_SELECTIONRANGE, getToday, isInSelectionRange, range } from './utils';
 
 
@@ -11,13 +12,13 @@ const EMPTY_DATA = [[]];
 @Injectable()
 export class JalaliYearViewService extends YearViewService {
   constructor(
-    @Inject(IntlService) protected intlService: CldrIntlService
+    @Inject(IntlService) protected intlService: JalaliCldrIntlService
   ) {
     super(intlService);
   }
 
   abbrMonthNames2() {
-    if (this.intlService.localeId === 'fa') {
+    if (this.intlService.isIranTimezone) {
       return moment().locale(this.intlService.localeId).localeData().jMonthsShort();
     }
     return moment().locale(this.intlService.localeId).localeData().monthsShort();

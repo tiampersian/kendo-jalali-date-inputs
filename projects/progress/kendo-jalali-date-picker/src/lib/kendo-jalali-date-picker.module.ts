@@ -8,6 +8,7 @@ import { JalaliDecadeViewService } from './services/decade-view.service';
 import { JalaliMonthViewService } from './services/month-view.service';
 import { JalaliYearViewService } from './services/year-view.services';
 import { JalaliCldrIntlService } from './services/locale.service';
+import { JalaliWeekNamesService } from './services/week-names.service';
 
 
 @NgModule({
@@ -19,10 +20,12 @@ import { JalaliCldrIntlService } from './services/locale.service';
     DateInputsModule
   ],
   providers: [
+    { provide: CenturyViewService, useClass: JalaliCenturyViewService },
+    { provide: DecadeViewService, useClass: JalaliDecadeViewService },
     { provide: YearViewService, useClass: JalaliYearViewService },
     { provide: MonthViewService, useClass: JalaliMonthViewService },
-    { provide: DecadeViewService, useClass: JalaliDecadeViewService },
-    { provide: CenturyViewService, useClass: JalaliCenturyViewService },
+    { provide: WeekNamesService, useClass: JalaliWeekNamesService },
+
     { provide: IntlService, useClass: JalaliCldrIntlService }
   ],
   exports: [

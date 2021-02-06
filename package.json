@@ -28,6 +28,7 @@
     "@progress/kendo-angular-popup": "4.0.0",
     "@progress/kendo-theme-default": "4.13.0",
     "jalali-moment": "3.3.8",
+    "moment-timezone": "0.5.32",
     "@angular/localize": "11.0.4",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
