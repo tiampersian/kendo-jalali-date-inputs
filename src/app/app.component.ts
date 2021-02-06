@@ -11,7 +11,7 @@ import { JalaliCldrIntlService } from '@progress/kendo-jalali-date-picker';
 
 })
 export class AppComponent {
-  title = 'kendo-jalali-date';
+  title = 'kendo-jalali-datepicker';
   public value: Date = new Date();
   rerender = true;
   locales = ['en-US', 'fa'];
