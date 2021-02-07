@@ -1,4 +1,4 @@
 # kendo-jalali-date
 
 
-![](src/assets/demo.png)
+![](src/assets/screenshot.png)
