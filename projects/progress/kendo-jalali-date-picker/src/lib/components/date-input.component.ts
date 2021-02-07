@@ -20,7 +20,7 @@ DateInputComponent.prototype['updateElementValue'] = function (isActive) {
   this.currentFormat = texts[1];
   this.currentValue = !showPlaceholder ? texts[0] : '';
   const value = this.intl.parseDate(this.currentValue, this.inputFormat) || this.currentValue;
-  const localeId = this.intl.localeId;
+  const localeId = this.intl.localeIdByDatePickerType;
   this.renderer.setProperty(input, "value", this.currentValue ? moment(value).locale(localeId).format(formats[format] || format) : this.currentValue);
   if (input.placeholder !== this.placeholder) {
     this.renderer.setProperty(input, "placeholder", this.placeholder);

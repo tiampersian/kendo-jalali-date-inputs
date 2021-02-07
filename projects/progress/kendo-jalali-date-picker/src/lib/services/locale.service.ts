@@ -8,7 +8,7 @@ export enum DatePickerType {
 @Injectable()
 export class JalaliCldrIntlService extends CldrIntlService {
   isJalali: boolean;
-  isIranTimezone = false;
+  // isIranTimezone = false;
   isGregorian: boolean;
   datePickerType: DatePickerType;
 
@@ -16,25 +16,28 @@ export class JalaliCldrIntlService extends CldrIntlService {
     @Inject(LOCALE_ID) private originalLocaleId: string
   ) {
     super(originalLocaleId);
-    this.isIranTimezone = this.originalLocaleId === 'fa-IR';
+    // this.isIranTimezone = this.originalLocaleId === 'fa-IR';
     this.changeType();
   }
-
+  localeIdByDatePickerType = '';
   changeType(value?: DatePickerType) {
     this.datePickerType = this.getType(value);
     if (this.datePickerType === DatePickerType.jalali) {
       this.isJalali = true;
       this.isGregorian = false;
-      super.localeId = 'fa';
+
+      this.localeIdByDatePickerType = 'fa';
 
       return;
     }
     this.isJalali = false;
     this.isGregorian = true;
-    super.localeId = this.originalLocaleId;
-
+    this.localeIdByDatePickerType = 'en';
   }
 
+  changeLocaleId(value) {
+    super.localeId = value;
+  }
   toggleType() {
     this.changeType(this.datePickerType === DatePickerType.jalali ? DatePickerType.gregorian : DatePickerType.jalali);
   }

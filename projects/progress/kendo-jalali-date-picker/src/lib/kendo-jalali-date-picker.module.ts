@@ -29,7 +29,6 @@ import { JalaliWeekNamesService } from './services/week-names.service';
     { provide: IntlService, useClass: JalaliCldrIntlService }
   ],
   exports: [
-    IntlModule,
     DateInputsModule
   ]
 })

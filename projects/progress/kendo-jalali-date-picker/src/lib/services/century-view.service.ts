@@ -7,12 +7,13 @@ const EMPTY_DATA = [[]];
 const CELLS_LENGTH = 5;
 const ROWS_LENGTH = 2;
 import { CldrIntlService, IntlService } from '@progress/kendo-angular-intl';
+import { JalaliCldrIntlService } from './locale.service';
 
 @Injectable()
 export class JalaliCenturyViewService extends CenturyViewService {
 
   constructor(
-    @Inject(IntlService) private intlService: CldrIntlService
+    @Inject(IntlService) private intlService: JalaliCldrIntlService
   ) {
     super();
   }
@@ -22,11 +23,11 @@ export class JalaliCenturyViewService extends CenturyViewService {
       return '';
     }
 
-    const temp = moment(lastDecadeOfCentury(current, this.intlService.localeId)).locale(this.intlService.localeId).format('YYYY');
-    return `${moment(firstDecadeOfCentury(current, this.intlService.localeId)).locale(this.intlService.localeId).format('YYYY')} - ${temp}`;
+    const temp = moment(lastDecadeOfCentury(current, this.intlService.localeIdByDatePickerType)).locale(this.intlService.localeIdByDatePickerType).format('YYYY');
+    return `${moment(firstDecadeOfCentury(current, this.intlService.localeIdByDatePickerType)).locale(this.intlService.localeIdByDatePickerType).format('YYYY')} - ${temp}`;
   }
   navigationTitle(value) {
-    return `${moment(firstDecadeOfCentury(value, this.intlService.localeId)).locale(this.intlService.localeId).format('YYYY')}`;
+    return `${moment(firstDecadeOfCentury(value, this.intlService.localeIdByDatePickerType)).locale(this.intlService.localeIdByDatePickerType).format('YYYY')}`;
   }
 
 
@@ -37,8 +38,8 @@ export class JalaliCenturyViewService extends CenturyViewService {
     }
     console.log(super.data(options))
     const cells = range(0, CELLS_LENGTH);
-    const firstDate = firstDecadeOfCentury(viewDate, this.intlService.localeId);
-    const lastDate = lastDecadeOfCentury(viewDate, this.intlService.localeId);
+    const firstDate = firstDecadeOfCentury(viewDate, this.intlService.localeIdByDatePickerType);
+    const lastDate = lastDecadeOfCentury(viewDate, this.intlService.localeIdByDatePickerType);
     const isSelectedDateInRange = isInRange(selectedDate, min, max);
     const today = getToday();
     const data = range(0, ROWS_LENGTH).map(rowOffset => {
@@ -52,7 +53,7 @@ export class JalaliCenturyViewService extends CenturyViewService {
         const isRangeEnd = this.isEqual(cellDate, selectionRange.end);
         const isInMiddle = !isRangeStart && !isRangeEnd;
         const isRangeMid = isInMiddle && isInSelectionRange(cellDate, selectionRange);
-        const title = moment(cellDate).locale(this.intlService.localeId).format('YYYY');
+        const title = moment(cellDate).locale(this.intlService.localeIdByDatePickerType).format('YYYY');
 
         return {
           formattedValue: title,
@@ -77,25 +78,9 @@ export class JalaliCenturyViewService extends CenturyViewService {
   }
 
   isInRange(candidate, min, max) {
-    const year = firstYearOfDecade(candidate, this.intlService.localeId).getFullYear();
-    const aboveMin = !min || firstYearOfDecade(min, this.intlService.localeId).getFullYear() <= year;
-    const belowMax = !max || year <= firstYearOfDecade(max, this.intlService.localeId).getFullYear();
+    const year = firstYearOfDecade(candidate, this.intlService.localeIdByDatePickerType).getFullYear();
+    const aboveMin = !min || firstYearOfDecade(min, this.intlService.localeIdByDatePickerType).getFullYear() <= year;
+    const belowMax = !max || year <= firstYearOfDecade(max, this.intlService.localeIdByDatePickerType).getFullYear();
     return aboveMin && belowMax;
   }
 }
-
-// Object.defineProperty(DateInputComponent.prototype, "updateElementValue", {
-//   get: function () {
-//       if (!this.format) {
-//           return DEFAULT_FORMAT;
-//       }
-//       if (typeof this.format === 'string') {
-//           return this.format;
-//       }
-//       else {
-//           return this.format.inputFormat;
-//       }
-//   },
-//   enumerable: true,
-//   configurable: true
-// });

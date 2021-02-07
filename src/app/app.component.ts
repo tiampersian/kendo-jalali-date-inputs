@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Inject, LOCALE_ID, Injector } from '@angular/core';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { RTL } from '@progress/kendo-angular-l10n';
 import { DatePickerType, JalaliCldrIntlService } from '@progress/kendo-jalali-date-picker';
 
 @Component({
@@ -7,6 +8,7 @@ import { DatePickerType, JalaliCldrIntlService } from '@progress/kendo-jalali-da
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   viewProviders: [
+    { provide: RTL, useFactory: isRtl, deps: [IntlService] }
   ],
 
 })
@@ -14,22 +16,40 @@ export class AppComponent {
   title = 'kendo-jalali-datepicker';
   public value: Date = new Date();
   rerender = true;
-  locales = Object.values(DatePickerType);
-  locale = '';
+  locales = ['fa-IR', 'en-US'];
+  calendarTypes = Object.values(DatePickerType);
+  calendarType = '';
+  currentLocaleId = '';
   constructor(
-    private localeService: IntlService,
+    @Inject(IntlService) private localeService: JalaliCldrIntlService,
     private injector: Injector,
     private cdr: ChangeDetectorRef
   ) {
-    this.locale = (localeService as JalaliCldrIntlService).isJalali ? DatePickerType.jalali : DatePickerType.gregorian;
+    this.calendarType = localeService.isJalali ? DatePickerType.jalali : DatePickerType.gregorian;
+    this.currentLocaleId = localeService.localeId;
   }
 
-  changeLocale(value) {
+  changeCalendarType(value) {
     localStorage.setItem('locale', value);
-    this.locale = value;
-    (this.localeService as JalaliCldrIntlService).toggleType();
-
-    this.cdr.detectChanges();
+    this.calendarType = value;
+    this.localeService.toggleType();
+    this.reload();
 
   }
+  private reload() {
+    this.rerender = false;
+    this.cdr.detectChanges();
+    this.rerender = true;
+  }
+
+  changeLocaleId(value) {
+    this.localeService.changeLocaleId(value);
+    this.reload();
+
+  }
+}
+
+export function isRtl(intlService:JalaliCldrIntlService) {
+  debugger
+  return intlService.localeId === 'fa-id';
 }

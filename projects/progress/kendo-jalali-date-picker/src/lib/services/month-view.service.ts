@@ -21,12 +21,12 @@ export class JalaliMonthViewService extends MonthViewService {
     if (!current) {
       return '';
     }
-    const res = moment(current).locale(this.intlService.localeId).format('DD').toString();
+    const res = moment(current).locale(this.intlService.localeIdByDatePickerType).format('DD').toString();
     return res;
   }
 
   abbrMonthNames2() {
-    if (this.intlService.isIranTimezone) {
+    if (this.intlService.isJalali) {
       return moment().locale(this.intlService.localeId).localeData().jMonthsShort();
     }
     return moment().locale(this.intlService.localeId).localeData().monthsShort();
@@ -38,18 +38,18 @@ export class JalaliMonthViewService extends MonthViewService {
     }
 
     if (this.isRangeStart(value)) {
-      return moment(value).locale(this.intlService.localeId).format('yyyy');
+      return moment(value).locale(this.intlService.localeIdByDatePickerType).format('yyyy');
     }
-    return this.abbrMonthNames2()[moment(value).locale(this.intlService.localeId).month()];
+    return this.abbrMonthNames2()[moment(value).locale(this.intlService.localeIdByDatePickerType).month()];
   }
 
   isRangeStart(value) {
     if (!value) { return false; }
-    return moment(value).locale(this.intlService.localeId).month() === 0;
+    return moment(value).locale(this.intlService.localeIdByDatePickerType).month() === 0;
   }
 
   title(current) {
-    return `${moment(current).locale(this.intlService.localeId).format('MMMM')} ${moment(current).locale(this.intlService.localeId).format('YYYY')}`;
+    return `${this.abbrMonthNames2()[moment(current).locale(this.intlService.localeIdByDatePickerType).month()]} ${moment(current).locale(this.intlService.localeIdByDatePickerType).format('YYYY')}`;
   }
 
   datesList(start, count) {
@@ -60,7 +60,7 @@ export class JalaliMonthViewService extends MonthViewService {
     if (!viewDate) {
       return EMPTY_DATA;
     }
-    const xx = moment(viewDate).locale(this.intlService.localeId);
+    const xx = moment(viewDate).locale(this.intlService.localeIdByDatePickerType);
     const firstMonthDate = moment(xx).add(-(xx.date() - 1), 'day').toDate();
     const firstMonthDay = getDate(firstMonthDate);
     const lastMonthDate = moment(xx).add(1, 'month').add(-(xx.date()), 'day').toDate();
@@ -104,10 +104,5 @@ export class JalaliMonthViewService extends MonthViewService {
       });
     });
   }
-  // data(options: any): any[][] {
-  //   debugger
-  //   const x=moment(options.viewData).locale('fa')
-  //   x.jMonth()
-  //   return super.data(options);
-  // }
+
 }
