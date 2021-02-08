@@ -31,12 +31,11 @@ jobs:
       - name: Use Node.js 12.8
         uses: actions/setup-node@v1
         with:
-          node-version: 12.8
+         node-version: 12.8
 
-      - name: npm install
-        run:
+      - name: npm install and npm run build
+        run: |
           npm install
-      - name: npm run build
           npm run build:ci
       - name: Push Build to Releases
         uses: ncipollo/release-action@v1
