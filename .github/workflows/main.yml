@@ -42,3 +42,5 @@ jobs:
         with:
           artifacts: "dist/progress/kendo-jalali-date-picker/*"
           token: ${{ secrets.t2 }}
+          commit: main
+          tag: v1.0.${{ github.run_number }}
