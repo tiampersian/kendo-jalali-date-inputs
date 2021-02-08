@@ -1,6 +1,6 @@
 {
   "name": "@progress/kendo-jalali-date-picker",
-  "version": "0.3.0",
+  "version": "0.8.0",
   "peerDependencies": {
     "@angular/common": "^11.0.9",
     "@angular/core": "^11.0.9"

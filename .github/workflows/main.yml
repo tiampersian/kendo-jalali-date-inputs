@@ -38,7 +38,9 @@ jobs:
       - name: npm install and npm run build
         run: |
           npm install
+          npm run setversion 0.1.${{ github.run_number }}
           npm run build:ci
+          npm run publish
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:

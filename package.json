@@ -9,6 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "setversion": "node update-version.js",
     "build:ci": "ng build @progress/kendo-jalali-date-picker --prod"
   },
   "private": true,
