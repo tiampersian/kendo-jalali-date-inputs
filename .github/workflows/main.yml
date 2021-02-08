@@ -41,6 +41,7 @@ jobs:
           npm run setversion 0.1.${{ github.run_number }}
           npm run build:ci
       - name: npm run publish
+        run:
           npm run publish
           env:
             NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
