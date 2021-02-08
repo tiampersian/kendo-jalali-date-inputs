@@ -32,11 +32,16 @@ jobs:
         uses: actions/setup-node@v1
         with:
          node-version: 12.8
-      - name: Build and Deploy
-            uses: JamesIves/github-pages-deploy-action@releases/v2
-            env:
-              ACCESS_TOKEN: ${{ secrets.t2 }}
-              BASE_BRANCH: main
-              BRANCH: gh-pages
-              FOLDER: dist/progress/kendo-jalali-date-picker
-              BUILD_SCRIPT: npm install && npm run build:ci
+
+      - name: npm install and npm run build
+        run: |
+          npm install
+          npm run build:ci
+      - name: Push Build to Releases
+        uses: ncipollo/release-action@v2
+        with:
+          fetch-depth: 0
+          artifacts: "dist/progress/kendo-jalali-date-picker/*"
+          token: ${{ secrets.t2 }}
+          commit: main
+          tag: v1.0.${{ github.run_number }}
