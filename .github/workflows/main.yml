@@ -33,9 +33,10 @@ jobs:
         with:
           node-version: 12.8
 
-      - name: npm install and npm run build
-        run: |
-          npm ci
+      - name: npm install
+        run:
+          npm install
+      - name: npm run build
           npm run build:ci
       - name: Push Build to Releases
         uses: ncipollo/release-action@v1
