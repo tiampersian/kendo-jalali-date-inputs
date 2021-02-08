@@ -1,9 +1,13 @@
 {
-  "name": "@progress/kendo-jalali-date-picker",
+  "name": "@tiam/kendo-jalali-date-picker",
   "version": "0.8.0",
   "peerDependencies": {
     "@angular/common": "^11.0.9",
     "@angular/core": "^11.0.9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tiampersian/kendo-jalali-datepicker"
   },
   "dependencies": {
     "@progress/kendo-angular-dateinputs": "5.0.0",

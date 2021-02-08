@@ -10,9 +10,10 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "setversion": "node update-version.js",
-    "build:ci": "ng build @progress/kendo-jalali-date-picker --prod"
+    "build:ci": "ng build @progress/kendo-jalali-date-picker --prod",
+    "publish":"npm publish dist/progress/kendo-jalali-date-picker"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@angular/animations": "~11.0.4",
     "@angular/common": "~11.0.4",
