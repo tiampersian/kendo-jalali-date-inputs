@@ -17,18 +17,18 @@ export class JalaliDecadeViewService extends DecadeViewService {
     super();
   }
 
+
   title(value) {
     if (!value) {
       return '';
     }
-    return `${moment(firstYearOfDecade(value, this.intlService.localeIdByDatePickerType)).locale(this.intlService.localeIdByDatePickerType).format('YYYY')} - ${moment(lastYearOfDecade(value,this.intlService.localeIdByDatePickerType)).locale(this.intlService.localeIdByDatePickerType).format('YYYY')}`;
+    return `${moment(firstYearOfDecade(value, this.intlService.localeIdByDatePickerType)).locale(this.intlService.localeIdByDatePickerType).format('YYYY')} - ${moment(lastYearOfDecade(value, this.intlService.localeIdByDatePickerType)).locale(this.intlService.localeIdByDatePickerType).format('YYYY')}`;
   }
   navigationTitle(value) {
     if (!value) {
       return '';
     }
     return `${moment(firstYearOfDecade(value, this.intlService.localeIdByDatePickerType)).locale(this.intlService.localeIdByDatePickerType).format('YYYY')}`;
-
   }
   data(options) {
     const { cellUID, focusedDate, isActiveView, max, min, selectedDate, selectionRange = {}, viewDate } = options;

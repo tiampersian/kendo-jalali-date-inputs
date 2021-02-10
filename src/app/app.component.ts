@@ -16,7 +16,7 @@ export class AppComponent {
   title = 'kendo-jalali-datepicker';
   public value: Date = new Date();
   rerender = true;
-  locales = ['fa-IR', 'en-US'];
+  locales = ['fa-IR', 'en-US', 'en'];
   calendarTypes = Object.values(DatePickerType);
   calendarType = '';
   currentLocaleId = '';
@@ -33,23 +33,24 @@ export class AppComponent {
     localStorage.setItem('locale', value);
     this.calendarType = value;
     this.localeService.toggleType();
+    const temp = this.localeService.localeId;
+    this.localeService.reload();
     this.reload();
 
   }
   private reload() {
-    this.rerender = false;
+    // this.rerender = false;
     this.cdr.detectChanges();
     this.rerender = true;
   }
 
   changeLocaleId(value) {
     this.localeService.changeLocaleId(value);
-    this.reload();
-
+    this.localeService.reload();
+    // this.reload();
   }
 }
 
-export function isRtl(intlService:JalaliCldrIntlService) {
-  debugger
+export function isRtl(intlService: JalaliCldrIntlService) {
   return intlService.localeId === 'fa-id';
 }

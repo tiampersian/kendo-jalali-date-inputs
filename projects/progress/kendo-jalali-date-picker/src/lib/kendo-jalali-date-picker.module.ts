@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Injector, ComponentFactoryResolver, Inject } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IntlModule, IntlService } from '@progress/kendo-angular-intl';
@@ -9,10 +9,13 @@ import { JalaliMonthViewService } from './services/month-view.service';
 import { JalaliYearViewService } from './services/year-view.services';
 import { JalaliCldrIntlService } from './services/locale.service';
 import { JalaliWeekNamesService } from './services/week-names.service';
+import { KendoJalaliHeaderTitleTemplateComponent } from './components/kendo-jalali-header-title-template/kendo-jalali-header-title-template.component';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    KendoJalaliHeaderTitleTemplateComponent
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -26,10 +29,26 @@ import { JalaliWeekNamesService } from './services/week-names.service';
     { provide: MonthViewService, useClass: JalaliMonthViewService },
     { provide: WeekNamesService, useClass: JalaliWeekNamesService },
 
-    { provide: IntlService, useClass: JalaliCldrIntlService }
+    { provide: IntlService, useClass: JalaliCldrIntlService },
+    { provide: 'HeaderTitleTemplate', useValue: KendoJalaliHeaderTitleTemplateComponent }
   ],
   exports: [
     DateInputsModule
   ]
 })
-export class KendoJalaliDatePickerModule { }
+export class KendoJalaliDatePickerModule {
+  constructor(
+    injector: Injector,
+    resolver: ComponentFactoryResolver,
+    @Inject(IntlService) intlService: JalaliCldrIntlService
+  ) {
+    this.setHeaderTitleTemplate(injector, resolver, intlService);
+  }
+
+  private setHeaderTitleTemplate(injector: Injector, resolver: ComponentFactoryResolver, intlService: JalaliCldrIntlService): void {
+    const HeaderTitleTemplate = injector.get<string>('HeaderTitleTemplate' as any);
+    const temp = resolver.resolveComponentFactory(HeaderTitleTemplate as any).create(injector);
+    temp.changeDetectorRef.detectChanges();
+    intlService.setTitleTemplate((temp.instance as KendoJalaliHeaderTitleTemplateComponent));
+  }
+}

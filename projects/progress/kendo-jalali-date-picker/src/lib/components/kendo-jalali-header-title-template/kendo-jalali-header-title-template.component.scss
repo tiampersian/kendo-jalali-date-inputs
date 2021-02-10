@@ -1,0 +1,39 @@
+::ng-deep{
+  .k-calendar-title{
+    display: block;
+    text-align: left;
+    width: 100%;
+    outline: unset!important;
+    cursor: unset!important;
+    opacity: unset!important;
+    filter: unset!important;
+    pointer-events: unset!important;
+    box-shadow: unset!important;
+    &:hover,&:active{
+      &::before{
+        background: none;
+      }
+    }
+    .header-calendar-type{
+      text-align: center;
+      text-transform: capitalize;
+      width: 50%;
+      font-weight: inherit;
+      font-size: smaller;
+    }
+    .header-title{
+      width: 50%;
+      text-align: left;
+    }
+    &.k-state-disabled{
+      .header-title{
+        outline: none;
+        cursor: default;
+        opacity: 0.6;
+        filter: grayscale(0.1);
+        pointer-events: none;
+        box-shadow: none;
+      }
+    }
+  }
+}

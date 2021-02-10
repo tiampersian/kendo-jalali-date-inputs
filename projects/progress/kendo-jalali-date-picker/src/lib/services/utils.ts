@@ -39,11 +39,11 @@ export const lastYearOfDecade = (dt, localeId) => {
 // };
 export const firstDecadeOfCentury = (dt, localeId) => {
   const x = moment(dt).locale(localeId).year();
-  return moment(dt).locale(localeId).add((-(x % 100)) + 100, 'year').toDate();
+  return moment(dt).locale(localeId).add((-(x % 100)) , 'year').toDate();
 }
 export const lastDecadeOfCentury = (dt, localeId) => {
   const x = moment(dt).locale(localeId).year();
-  return moment(dt).locale(localeId).add((-(x % 100)) + 190, 'year').toDate();
+  return moment(dt).locale(localeId).add((-(x % 100)) + 90, 'year').toDate();
 
 }
 

@@ -11,6 +11,8 @@ export class JalaliCldrIntlService extends CldrIntlService {
   // isIranTimezone = false;
   isGregorian: boolean;
   datePickerType: DatePickerType;
+  defaultTitleTemplate: any;
+  localeIdByDatePickerType = '';
 
   constructor(
     @Inject(LOCALE_ID) private originalLocaleId: string
@@ -19,25 +21,38 @@ export class JalaliCldrIntlService extends CldrIntlService {
     // this.isIranTimezone = this.originalLocaleId === 'fa-IR';
     this.changeType();
   }
-  localeIdByDatePickerType = '';
+  setTitleTemplate(template) {
+    this.defaultTitleTemplate = template;
+  }
+
   changeType(value?: DatePickerType) {
     this.datePickerType = this.getType(value);
     if (this.datePickerType === DatePickerType.jalali) {
       this.isJalali = true;
       this.isGregorian = false;
-
       this.localeIdByDatePickerType = 'fa';
-
+      this.reload();
       return;
     }
     this.isJalali = false;
     this.isGregorian = true;
     this.localeIdByDatePickerType = 'en';
+    this.reload();
+  }
+
+  reload() {
+    this.changes.next(super.localeId);
+    this.notify();
+      const tem = super.localeId;
+    this.changeLocaleId('en');
+    this.changeLocaleId(tem);
   }
 
   changeLocaleId(value) {
     super.localeId = value;
+    this.notify();
   }
+
   toggleType() {
     this.changeType(this.datePickerType === DatePickerType.jalali ? DatePickerType.gregorian : DatePickerType.jalali);
   }
