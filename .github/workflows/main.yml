@@ -26,13 +26,10 @@ jobs:
         node-version: [12.x]
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v1
-      - name: Use Node.js 12.8
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1
         with:
           node-version: 12.8
-          registry-url: 'https://npm.pkg.github.com'
       - name: npm install and npm run build
         run: |
           npm install
