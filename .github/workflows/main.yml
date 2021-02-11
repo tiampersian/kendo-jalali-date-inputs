@@ -38,7 +38,7 @@ jobs:
       - name: npm install and npm run build
         run: |
           npm install
-          npm run setversion 0.1.${{ github.run_number }}
+          npm run setversion 0.1.${{ github.run_number }}-${{github.job}}
           npm run build:ci
       - name: npm run publish
         run: npm run publish
