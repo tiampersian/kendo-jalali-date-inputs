@@ -46,9 +46,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: dist-without-markdown
-          path: |
-            dist
-            !dist/**/*.md
+          path: dist
   publish-github:
     # The type of runner that the job will run on
     needs: build
@@ -69,6 +67,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: dist-without-markdown
+          path: dist
       - name: npm run publish
         run: npm run publish
         env:
