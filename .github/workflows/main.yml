@@ -48,8 +48,10 @@ jobs:
         with:
           node-version: 12.8
           registry-url: 'https://registry.npmjs.org'
-          token: '${{secrets.NPM_TOKEN}}'
       - name: npm run publish2
+        with:
+          node-version: 12.8
+          registry-url: 'https://registry.npmjs.org'
         run: npm run publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
