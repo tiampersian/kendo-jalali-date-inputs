@@ -46,7 +46,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           npm-registry:
-            - registry: 'https://registry.npmjs.org'
+              registry: 'https://registry.npmjs.org'
               token: '${{secrets.NPM_TOKEN}}'
       - run: npm run publish
 
