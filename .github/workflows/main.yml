@@ -42,6 +42,7 @@ jobs:
           npm install
           npm run setversion 0.1.${{ github.run_number }}-${{github.job}}
           npm run build:ci
+          npm run build:app:ci
       - name: Archive production artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -73,51 +74,57 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.t2 }}
 
-  # publish-npm:
-  #   # The type of runner that the job will run on
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       node-version: [12.x]
-  #   # Steps represent a sequence of tasks that will be executed as part of the job
-  #   steps:
-  #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-  #     - uses: actions/checkout@v1
-  #     - name: Use Node.js 12.8
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: 12.8
-  #         registry-url: 'https://registry.npmjs.org/'
-  #     - name: npm run publish
-  #       run: npm run publish
-  #       env:
-  #         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  publish-npm:
+    # The type of runner that the job will run on
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v1
+      - name: Use Node.js 12.8
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.8
+          registry-url: 'https://registry.npmjs.org/'
+      - name: Download a single artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: dist-without-markdown
+          path: dist
+      - name: npm run publish
+        run: npm run publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-  # publish-app:
-  #   # The type of runner that the job will run on
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       node-version: [12.x]
-  #   # Steps represent a sequence of tasks that will be executed as part of the job
-  #   steps:
-  #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-  #     - uses: actions/checkout@v2
-  #     - name: Use Node.js 12.8
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: 12.8
-  #         registry-url: 'https://npm.pkg.github.com'
-  #     - name: npm run build:app:ci
-  #       run: npm run build:app:ci
-
-  #     - name: Publish generated content to GitHub Pages
-  #       uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
-  #       with:
-  #         dir: dist/kendo-jalali-date
-  #         branch: main
-  #         token: ${{ secrets.t2 }}
+  publish-app:
+    # The type of runner that the job will run on
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12.8
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.8
+      - name: Download a single artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: dist-without-markdown
+          path: dist
+      - name: Publish generated content to GitHub Pages
+        uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
+        with:
+          dir: dist/kendo-jalali-date
+          branch: gh-pages
+          token: ${{ secrets.t2 }}
 
 
