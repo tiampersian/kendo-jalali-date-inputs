@@ -1,24 +1,25 @@
-# KendoJalaliDatePicker
+# kendo-jalali-datepicker
+This is a configurable jalali (persian, khorshidi, shamsi, jalali) date-picker for Angular 2 applications based on [kendo-dateinputs](https://www.telerik.com/kendo-angular-ui/components/dateinputs/).
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.9.
 
-## Code scaffolding
+[kendo-jalali-datepicker DEMO](https://tiampersian.github.io/kendo-jalali-datepicker/)
+## Screenshots
 
-Run `ng generate component component-name --project kendo-jalali-date-picker` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project kendo-jalali-date-picker`.
-> Note: Don't forget to add `--project kendo-jalali-date-picker` or else it will be added to the default project in your `angular.json` file. 
+![](https://github.com/tiampersian/kendo-jalali-datepicker/raw/main/src/assets/screenshot.png)
 
-## Build
+## Installation:
+1. Download from npm:
+`npm install @tiampersian/kendo-jalali-date-picker --save` 
+2. import the `KendoJalaliDatePickerModule` module in typescript (.ts) or es6 files like below:  
+ `import { KendoJalaliDatePickerModule } from '@progress/kendo-jalali-date-picker';`  
 
-Run `ng build kendo-jalali-date-picker` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Publishing
-
-After building your library with `ng build kendo-jalali-date-picker`, go to the dist folder `cd dist/kendo-jalali-date-picker` and run `npm publish`.
-
-## Running unit tests
-
-Run `ng test kendo-jalali-date-picker` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+ 3. Add `KendoJalaliDatePickerModule` to your module imports:  
+```ts
+ @NgModule({
+   ...
+   imports: [
+     ...
+     KendoJalaliDatePickerModule
+   ]
+ })
+```
