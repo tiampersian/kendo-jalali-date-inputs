@@ -43,16 +43,13 @@ jobs:
         run: npm run publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.t2 }}
-      - name: Creating .npmrc
-        run: |
-          cat << EOF > "$HOME/.npmrc"
-            email=tiampersian@gmail.com
-            //registry.npmjs.org/:_authToken=$NPM_TOKEN
-          EOF
-      - name: npm run publish2
-        run: npm run publish
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+      - run: npm run publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.t2}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
 
       - name: npm run build:app:ci
