@@ -1,6 +1,7 @@
 import { Component, Inject, TemplateRef, ViewChild } from '@angular/core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { DatePickerType, JalaliCldrIntlService } from '../../services/locale.service';
+import '@angular/localize';
 
 @Component({
   template: `

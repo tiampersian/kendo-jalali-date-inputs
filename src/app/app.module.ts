@@ -5,6 +5,7 @@ import { KendoJalaliDatePickerModule } from '@progress/kendo-jalali-date-picker'
 import { AppComponent } from './app.component';
 import '@progress/kendo-angular-intl/locales/fa/all';
 import '@progress/kendo-angular-intl/locales/tr/all';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -13,6 +14,8 @@ import '@progress/kendo-angular-intl/locales/tr/all';
     AppComponent
   ],
   imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
     BrowserModule,
     KendoJalaliDatePickerModule
   ],

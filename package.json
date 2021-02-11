@@ -11,6 +11,7 @@
     "e2e": "ng e2e",
     "setversion": "node update-version.js",
     "build:ci": "ng build @progress/kendo-jalali-date-picker --prod",
+    "build:app:ci": "ng build --prod",
     "publish":"npm publish dist/progress/kendo-jalali-date-picker  --access public"
   },
   "private": false,

@@ -44,9 +44,19 @@ jobs:
         run: npm run publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.t2 }}
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+
+      - name: npm run build:app:ci
+        run: npm run build:app:ci
+
+      - name: Publish generated content to GitHub Pages
+        uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
         with:
-          GITHUB_TOKEN: ${{ secrets.t2 }}
-          BRANCH: gh-pages
-          FOLDER: dist/progress/kendo-jalali-date-picker
+          dir: dist/kendo-jalali-date
+          branch: main
+          token: ${{ secrets.t2 }}
+      # - name: Deploy to GitHub Pages
+      #   uses: JamesIves/github-pages-deploy-action@releases/v3
+      #   with:
+      #     GITHUB_TOKEN: ${{ secrets.t2 }}
+      #     BRANCH: main
+      #     FOLDER: dist/progress/kendo-jalali-date-picker

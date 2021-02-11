@@ -10,6 +10,7 @@ import { JalaliYearViewService } from './services/year-view.services';
 import { JalaliCldrIntlService } from './services/locale.service';
 import { JalaliWeekNamesService } from './services/week-names.service';
 import { KendoJalaliHeaderTitleTemplateComponent } from './components/kendo-jalali-header-title-template/kendo-jalali-header-title-template.component';
+import '@angular/localize/init';
 
 
 @NgModule({
@@ -17,8 +18,6 @@ import { KendoJalaliHeaderTitleTemplateComponent } from './components/kendo-jala
     KendoJalaliHeaderTitleTemplateComponent
   ],
   imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
     IntlModule,
     DateInputsModule
   ],
@@ -28,7 +27,6 @@ import { KendoJalaliHeaderTitleTemplateComponent } from './components/kendo-jala
     { provide: YearViewService, useClass: JalaliYearViewService },
     { provide: MonthViewService, useClass: JalaliMonthViewService },
     { provide: WeekNamesService, useClass: JalaliWeekNamesService },
-
     { provide: IntlService, useClass: JalaliCldrIntlService },
     { provide: 'HeaderTitleTemplate', useValue: KendoJalaliHeaderTitleTemplateComponent }
   ],
