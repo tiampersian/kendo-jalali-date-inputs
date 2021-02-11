@@ -42,10 +42,10 @@ jobs:
       - name: npm run publish
         run: npm run publish
       - name: Use 2Node.js 12.8
-        uses: actions/setup-node@v1
         with:
           node-version: 12.8
           registry-url: 'https://registry.npmjs.org'
+      - name: npm run publish2
         run: npm run publish
 
         env:
