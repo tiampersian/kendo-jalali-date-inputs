@@ -48,6 +48,8 @@ jobs:
         with:
           name: dist-without-markdown
           path: dist
+
+
   publish-github:
     # The type of runner that the job will run on
     needs: build
@@ -74,6 +76,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.t2 }}
 
+
   publish-npm:
     # The type of runner that the job will run on
     needs: build
@@ -99,6 +102,7 @@ jobs:
         run: npm run publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
 
   publish-app:
     # The type of runner that the job will run on
