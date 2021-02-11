@@ -39,16 +39,6 @@ jobs:
           npm run setversion 0.1.${{ github.run_number }}-${{github.job}}
           npm run build:ci
 
-      - name: npm run build:app:ci
-        run: npm run build:app:ci
-
-      - name: Publish generated content to GitHub Pages
-        uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
-        with:
-          dir: dist/kendo-jalali-date
-          branch: main
-          token: ${{ secrets.t2 }}
-
   publish-github:
     # The type of runner that the job will run on
     needs: build
@@ -116,3 +106,5 @@ jobs:
           dir: dist/kendo-jalali-date
           branch: main
           token: ${{ secrets.t2 }}
+
+
