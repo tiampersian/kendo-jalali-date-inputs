@@ -48,13 +48,14 @@ jobs:
         with:
           node-version: 12.8
           registry-url: 'https://registry.npmjs.org'
-      - run: echo "//registry.npmjs.org:_authToken=$NODE_AUTH_TOKEN" > .npmrc
+      - run: echo "//registry.npmjs.org:_authToken=$NPM_TOKEN" > .npmrc
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.t2 }}
       - name: npm run publish2
         run: npm run publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.t2}}
 
 
       - name: npm run build:app:ci
