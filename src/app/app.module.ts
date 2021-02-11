@@ -14,13 +14,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppComponent
   ],
   imports: [
-    BrowserModule,
     BrowserAnimationsModule,
     BrowserModule,
     KendoJalaliDatePickerModule
   ],
   providers: [
-    // { provide: LOCALE_ID, useValue: 'fa-IR' }
   ],
   bootstrap: [AppComponent]
 })

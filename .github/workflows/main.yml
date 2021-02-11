@@ -41,6 +41,10 @@ jobs:
           npm run build:ci
       - name: npm run publish
         run: npm run publish
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          run: npm run publish
+
         env:
           NODE_AUTH_TOKEN: ${{ secrets.t2 }}
 
