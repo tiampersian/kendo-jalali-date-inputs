@@ -43,12 +43,15 @@ jobs:
         run: npm run publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.t2 }}
-      - uses: actions/setup-node@v1
+      - name: Use 2Node.js 12.8
+        uses: actions/setup-node@v1
         with:
-          npm-registry:
-              registry: 'https://registry.npmjs.org'
-              token: '${{secrets.NPM_TOKEN}}'
-      - run: npm run publish
+          node-version: 12.8
+          registry-url: 'https://registry.npmjs.org'
+      - name: npm run publish2
+        run: npm run publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
 
       - name: npm run build:app:ci
