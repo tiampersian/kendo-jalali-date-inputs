@@ -47,7 +47,7 @@ jobs:
         with:
           npm-registry:
             - registry: 'https://registry.npmjs.org'
-              token: '${{secrets.NPMJS_TOKEN}}'
+              token: '${{secrets.NPM_TOKEN}}'
       - run: npm run publish
 
 
