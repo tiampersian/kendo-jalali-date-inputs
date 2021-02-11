@@ -48,7 +48,8 @@ jobs:
           node-version: 12.8
           registry-url: 'https://registry.npmjs.org'
           token: '${{secrets.NPM_TOKEN}}'
-          run: npm run publish
+      - name: npm run publish22
+        run: npm run publish
 
 
       - name: npm run build:app:ci
