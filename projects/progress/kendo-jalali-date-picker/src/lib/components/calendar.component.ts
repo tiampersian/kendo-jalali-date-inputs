@@ -5,7 +5,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
 let headerTitleTemplate: TemplateRef<any>;
 Object.defineProperty(CalendarComponent.prototype, 'headerTitleTemplate', {
   get(): TemplateRef<any> {
-    return headerTitleTemplate;
+    return headerTitleTemplate || this.injector.get(IntlService).defaultTitleTemplate;
   },
 
   set(template: TemplateRef<any>): void {

@@ -1,9 +1,9 @@
-import { Inject, Injectable, LOCALE_ID } from '@angular/core';
-import { CldrIntlService, IntlService } from '@progress/kendo-angular-intl';
+import { Inject, Injectable, LOCALE_ID, Optional } from '@angular/core';
+import { CldrIntlService } from '@progress/kendo-angular-intl';
 export enum DatePickerType {
   jalali = 'jalali',
   gregorian = 'gregorian'
-};
+}
 
 @Injectable()
 export class JalaliCldrIntlService extends CldrIntlService {
@@ -11,21 +11,23 @@ export class JalaliCldrIntlService extends CldrIntlService {
   // isIranTimezone = false;
   isGregorian: boolean;
   datePickerType: DatePickerType;
-  defaultTitleTemplate: any;
   localeIdByDatePickerType = '';
+  defaultTitleTemplate: any;
 
   constructor(
-    @Inject(LOCALE_ID) private originalLocaleId: string
+    @Inject(LOCALE_ID) private originalLocaleId: string,
+    // @Optional() @Inject('HeaderTitleTemplate') public defaultTitleTemplate?: any
   ) {
     super(originalLocaleId);
     // this.isIranTimezone = this.originalLocaleId === 'fa-IR';
     this.changeType();
   }
-  setTitleTemplate(template) {
+
+  setTitleTemplate(template): void {
     this.defaultTitleTemplate = template;
   }
 
-  changeType(value?: DatePickerType) {
+  changeType(value?: DatePickerType): void {
     this.datePickerType = this.getType(value);
     if (this.datePickerType === DatePickerType.jalali) {
       this.isJalali = true;
@@ -40,20 +42,20 @@ export class JalaliCldrIntlService extends CldrIntlService {
     this.reload();
   }
 
-  reload() {
+  reload(): void {
     this.changes.next(super.localeId);
     this.notify();
-      const tem = super.localeId;
+    const tem = super.localeId;
     this.changeLocaleId('en');
     this.changeLocaleId(tem);
   }
 
-  changeLocaleId(value) {
+  changeLocaleId(value): void {
     super.localeId = value;
     this.notify();
   }
 
-  toggleType() {
+  toggleType(): void {
     this.changeType(this.datePickerType === DatePickerType.jalali ? DatePickerType.gregorian : DatePickerType.jalali);
   }
 
