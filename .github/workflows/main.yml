@@ -120,11 +120,19 @@ jobs:
         with:
           name: dist-without-markdown
           path: dist
-      - name: Publish generated content to GitHub Pages
-        uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
-        with:
-          dir: dist/kendo-jalali-date
-          branch: gh-pages
-          token: ${{ secrets.t2 }}
+      - uses: actions/checkout@v1
+      - name: Deploy with github-pages
+      uses: JamesIves/github-pages-deploy-action@master
+      env:
+          ACCESS_TOKEN: ${{ secrets.t2 }}
+          BASE_BRANCH: main # The branch the action should deploy from.
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: dist/kendo-jalali-date # The folder the action should deploy.
+      # - name: Publish generated content to GitHub Pages
+      #   uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
+      #   with:
+      #     dir: dist/kendo-jalali-date
+      #     branch: gh-pages
+      #     token: ${{ secrets.t2 }}
 
 

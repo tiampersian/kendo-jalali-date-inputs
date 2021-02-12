@@ -7,8 +7,8 @@ import { DatePickerType, JalaliCldrIntlService } from '@progress/kendo-jalali-da
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  viewProviders: [
-    { provide: RTL, useFactory: isRtl, deps: [IntlService] }
+  providers: [
+    // { provide: LOCALE_ID, useFactory: localeIdFactory, deps: ['LOCALE_ID'] },
   ],
 
 })
@@ -22,35 +22,41 @@ export class AppComponent {
   currentLocaleId = '';
   constructor(
     @Inject(IntlService) private localeService: JalaliCldrIntlService,
-    private injector: Injector,
     private cdr: ChangeDetectorRef
   ) {
     this.calendarType = localeService.isJalali ? DatePickerType.jalali : DatePickerType.gregorian;
     this.currentLocaleId = localeService.localeId;
   }
 
-  changeCalendarType(value) {
+  changeCalendarType(value): void {
     localStorage.setItem('locale', value);
     this.calendarType = value;
     this.localeService.toggleType();
-    const temp = this.localeService.localeId;
     this.localeService.reload();
-    this.reload();
+    // this.reload();
 
   }
-  private reload() {
+  private reload(): void {
     // this.rerender = false;
     this.cdr.detectChanges();
     this.rerender = true;
   }
 
-  changeLocaleId(value) {
+  changeLocaleId(value): void {
+    localStorage.setItem('localeId', value);
     this.localeService.changeLocaleId(value);
     this.localeService.reload();
-    // this.reload();
+  }
+
+  changeValue($event): void {
+    debugger
+    this.value = $event;
   }
 }
 
-export function isRtl(intlService: JalaliCldrIntlService) {
-  return intlService.localeId === 'fa-id';
+export function isRtl(intlService: JalaliCldrIntlService): boolean {
+  return intlService.localeId === 'fa-IR';
+}
+export function localeIdFactory(originalLocalId: string): string {
+  return localStorage.getItem('localeId') || originalLocalId;
 }

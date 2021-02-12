@@ -385,7 +385,8 @@
   <!-- Resources -->
   <h2>Basic Usage</h2>
   <p>
-    The following example demonstrates the Calendar, DateInput, DatePicker, DateRange, DateTimePicker, MultiViewCalendar, and TimePicker components in action.</p>
+    The following example demonstrates the Calendar, DateInput, DatePicker, DateRange, DateTimePicker,
+    MultiViewCalendar, and TimePicker components in action.</p>
 
   <br>
   <br>
@@ -416,37 +417,38 @@
   <div class="card-container"
        *ngIf="rerender">
     <div class="row example-wrapper"
-    *ngIf="1"
+         *ngIf="1"
          style="min-height: 450px;display: flex;">
       <div class="col-xs-12 col-md-6 example-col">
         <p>DateInput</p>
-        <kendo-dateinput [value]="value"></kendo-dateinput>
+        <kendo-dateinput [(ngModel)]="value"
+                         (change)="value=$event;"></kendo-dateinput>
         <p>(use <code>←</code> and <code>→</code> to navigate, <code>↑</code> and <code>↓</code> to update)</p>
 
         <p>DatePicker</p>
-        <kendo-datepicker [value]="value"></kendo-datepicker>
+        <kendo-datepicker [(ngModel)]="value"></kendo-datepicker>
         <p>(use <code>Alt</code>+<code>↓</code> to open the Calendar)</p>
 
         <p>TimePicker</p>
-        <kendo-timepicker [value]="value"></kendo-timepicker>
+        <kendo-timepicker [(ngModel)]="value"></kendo-timepicker>
         <p>(use Alt+↓ to open the time list, Tab to move to the next time section in the popup, ↑ to increment and ↓ to
           decrement the value)</p>
       </div>
       <div class="col-xs-12 col-md-6 example-col">
         <p>DateTimePicker</p>
-        <kendo-datetimepicker [value]="value">
+        <kendo-datetimepicker [(ngModel)]="value">
         </kendo-datetimepicker>
         <p>(use Alt+↓ to open the popup, Alt+<code>←</code> and Alt+<code>→</code> to switch between the tabs when open)
         </p>
 
         <p>Calendar</p>
-        <kendo-calendar [value]="value"></kendo-calendar>
+        <kendo-calendar [(ngModel)]="value"></kendo-calendar>
       </div>
     </div>
     <div class="row example-wrapper">
       <div class="col-12 example-col">
         <p>MultiViewCalendar</p>
-        <kendo-multiviewcalendar [value]="value"></kendo-multiviewcalendar>
+        <kendo-multiviewcalendar [(ngModel)]="value"></kendo-multiviewcalendar>
       </div>
     </div>
 

@@ -34,7 +34,6 @@ export class KendoJalaliHeaderTitleTemplateComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(){
-    debugger
     this.localeService.setTitleTemplate(this);
   }
 
