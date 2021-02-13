@@ -58,5 +58,5 @@ export function isRtl(intlService: JalaliCldrIntlService): boolean {
   return intlService.localeId === 'fa-IR';
 }
 export function localeIdFactory(originalLocalId: string): string {
-  return localStorage.getItem('localeId') || originalLocalId;
+  return localStorage.getItem('localeId') || originalLocalId || 'fa-IR';
 }
