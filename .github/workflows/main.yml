@@ -18,63 +18,63 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12.8
-      - name: Cache NPM dependencies
-        uses: actions/cache@v1
-        with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-npm-cache-
-      - name: npm install and npm run build
-        run: |
-          npm install
-          npm run setversion 0.1.${{ github.run_number }}
-          npm run build:ci
-          npm run build:app:ci
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: dist-without-markdown
-          path: dist
+  # build:
+  #   # The type of runner that the job will run on
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       node-version: [12.x]
+  #   # Steps represent a sequence of tasks that will be executed as part of the job
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 12.8
+  #     - name: Cache NPM dependencies
+  #       uses: actions/cache@v1
+  #       with:
+  #         path: ~/.npm
+  #         key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+  #         restore-keys: |
+  #           ${{ runner.OS }}-npm-cache-
+  #     - name: npm install and npm run build
+  #       run: |
+  #         npm install
+  #         npm run setversion 0.1.${{ github.run_number }}
+  #         npm run build:ci
+  #         npm run build:app:ci
+  #     - name: Archive production artifacts
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: dist-without-markdown
+  #         path: dist
 
 
-  publish-github:
-    # The type of runner that the job will run on
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v1
-      - name: Use Node.js 12.8
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12.8
-          registry-url: 'https://npm.pkg.github.com'
-      - name: Download a single artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: dist-without-markdown
-          path: dist
-      - name: npm run publish
-        run: npm run publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.t2 }}
+  # publish-github:
+  #   # The type of runner that the job will run on
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       node-version: [12.x]
+  #   # Steps represent a sequence of tasks that will be executed as part of the job
+  #   steps:
+  #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+  #     - uses: actions/checkout@v1
+  #     - name: Use Node.js 12.8
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 12.8
+  #         registry-url: 'https://npm.pkg.github.com'
+  #     - name: Download a single artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: dist-without-markdown
+  #         path: dist
+  #     - name: npm run publish
+  #       run: npm run publish
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{ secrets.t2 }}
 
 
   publish-npm:
@@ -115,24 +115,24 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - name: Download a single artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: dist-without-markdown
-          path: dist
-      - name: Deploy with github-pages
-        uses: JamesIves/github-pages-deploy-action@4.0.0
-        with:
-          ACCESS_TOKEN: ${{ secrets.t2 }}
-          BASE_BRANCH: main # The branch the action should deploy from.
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: dist/kendo-jalali-date # The folder the action should deploy.
-          SINGLE_COMMIT: true
+      # - name: Download a single artifact
+      #   uses: actions/download-artifact@v2
+      #   with:
+      #     name: dist-without-markdown
+      #     path: dist
+      # - name: Deploy with github-pages
+      #   uses: JamesIves/github-pages-deploy-action@4.0.0
+      #   with:
+      #     ACCESS_TOKEN: ${{ secrets.t2 }}
+      #     BASE_BRANCH: main # The branch the action should deploy from.
+      #     BRANCH: gh-pages # The branch the action should deploy to.
+      #     FOLDER: dist/kendo-jalali-date # The folder the action should deploy.
+      #     SINGLE_COMMIT: true
       - name: Screenshot Website
         uses: swinton/screenshot-website@v1.x
         with:
           source: https://tiampersian.github.io/kendo-jalali-datepicker/
-          destination: src/assets/screenshot.png
+          destination: /src/assets/screenshot.png
           full-page: true
       # - name: Publish generated content to GitHub Pages
       #   uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
