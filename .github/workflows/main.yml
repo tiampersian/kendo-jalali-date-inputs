@@ -131,7 +131,7 @@ jobs:
       - name: Screenshot Website
         uses: swinton/screenshot-website@v1.x
         with:
-          source: https://github.com/tiampersian/kendo-jalali-datepicker
+          source: https://tiampersian.github.io/kendo-jalali-datepicker/
           destination: src/assets/screenshot.png
           full-page: true
       # - name: Publish generated content to GitHub Pages
