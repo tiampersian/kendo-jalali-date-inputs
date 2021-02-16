@@ -128,6 +128,12 @@ jobs:
           BRANCH: gh-pages # The branch the action should deploy to.
           FOLDER: dist/kendo-jalali-date # The folder the action should deploy.
           SINGLE_COMMIT: true
+      - name: Screenshot Website
+        uses: swinton/screenshot-website@v1.x
+        with:
+          source: https://github.com/tiampersian/kendo-jalali-datepicker
+          destination: src/assets/screenshot.png
+          full-page: true
       # - name: Publish generated content to GitHub Pages
       #   uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
       #   with:
