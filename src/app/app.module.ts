@@ -32,7 +32,7 @@ export class AppModule { }
 
 
 export function originalLocaleIdFactory(originalLocalId: string): string {
-  return localStorage.getItem('localeId') || originalLocalId;
+  return localStorage.getItem('localeId') || 'fa-IR';
 }
 
 export function isRtl(): boolean {
