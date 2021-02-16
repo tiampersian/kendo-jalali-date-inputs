@@ -131,7 +131,7 @@ jobs:
       - name: screenshots-ci-action
         uses: flameddd/screenshots-ci-action@v1.1.1
         with:
-          url: https://github.com
+          url: https://tiampersian.github.io/kendo-jalali-datepicker/
           devices: iPhone 6,iPhone 6 landscape,Nexus 7,Pad Pro,Galaxy S III landscape,iPad Pro landscape
       - uses: actions/upload-artifact@v2
         with:
