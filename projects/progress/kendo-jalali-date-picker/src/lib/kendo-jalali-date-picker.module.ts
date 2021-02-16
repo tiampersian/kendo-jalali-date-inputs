@@ -15,7 +15,6 @@ import { KendoDatePickerDirective } from './components/navigation.component';
 import { HeaderTitleTemplateFactory } from './HeaderTitleTemplateFactory';
 import { Providers } from './providers';
 
-let template = null;
 @NgModule({
   declarations: [
     KendoJalaliHeaderTitleTemplateComponent,

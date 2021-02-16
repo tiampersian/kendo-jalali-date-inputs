@@ -14,7 +14,7 @@ import { DatePickerType, JalaliCldrIntlService } from '@progress/kendo-jalali-da
 })
 export class AppComponent {
   title = 'kendo-jalali-datepicker';
-  public value: Date = new Date();
+  public value: Date = null;
   rerender = true;
   locales = ['fa-IR', 'en-US', 'en'];
   calendarTypes = Object.values(DatePickerType);
