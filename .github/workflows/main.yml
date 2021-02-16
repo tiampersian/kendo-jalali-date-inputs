@@ -132,7 +132,7 @@ jobs:
         uses: swinton/screenshot-website@v1.x
         with:
           source: https://tiampersian.github.io/kendo-jalali-datepicker/
-          destination: /src/assets/screenshot.png
+          destination: screenshot.png
           full-page: true
       # - name: Publish generated content to GitHub Pages
       #   uses: tsunematsu21/actions-publish-gh-pages@v1.0.1
