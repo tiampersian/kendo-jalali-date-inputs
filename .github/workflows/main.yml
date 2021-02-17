@@ -132,7 +132,7 @@ jobs:
         uses: swinton/screenshot-website@v1.x
         with:
           source: https://tiampersian.github.io/kendo-jalali-datepicker/
-          destination: src/assets/screenshot.png
+          destination: screenshot.png
       # - name: screenshots-ci-action
       #   uses: flameddd/screenshots-ci-action@v1.1.1
       #   with:
