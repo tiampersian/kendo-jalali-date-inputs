@@ -128,11 +128,25 @@ jobs:
       #     BRANCH: gh-pages # The branch the action should deploy to.
       #     FOLDER: dist/kendo-jalali-date # The folder the action should deploy.
       #     SINGLE_COMMIT: true
-      - name: Screenshot Website
-        uses: swinton/screenshot-website@v1.x
+      - uses: actions/setup-node@v1
         with:
-          source: https://tiampersian.github.io/kendo-jalali-datepicker/
-          destination: screenshot.png
+          node-version: 12.8
+      # - name: Cache NPM dependencies
+      #   uses: actions/cache@v1
+      #   with:
+      #     path: ~/.npm
+      #     key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+      #     restore-keys: |
+      #       ${{ runner.OS }}-npm-cache-
+      - name: npm install and npm run build
+        run: |
+          node update-screenshot.js
+      - name: Update resources
+        uses: test-room-7/action-update-file@v1
+        with:
+            file-path: src/assets/screenshot.png
+            commit-msg: Update resources
+            github-token: ${{ secrets.t2 }}
       # - name: screenshots-ci-action
       #   uses: flameddd/screenshots-ci-action@v1.1.1
       #   with:
