@@ -1,7 +1,7 @@
 import { LOCALE_ID, NgModule, Injectable, SkipSelf } from '@angular/core';
 import '@angular/localize/init';
 import { BrowserModule } from '@angular/platform-browser';
-import { JalaliCldrIntlService, KendoJalaliDateInputsModule } from '@tiampersian/kendo-jalali-data-inputs';
+import { JalaliCldrIntlService, KendoJalaliDateInputsModule } from '@tiampersian/kendo-jalali-date-inputs';
 import { AppComponent } from './app.component';
 import '@progress/kendo-angular-intl/locales/fa/all';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

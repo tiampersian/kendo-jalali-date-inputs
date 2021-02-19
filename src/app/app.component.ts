@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Inject, LOCALE_ID, Injector } from '@angular/core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { RTL } from '@progress/kendo-angular-l10n';
-import { DatePickerType, JalaliCldrIntlService } from '@tiampersian/kendo-jalali-data-inputs';
+import { DatePickerType, JalaliCldrIntlService } from '@tiampersian/kendo-jalali-date-inputs';
 
 @Component({
   selector: 'app-root',

@@ -10,9 +10,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "setversion": "node update-version.js",
-    "build:ci": "ng build @tiampersian/kendo-jalali-data-inputs --prod",
+    "build:ci": "ng build @tiampersian/kendo-jalali-date-inputs --prod",
     "build:app:ci": "ng build --prod",
-    "publish": "npm publish dist/tiampersian/kendo-jalali-data-inputs  --access public"
+    "publish": "npm publish dist/tiampersian/kendo-jalali-date-inputs  --access public"
   },
   "private": false,
   "dependencies": {

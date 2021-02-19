@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, '../../../coverage/tiampersian/kendo-jalali-data-inputs'),
+      dir: require('path').join(__dirname, '../../../coverage/tiampersian/kendo-jalali-date-inputs'),
       subdir: '.',
       reporters: [
         { type: 'html' },

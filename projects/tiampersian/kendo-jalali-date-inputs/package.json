@@ -1,5 +1,5 @@
 {
-  "name": "@tiampersian/kendo-jalali-date-picker",
+  "name": "@tiampersian/kendo-jalali-date-inputs",
   "version": "0.8.0",
   "peerDependencies": {
     "@progress/kendo-theme-default": "4.13.0",

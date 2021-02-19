@@ -127,38 +127,38 @@
         }
       }
     },
-    "@tiampersian/kendo-jalali-data-inputs": {
+    "@tiampersian/kendo-jalali-date-inputs": {
       "projectType": "library",
-      "root": "projects/tiampersian/kendo-jalali-data-inputs",
-      "sourceRoot": "projects/tiampersian/kendo-jalali-data-inputs/src",
+      "root": "projects/tiampersian/kendo-jalali-date-inputs",
+      "sourceRoot": "projects/tiampersian/kendo-jalali-date-inputs/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "tsConfig": "projects/tiampersian/kendo-jalali-data-inputs/tsconfig.lib.json",
-            "project": "projects/tiampersian/kendo-jalali-data-inputs/ng-package.json"
+            "tsConfig": "projects/tiampersian/kendo-jalali-date-inputs/tsconfig.lib.json",
+            "project": "projects/tiampersian/kendo-jalali-date-inputs/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/tiampersian/kendo-jalali-data-inputs/tsconfig.lib.prod.json"
+              "tsConfig": "projects/tiampersian/kendo-jalali-date-inputs/tsconfig.lib.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/tiampersian/kendo-jalali-data-inputs/src/test.ts",
-            "tsConfig": "projects/tiampersian/kendo-jalali-data-inputs/tsconfig.spec.json",
-            "karmaConfig": "projects/tiampersian/kendo-jalali-data-inputs/karma.conf.js"
+            "main": "projects/tiampersian/kendo-jalali-date-inputs/src/test.ts",
+            "tsConfig": "projects/tiampersian/kendo-jalali-date-inputs/tsconfig.spec.json",
+            "karmaConfig": "projects/tiampersian/kendo-jalali-date-inputs/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/tiampersian/kendo-jalali-data-inputs/tsconfig.lib.json",
-              "projects/tiampersian/kendo-jalali-data-inputs/tsconfig.spec.json"
+              "projects/tiampersian/kendo-jalali-date-inputs/tsconfig.lib.json",
+              "projects/tiampersian/kendo-jalali-date-inputs/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
