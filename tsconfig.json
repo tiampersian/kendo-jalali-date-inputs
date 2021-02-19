@@ -17,8 +17,8 @@
       "dom"
     ],
     "paths": {
-      "@progress/kendo-jalali-date-picker": [
-        "projects/progress/kendo-jalali-date-picker/src/public-api.ts"
+      "@tiampersian/kendo-jalali-data-inputs": [
+        "projects/tiampersian/kendo-jalali-data-inputs/src/public-api.ts"
       ]
     }
   }

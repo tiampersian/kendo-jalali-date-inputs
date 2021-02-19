@@ -1,6 +1,6 @@
 {
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../../dist/progress/kendo-jalali-date-picker",
+  "dest": "../../../dist/tiampersian/kendo-jalali-data-inputs",
   "lib": {
     "entryFile": "src/public-api.ts"
   },

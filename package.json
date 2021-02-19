@@ -1,5 +1,5 @@
 {
-  "name": "kendo-jalali-date",
+  "name": "tiampersian",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -10,9 +10,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "setversion": "node update-version.js",
-    "build:ci": "ng build @progress/kendo-jalali-date-picker --prod",
+    "build:ci": "ng build @tiampersian/kendo-jalali-data-inputs --prod",
     "build:app:ci": "ng build --prod",
-    "publish": "npm publish dist/progress/kendo-jalali-date-picker  --access public"
+    "publish": "npm publish dist/tiampersian/kendo-jalali-data-inputs  --access public"
   },
   "private": false,
   "dependencies": {

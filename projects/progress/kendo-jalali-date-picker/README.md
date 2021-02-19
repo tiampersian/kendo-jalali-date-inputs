@@ -11,7 +11,7 @@ This is a configurable jalali (persian, khorshidi, shamsi, jalali) date-picker f
 1. Download from npm:
 `npm install @tiampersian/kendo-jalali-date-picker --save` 
 2. import the `KendoJalaliDatePickerModule` module in typescript (.ts) or es6 files like below:  
- `import { KendoJalaliDatePickerModule } from '@progress/kendo-jalali-date-picker';`  
+ `import { KendoJalaliDatePickerModule } from '@tiampersian/kendo-jalali-data-inputs';`  
 
  3. Add `KendoJalaliDatePickerModule` to your module imports:  
 ```ts

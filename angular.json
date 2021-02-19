@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "kendo-jalali-date": {
+    "tiampersian": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,13 +17,13 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/kendo-jalali-date",
+            "outputPath": "dist/tiampersian",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "deployUrl": "/kendo-jalali-datepicker/",
+            "deployUrl": "/tiampersian/",
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -127,38 +127,38 @@
         }
       }
     },
-    "@progress/kendo-jalali-date-picker": {
+    "@tiampersian/kendo-jalali-data-inputs": {
       "projectType": "library",
-      "root": "projects/progress/kendo-jalali-date-picker",
-      "sourceRoot": "projects/progress/kendo-jalali-date-picker/src",
+      "root": "projects/tiampersian/kendo-jalali-data-inputs",
+      "sourceRoot": "projects/tiampersian/kendo-jalali-data-inputs/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "tsConfig": "projects/progress/kendo-jalali-date-picker/tsconfig.lib.json",
-            "project": "projects/progress/kendo-jalali-date-picker/ng-package.json"
+            "tsConfig": "projects/tiampersian/kendo-jalali-data-inputs/tsconfig.lib.json",
+            "project": "projects/tiampersian/kendo-jalali-data-inputs/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/progress/kendo-jalali-date-picker/tsconfig.lib.prod.json"
+              "tsConfig": "projects/tiampersian/kendo-jalali-data-inputs/tsconfig.lib.prod.json"
             }
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/progress/kendo-jalali-date-picker/src/test.ts",
-            "tsConfig": "projects/progress/kendo-jalali-date-picker/tsconfig.spec.json",
-            "karmaConfig": "projects/progress/kendo-jalali-date-picker/karma.conf.js"
+            "main": "projects/tiampersian/kendo-jalali-data-inputs/src/test.ts",
+            "tsConfig": "projects/tiampersian/kendo-jalali-data-inputs/tsconfig.spec.json",
+            "karmaConfig": "projects/tiampersian/kendo-jalali-data-inputs/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/progress/kendo-jalali-date-picker/tsconfig.lib.json",
-              "projects/progress/kendo-jalali-date-picker/tsconfig.spec.json"
+              "projects/tiampersian/kendo-jalali-data-inputs/tsconfig.lib.json",
+              "projects/tiampersian/kendo-jalali-data-inputs/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -168,5 +168,5 @@
       }
     }
   },
-  "defaultProject": "kendo-jalali-date"
+  "defaultProject": "tiampersian"
 }

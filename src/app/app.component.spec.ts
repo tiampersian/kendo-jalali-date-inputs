@@ -3,7 +3,7 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DatePickerType, KendoJalaliDatePickerModule } from '@progress/kendo-jalali-date-picker';
+import { DatePickerType, KendoJalaliDateInputsModule } from '@tiampersian/kendo-jalali-data-inputs';
 import moment from 'jalali-moment';
 import { AppComponent } from './app.component';
 import '@progress/kendo-angular-intl/locales/fa/all';
@@ -15,7 +15,7 @@ describe('AppComponent', () => {
         NoopAnimationsModule,
         BrowserModule,
         FormsModule,
-        KendoJalaliDatePickerModule],
+        KendoJalaliDateInputsModule],
       declarations: [
         AppComponent
       ],

@@ -1,10 +1,9 @@
 import { LOCALE_ID, NgModule, Injectable, SkipSelf } from '@angular/core';
 import '@angular/localize/init';
 import { BrowserModule } from '@angular/platform-browser';
-import { JalaliCldrIntlService, KendoJalaliDatePickerModule } from '@progress/kendo-jalali-date-picker';
+import { JalaliCldrIntlService, KendoJalaliDateInputsModule } from '@tiampersian/kendo-jalali-data-inputs';
 import { AppComponent } from './app.component';
 import '@progress/kendo-angular-intl/locales/fa/all';
-import '@progress/kendo-angular-intl/locales/tr/all';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { RTL } from '@progress/kendo-angular-l10n';
@@ -20,7 +19,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
-    KendoJalaliDatePickerModule
+    KendoJalaliDateInputsModule
   ],
   providers: [
     { provide: LOCALE_ID, useFactory: originalLocaleIdFactory },
