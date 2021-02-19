@@ -83,7 +83,7 @@ For licensing information about Kendo UI, see the [License Agreements page](http
 *Copyright © 2019 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.*
 
 
-@tiampersian/kendo-jalali-date-picker
+@tiampersian/kendo-jalali-date-inputs
 
 css-loader
 MIT
