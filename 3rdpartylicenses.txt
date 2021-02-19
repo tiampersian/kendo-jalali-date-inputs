@@ -84,6 +84,7 @@ For licensing information about Kendo UI, see the [License Agreements page](http
 
 
 @tiampersian/kendo-jalali-date-inputs
+MIT
 
 jalali-moment
 MIT
