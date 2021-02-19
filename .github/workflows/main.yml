@@ -150,7 +150,7 @@ jobs:
       # - name: screenshots-ci-action
       #   uses: flameddd/screenshots-ci-action@v1.1.1
       #   with:
-      #     url: https://tiampersian.github.io/kendo-jalali-datepicker/
+      #     url: https://tiampersian.github.io/kendo-jalali-date-inputs/
       #     devices: iPhone 6,iPhone 6 landscape,Nexus 7,Pad Pro,Galaxy S III landscape,iPad Pro landscape
       # - name: Publish generated content to GitHub Pages
       #   uses: tsunematsu21/actions-publish-gh-pages@v1.0.1

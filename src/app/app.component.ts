@@ -13,7 +13,7 @@ import { DatePickerType, JalaliCldrIntlService } from '@tiampersian/kendo-jalali
 
 })
 export class AppComponent {
-  title = 'kendo-jalali-datepicker';
+  title = 'kendo-jalali-date-inputs';
   public value: Date = null;
   rerender = true;
   locales = ['fa-IR', 'en-US', 'en'];

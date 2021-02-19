@@ -32,7 +32,7 @@ import { Providers } from './providers';
     KendoDatePickerDirective,
   ]
 })
-export class KendoJalaliDatePickerModule {
+export class KendoJalaliDateInputsModule {
   constructor(
     @Inject('HeaderTitleTemplate') headerTitleTemplate
   ) {

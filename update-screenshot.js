@@ -5,7 +5,7 @@
 const captureWebsite = require('capture-website');
 
 (async () => {
-  await captureWebsite.file('https://tiampersian.github.io/kendo-jalali-datepicker/', 'src/assets/screenshot.png', {
+  await captureWebsite.file('https://tiampersian.github.io/kendo-jalali-date-inputs/', 'src/assets/screenshot.png', {
     overwrite: true
   });
 })()

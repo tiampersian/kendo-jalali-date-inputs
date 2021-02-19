@@ -1,14 +1,14 @@
-# kendo-jalali-datepicker
+# kendo-jalali-date-inputs
 This is a configurable jalali (persian, khorshidi, shamsi, jalali) date-picker for Angular 2 applications based on [kendo-dateinputs](https://www.telerik.com/kendo-angular-ui/components/dateinputs/).
 
 
-[![Build Status](https://travis-ci.org/tiampersian/kendo-jalali-datepicker.svg?branch=master)](https://travis-ci.org/tiampersian/kendo-jalali-datepicker) 
-[![npm version](https://badge.fury.io/js/kendo-jalali-datepicker.svg)](https://badge.fury.io/js/kendo-jalali-datepicker)
-[![Package Quality](http://npm.packagequality.com/shield/kendo-jalali-datepicker.svg)](http://packagequality.com/#?package=kendo-jalali-datepicker)
-[![dependency Quality](https://david-dm.org/tiampersian/kendo-jalali-datepicker.svg)](https://david-dm.org/tiampersian/kendo-jalali-datepicker)
-[![dev dependency Quality](https://david-dm.org/tiampersian/kendo-jalali-datepicker/dev-status.svg)](https://david-dm.org/tiampersian/kendo-jalali-datepicker?type=dev)
+[![Build Status](https://travis-ci.org/tiampersian/kendo-jalali-date-inputs.svg?branch=master)](https://travis-ci.org/tiampersian/kendo-jalali-date-inputs) 
+[![npm version](https://badge.fury.io/js/kendo-jalali-date-inputs.svg)](https://badge.fury.io/js/kendo-jalali-date-inputs)
+[![Package Quality](http://npm.packagequality.com/shield/kendo-jalali-date-inputs.svg)](http://packagequality.com/#?package=kendo-jalali-date-inputs)
+[![dependency Quality](https://david-dm.org/tiampersian/kendo-jalali-date-inputs.svg)](https://david-dm.org/tiampersian/kendo-jalali-date-inputs)
+[![dev dependency Quality](https://david-dm.org/tiampersian/kendo-jalali-date-inputs/dev-status.svg)](https://david-dm.org/tiampersian/kendo-jalali-date-inputs?type=dev)
 
-[kendo-jalali-datepicker DEMO](https://tiampersian.github.io/kendo-jalali-datepicker/)
+[kendo-jalali-date-inputs DEMO](https://tiampersian.github.io/kendo-jalali-date-inputs/)
 ## Screenshots
 
 ![](src/assets/screenshot.png)
@@ -16,16 +16,16 @@ This is a configurable jalali (persian, khorshidi, shamsi, jalali) date-picker f
 ## Installation:
 1. Download from npm:
 `npm install @tiampersian/kendo-jalali-date-picker --save` 
-2. import the `KendoJalaliDatePickerModule` module in typescript (.ts) or es6 files like below:  
- `import { KendoJalaliDatePickerModule } from '@tiampersian/kendo-jalali-data-inputs';`  
+2. import the `KendoJalaliDateInputsModule` module in typescript (.ts) or es6 files like below:  
+ `import { KendoJalaliDateInputsModule } from '@tiampersian/kendo-jalali-data-inputs';`  
 
- 3. Add `KendoJalaliDatePickerModule` to your module imports:  
+ 3. Add `KendoJalaliDateInputsModule` to your module imports:  
 ```ts
  @NgModule({
    ...
    imports: [
      ...
-     KendoJalaliDatePickerModule
+     KendoJalaliDateInputsModule
    ]
  })
 ```
