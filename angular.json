@@ -17,13 +17,13 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/tiampersian",
+            "outputPath": "dist/kendo-jalali-date-inputs",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "deployUrl": "/tiampersian/",
+            "deployUrl": "/kendo-jalali-date-inputs/",
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -33,7 +33,8 @@
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [
-              "jalali-moment"
+              "jalali-moment",
+              "@progress/kendo-angular-intl/locales/fa/all"
             ]
           },
           "configurations": {
