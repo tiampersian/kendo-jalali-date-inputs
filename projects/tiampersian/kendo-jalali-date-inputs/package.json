@@ -16,14 +16,27 @@
     "Abbas Mirzaei <tiampersian@gmail.com>"
   ],
   "keywords": [
+    "angular",
     "jalali",
     "shamsi",
-    "date",
+    "date-time",
     "date-picker",
     "datePicker",
     "calendare",
     "date-input",
-    "dateInput"
+    "dateInput",
+    "jalali-date-input",
+    "jalali-date-picker",
+    "jalali-calendar",
+    "jalali-date-time",
+    "kendo-jalali-date-input",
+    "kendo-jalali-date-picker",
+    "kendo-jalali-calendar",
+    "kendo-jalali-date-time",
+    "angular-jalali-date-input",
+    "angular-jalali-date-picker",
+    "angular-jalali-calendar",
+    "angular-jalali-date-time"
   ],
   "repository": {
     "type": "git",
