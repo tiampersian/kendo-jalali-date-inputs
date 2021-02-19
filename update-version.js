@@ -5,7 +5,7 @@ const fs = require('fs');
 const saveFile = fs.writeFileSync;
 
 
-const libraryFolder = './projects/progress/';
+const libraryFolder = './projects/tiampersian/';
 
 fs.readdir(libraryFolder, (err, files) => {
   files.forEach(folder => {
