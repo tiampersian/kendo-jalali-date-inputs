@@ -2,15 +2,15 @@ import { DateInputComponent } from '@progress/kendo-angular-dateinputs';
 import moment from 'jalali-moment';
 
 const formats = {
-  g: 'DD/MM/YYYY hh:mm:ss',
-  d: 'DD/MM/YYYY',
+  g: 'M/D/YYYY hh:mm:ss',
+  d: 'M/D/YYYY',
   t: 'h:mm a'
 };
-const inputFormats = {
-  g: 'DD/MM/YYYY hh:mm:ss',
-  d: 'DD/MM/YYYY',
-  'dd/MM/yyyy': 'DD/MM/YYYY'
-};
+// const inputFormats = {
+//   g: 'M/D/YYYY hh:mm:ss',
+//   d: 'M/D/YYYY',
+//   'dd/MM/yyyy': 'M/D/YYYY'
+// };
 // tslint:disable-next-line:no-string-literal
 DateInputComponent.prototype['updateElementValue'] = function (isActive: boolean): void {
   const start = this.caret()[0];
@@ -22,7 +22,7 @@ DateInputComponent.prototype['updateElementValue'] = function (isActive: boolean
   this.currentValue = !showPlaceholder ? texts[0] : '';
   const value = this.intl.parseDate(this.currentValue, this.inputFormat) || this.currentValue;
   const localeId = this.intl.localeIdByDatePickerType;
-  if (this.currentValue) {
+  if (this.inputValue&&this.value?.getTime()) {
     this.renderer.setProperty(input, 'value', moment(value).locale(localeId).format(formats[format] || format));
   } else {
     this.renderer.setProperty(input, 'value', this.currentValue);
@@ -35,7 +35,7 @@ DateInputComponent.prototype['updateElementValue'] = function (isActive: boolean
   }
 };
 
-
+export {};
 
 
 

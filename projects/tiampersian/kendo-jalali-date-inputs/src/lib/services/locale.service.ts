@@ -1,5 +1,9 @@
 import { Inject, Injectable, LOCALE_ID, Optional } from '@angular/core';
 import { CldrIntlService } from '@progress/kendo-angular-intl';
+import { NumberPipe } from '../pipes/number.pipe';
+import {
+  MomentNumberService
+} from './moment-numbers';
 export enum DatePickerType {
   jalali = 'jalali',
   gregorian = 'gregorian'
@@ -8,7 +12,6 @@ export enum DatePickerType {
 @Injectable()
 export class JalaliCldrIntlService extends CldrIntlService {
   isJalali: boolean;
-  // isIranTimezone = false;
   isGregorian: boolean;
   datePickerType: DatePickerType;
   localeIdByDatePickerType = '';
@@ -16,10 +19,9 @@ export class JalaliCldrIntlService extends CldrIntlService {
 
   constructor(
     @Inject(LOCALE_ID) private originalLocaleId: string,
-    // @Optional() @Inject('HeaderTitleTemplate') public defaultTitleTemplate?: any
+    private momentNumberService: MomentNumberService
   ) {
     super(originalLocaleId);
-    // this.isIranTimezone = this.originalLocaleId === 'fa-IR';
     this.changeType();
   }
 
@@ -52,6 +54,7 @@ export class JalaliCldrIntlService extends CldrIntlService {
 
   changeLocaleId(value): void {
     super.localeId = value;
+    this.momentNumberService.setLocaleId(value);
     this.notify();
   }
 

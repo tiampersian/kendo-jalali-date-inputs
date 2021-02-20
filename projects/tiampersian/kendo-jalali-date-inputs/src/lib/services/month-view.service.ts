@@ -27,7 +27,7 @@ export class JalaliMonthViewService extends MonthViewService {
 
   abbrMonthNames2() {
     if (this.intlService.isJalali) {
-      return moment().locale(this.intlService.localeId).localeData().jMonthsShort();
+       return moment().locale(this.intlService.localeId).localeData().jMonthsShort();
     }
     return moment().locale(this.intlService.localeId).localeData().monthsShort();
   }
