@@ -21,7 +21,7 @@ import { AppComponent } from './app.component';
   ],
   providers: [
     { provide: LOCALE_ID, useFactory: originalLocaleIdFactory },
-    { provide: RTL, useFactory: isRtl, deps: [] },
+    // { provide: RTL, useFactory: isRtl, deps: [] },
   ],
   bootstrap: [AppComponent]
 })
