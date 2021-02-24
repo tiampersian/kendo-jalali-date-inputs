@@ -28,7 +28,14 @@ export const firstYearOfDecade = (dt, localeId) => {
 export const lastYearOfDecade = (dt, localeId) => {
   const x = moment(dt).locale(localeId).year();
   return moment(dt).locale(localeId).add((10 - (x % 10)), 'year').toDate();
-
+}
+export const firstDayOfMonth = (dt, localeId) => {
+  const x = moment(dt).locale(localeId).date();
+  return moment(dt).locale(localeId).add(-(x % 30), 'day').toDate();
+}
+export const lastDayOfMonth = (dt, localeId) => {
+  const x = moment(dt).locale(localeId).date();
+  return moment(dt).locale(localeId).add((30 - (x % 30)), 'day').toDate();
 }
 // export const addMonths2 = (date, offset) => {
 //   var newDate = moment(date).toDate();
