@@ -36,8 +36,8 @@ export class AppComponent {
     // this.reload();
 
   }
-  private reload(): void {
-    // this.rerender = false;
+  reload(): void {
+    this.rerender = false;
     this.cdr.detectChanges();
     this.rerender = true;
   }

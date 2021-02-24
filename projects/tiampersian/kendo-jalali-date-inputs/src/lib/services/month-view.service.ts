@@ -65,10 +65,10 @@ export class JalaliMonthViewService extends MonthViewService {
     if (!viewDate) {
       return EMPTY_DATA;
     }
-    const dt = this.getValue(viewDate);
-    const firstMonthDate = firstDayOfMonth(dt,this.intlService.localeIdByDatePickerType);
+    const dt = this.getValue(viewDate).toDate();
+    const firstMonthDate = firstDayOfMonth(dt, this.intlService.localeIdByDatePickerType);
     const firstMonthDay = getDate(firstMonthDate);
-    const lastMonthDate = lastDayOfMonth(dt,this.intlService.localeIdByDatePickerType);
+    const lastMonthDate = lastDayOfMonth(dt, this.intlService.localeIdByDatePickerType);
     const lastMonthDay = getDate(lastMonthDate);
     const backward = -1;
     const isSelectedDateInRange = moment(selectedDate).isBetween(min, max);

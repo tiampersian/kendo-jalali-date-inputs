@@ -324,8 +324,10 @@
     </svg>
   </a>
 </div>
-
+<button (click)="reload()"
+        style="position: fixed;bottom: 0;left: 0;">reload</button>
 <div class="content"
+     *ngIf="rerender"
      role="main">
 
   <!-- Highlight Card -->
@@ -414,8 +416,13 @@
 
     </div>
   </div>
+  <div class="col-xs-12 col-md-6 example-col">
+
+    <p>Calendar</p>
+    <kendo-calendar [(ngModel)]="value"></kendo-calendar>
+  </div>
   <div class="card-container"
-       *ngIf="rerender">
+       *ngIf="false">
     <div class="row example-wrapper"
          *ngIf="1"
          style="min-height: 450px;display: flex;">
