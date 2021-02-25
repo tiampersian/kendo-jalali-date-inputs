@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { MonthViewService } from '@progress/kendo-angular-dateinputs';
 import { CldrIntlService, IntlService } from '@progress/kendo-angular-intl';
 import moment from 'jalali-moment';
-import { getToday, isInSelectionRange, range } from './utils';
+import { firstDayOfMonth, getToday, isInSelectionRange, range, lastDayOfMonth } from './utils';
 import { JalaliCldrIntlService } from './locale.service';
 const EMPTY_DATA = [[]];
 const CELLS_LENGTH = 7;
@@ -27,7 +27,7 @@ export class JalaliMonthViewService extends MonthViewService {
 
   abbrMonthNames2() {
     if (this.intlService.isJalali) {
-       return moment().locale(this.intlService.localeId).localeData().jMonthsShort();
+      return moment().locale(this.intlService.localeId).localeData().jMonthsShort();
     }
     return moment().locale(this.intlService.localeId).localeData().monthsShort();
   }
@@ -49,9 +49,24 @@ export class JalaliMonthViewService extends MonthViewService {
   }
 
   title(current) {
+    console.log(this.abbrMonthNames2()[moment(current).locale(this.intlService.localeIdByDatePickerType).month()])
     return `${this.abbrMonthNames2()[moment(current).locale(this.intlService.localeIdByDatePickerType).month()]} ${moment(current).locale(this.intlService.localeIdByDatePickerType).format('YYYY')}`;
   }
-
+  skip(value, min) {
+    return moment(value).locale(this.intlService.localeIdByDatePickerType).endOf('month').diff(
+      moment(min), 'month'
+    )
+    // return moment(value).diff(min, 'month');
+  }
+  total(min, max) {
+    return moment(max).diff(min, 'month') + 1;
+  }
+  beginningOfPeriod(date) {
+    if (!date) {
+      return date;
+    }
+    return moment(date).locale(this.intlService.localeIdByDatePickerType).startOf('month').toDate();
+  }
   datesList(start, count) {
     return range(0, count).map(i => addMonths(start, i));
   }
@@ -60,10 +75,10 @@ export class JalaliMonthViewService extends MonthViewService {
     if (!viewDate) {
       return EMPTY_DATA;
     }
-    const xx = moment(viewDate).locale(this.intlService.localeIdByDatePickerType);
-    const firstMonthDate = moment(xx).add(-(xx.date() - 1), 'day').toDate();
+    const xx = moment(viewDate).locale(this.intlService.localeIdByDatePickerType).toDate();
+    const firstMonthDate = firstDayOfMonth(xx, this.intlService.localeIdByDatePickerType);
     const firstMonthDay = getDate(firstMonthDate);
-    const lastMonthDate = moment(xx).add(1, 'month').add(-(xx.date()), 'day').toDate();
+    const lastMonthDate = lastDayOfMonth(xx, this.intlService.localeIdByDatePickerType);
     const lastMonthDay = getDate(lastMonthDate);
     const backward = -1;
     const isSelectedDateInRange = moment(selectedDate).isBetween(min, max);

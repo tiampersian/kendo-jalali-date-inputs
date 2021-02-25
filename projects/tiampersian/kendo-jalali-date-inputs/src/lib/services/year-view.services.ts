@@ -22,7 +22,6 @@ export class JalaliYearViewService extends YearViewService {
       return moment().locale(this.intlService.localeId).localeData().jMonthsShort();
     }
     return moment().locale(this.intlService.localeId).localeData().monthsShort();
-
   }
 
   data(options) {

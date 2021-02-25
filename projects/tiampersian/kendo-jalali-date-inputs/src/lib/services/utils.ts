@@ -22,13 +22,18 @@ export const isInRange = (dt, min, max) => {
   return moment(dt).isBetween(min, max);
 }
 export const firstYearOfDecade = (dt, localeId) => {
-  const x = moment(dt).locale(localeId).year();
-  return moment(dt).locale(localeId).add(-(x % 10), 'year').toDate();
+  const year = moment(dt).locale(localeId).year();
+  return moment(dt).locale(localeId).add(-(year % 10), 'year').toDate();
 }
 export const lastYearOfDecade = (dt, localeId) => {
-  const x = moment(dt).locale(localeId).year();
-  return moment(dt).locale(localeId).add((10 - (x % 10)), 'year').toDate();
-
+  const year = moment(dt).locale(localeId).year();
+  return moment(dt).locale(localeId).add((10 - (year % 10)), 'year').toDate();
+}
+export const firstDayOfMonth = (dt, localeId) => {
+  return moment(dt).locale(localeId).startOf('month').toDate();
+}
+export const lastDayOfMonth = (dt, localeId) => {
+  return moment(dt).locale(localeId).endOf('month').toDate();
 }
 // export const addMonths2 = (date, offset) => {
 //   var newDate = moment(date).toDate();
