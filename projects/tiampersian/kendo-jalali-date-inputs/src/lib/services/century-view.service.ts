@@ -36,7 +36,6 @@ export class JalaliCenturyViewService extends CenturyViewService {
     if (!viewDate) {
       return EMPTY_DATA;
     }
-    console.log(super.data(options))
     const cells = range(0, CELLS_LENGTH);
     const firstDate = firstDecadeOfCentury(viewDate, this.intlService.localeIdByDatePickerType);
     const lastDate = lastDecadeOfCentury(viewDate, this.intlService.localeIdByDatePickerType);
@@ -73,7 +72,6 @@ export class JalaliCenturyViewService extends CenturyViewService {
       });
     });
 
-    console.log(data);
     return data;
   }
 

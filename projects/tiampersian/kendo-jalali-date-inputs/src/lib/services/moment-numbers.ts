@@ -1,7 +1,23 @@
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import moment from 'jalali-moment';
+declare global {
+  interface String {
+    toPerNumber(): string;
+    toEnNumber(): string;
+  }
+}
 
-const symbolMap = {
+String.prototype.toPerNumber = function () {
+  return this.replace(/\d/g, (match) => {
+    return enToPerNumberMap[match] || match;
+  })
+}
+String.prototype.toEnNumber = function () {
+  return this.replace(/[١٢٣٤٥٦٧٨٩٠]/g, (match) => {
+    return perToEnNumberMap[match] || match;
+  })
+}
+export const enToPerNumberMap = {
   '1': '١',
   '2': '٢',
   '3': '٣',
@@ -13,7 +29,7 @@ const symbolMap = {
   '9': '٩',
   '0': '٠'
 };
-const numberMap = {
+export const perToEnNumberMap = {
   '١': '1',
   '٢': '2',
   '٣': '3',
@@ -50,7 +66,7 @@ export class MomentNumberService {
       }
       let result = te.call(this, format);
       result = result.replace(/\d/g, function (match) {
-        return symbolMap[match];
+        return enToPerNumberMap[match];
       }).replace(/,/g, '،')
       return result;
     };

@@ -49,7 +49,6 @@ export class JalaliMonthViewService extends MonthViewService {
   }
 
   title(current) {
-    console.log(this.abbrMonthNames2()[moment(current).locale(this.intlService.localeIdByDatePickerType).month()])
     return `${this.abbrMonthNames2()[moment(current).locale(this.intlService.localeIdByDatePickerType).month()]} ${moment(current).locale(this.intlService.localeIdByDatePickerType).format('YYYY')}`;
   }
   skip(value, min) {
