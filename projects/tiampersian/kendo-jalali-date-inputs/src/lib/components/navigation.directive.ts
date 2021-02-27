@@ -1,4 +1,4 @@
-import { Directive, Inject, Self, SkipSelf } from '@angular/core';
+import { ChangeDetectorRef, Directive, Inject, Self, SkipSelf } from '@angular/core';
 import { NavigationComponent } from '@progress/kendo-angular-dateinputs';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Providers } from '../providers';
@@ -21,11 +21,13 @@ export class KendoDatePickerDirective {
   constructor(
     @Inject(IntlService) @Self() intlService: JalaliCldrIntlService,
     @Inject(IntlService) @SkipSelf() hostIntlService: JalaliCldrIntlService,
-    @Inject('HeaderTitleTemplate') headerTitleTemplate
+    @Inject('HeaderTitleTemplate') headerTitleTemplate,
+    private cdr: ChangeDetectorRef
   ) {
     hostIntlService.changes.pipe(debounceTime(30)).subscribe(x => {
       intlService.changeLocaleId(hostIntlService.localeId);
       intlService.changeType(hostIntlService.datePickerType);
+      this.cdr.detectChanges();
     });
   }
 }

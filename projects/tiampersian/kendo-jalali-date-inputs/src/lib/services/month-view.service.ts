@@ -51,12 +51,14 @@ export class JalaliMonthViewService extends MonthViewService {
   title(current) {
     return `${this.abbrMonthNames2()[moment(current).locale(this.intlService.localeIdByDatePickerType).month()]} ${moment(current).locale(this.intlService.localeIdByDatePickerType).format('YYYY')}`;
   }
+
   skip(value, min) {
-    return moment(value).locale(this.intlService.localeIdByDatePickerType).endOf('month').diff(
-      moment(min), 'month'
+    const diff = moment(value).locale(this.intlService.localeIdByDatePickerType).endOf('month').diff(
+      moment(min).locale(this.intlService.localeIdByDatePickerType).startOf('month'), 'month'
     )
-    // return moment(value).diff(min, 'month');
+    return diff;
   }
+
   total(min, max) {
     return moment(max).diff(min, 'month') + 1;
   }

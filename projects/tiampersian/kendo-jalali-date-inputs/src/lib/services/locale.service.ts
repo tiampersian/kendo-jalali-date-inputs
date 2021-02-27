@@ -1,5 +1,6 @@
 import { Inject, Injectable, LOCALE_ID, Optional } from '@angular/core';
 import { CldrIntlService } from '@progress/kendo-angular-intl';
+import { Subject } from 'rxjs';
 import { NumberPipe } from '../pipes/number.pipe';
 import {
   MomentNumberService
@@ -16,6 +17,7 @@ export class JalaliCldrIntlService extends CldrIntlService {
   datePickerType: DatePickerType;
   localeIdByDatePickerType = '';
   defaultTitleTemplate: any;
+  $calendarType=new Subject();
 
   constructor(
     @Inject(LOCALE_ID) private originalLocaleId: string,
@@ -50,6 +52,7 @@ export class JalaliCldrIntlService extends CldrIntlService {
     const tem = super.localeId;
     this.changeLocaleId('en');
     this.changeLocaleId(tem);
+    this.$calendarType.next(this.localeIdByDatePickerType);
   }
 
   changeLocaleId(value): void {
