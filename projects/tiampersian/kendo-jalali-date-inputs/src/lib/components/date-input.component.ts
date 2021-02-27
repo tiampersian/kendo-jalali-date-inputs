@@ -35,15 +35,12 @@ DateInputComponent.prototype['updateElementValue'] = function (isActive: boolean
   let value = this.intl.parseDate(this.currentValue, this.inputFormat) || this.currentValue;
   const localeId = this.intl.localeIdByDatePickerType;
   if (moment.isDate(value)) {
-    let _format = (formats[this.intl.locale] ? formats[this.intl.locale][format] : formats[format]) || format;
-
-    _format = _format.replace(/\w/g, function (match) {
-      if (!symbolMap[match]) {
-        return match;
-      }
-      return symbolMap[match];
-    })
-    this.renderer.setProperty(input, 'value', moment(value).locale(localeId).format(_format));
+    // let _format = (formats[this.intl.locale] ? formats[this.intl.locale][format] : formats[format]) || format;
+    // _format = _format.replace(/\w/g, function (match) {
+    //   if (!symbolMap[match]) {  return match;  }
+    //   return symbolMap[match];
+    // })
+    setInputValue.call(this, value, localeId);
   } else {
     this.renderer.setProperty(input, 'value', this.currentValue);
   }
@@ -56,7 +53,9 @@ DateInputComponent.prototype['updateElementValue'] = function (isActive: boolean
 };
 const oldHandleInput = DateInputComponent.prototype['handleInput']
 DateInputComponent.prototype['handleInput'] = function () {
-  if (this.disabled || this.readonly) {
+  const me: DateInputComponent = this;
+
+  if (me.disabled || me.readonly) {
     return;
   }
   if (this.paste) {
@@ -64,13 +63,8 @@ DateInputComponent.prototype['handleInput'] = function () {
     this.paste = false;
     return;
   }
-  const me: DateInputComponent = this;
   const intl = (this.intl as JalaliCldrIntlService);
-  const diff = approximateStringMatching(this.currentValue, this.currentFormat, this.inputValue, this.caret()[0]);
-debugger
-  if (intl.localeId === 'fa-IR') {
-    me.inputElement.value = (me.inputElement.value as string).toPerNumber();
-  }
+  let diff = [];
 
   let _format: string = (formats[this.intl.locale] ? formats[this.intl.locale][this.format] : formats[this.format]) || this.format;
   _format = _format.replace(/\w/g, function (match) {
@@ -79,12 +73,16 @@ debugger
     }
     return symbolMap[match];
   });
-  const currentValue = moment.from((this.inputValue as string).toEnNumber(), 'fa', _format.toUpperCase());
+  let locale = intl.localeIdByDatePickerType;
+  let currentValue = moment.from((this.inputValue as string).toEnNumber(), 'fa', _format.toUpperCase());
+
+  diff = approximateStringMatching(this.currentValue, this.currentFormat, this.inputValue.toEnNumber(), this.caret()[0])
   const currentValueAsEn = moment(currentValue.toDate()).locale('en');
-  this.inputElement.value = currentValueAsEn.format('YYYY/MM/DD').toEnNumber();
+  // this.inputElement.value = currentValueAsEn.format('YYYY/MM/DD').toEnNumber();
   // const diff = approximateStringMatching(this.currentValue, this.currentFormat, this.inputValue, this.caret()[0]);
-  debugger
-  if (intl.localeIdByDatePickerType === 'fa') {
+
+  if (locale === 'fa') {
+    setInputValue.call(this, currentValue.toDate(), 'en');
     diff.forEach(x => {
       if ((x[0] as string).toLocaleLowerCase() === 'm') {
         x[1] = currentValueAsEn.format('MM').toEnNumber();
@@ -125,81 +123,11 @@ debugger
     this.switchDateSegment(-1);
   }
   this.backspace = false;
-}
-DateInputComponent.prototype['handleInput2'] = function () {
-  const me: DateInputComponent = this;
-  if ((this.intl as JalaliCldrIntlService).localeId === 'fa-IR') {
+  if (intl.localeId === 'fa-IR') {
     me.inputElement.value = (me.inputElement.value as string).toPerNumber();
   }
-  if ((this.intl as JalaliCldrIntlService).localeIdByDatePickerType !== 'fa') {
-    oldHandleInput.call(this);
-    return;
-  }
-
-  if (!moment((this.inputValue as string).toEnNumber()).locale('fa').isValid()) {
-    oldHandleInput.call(this);
-    return;
-  }
-
-  const caret = this.caret()[0];
-
-  let _format: string = (formats[this.intl.locale] ? formats[this.intl.locale][this.format] : formats[this.format]) || this.format;
-  _format = _format.replace(/\w/g, function (match) {
-    if (!symbolMap[match]) {
-      return match;
-    }
-    return symbolMap[match];
-  });
-  const currentValue = moment.from((this.inputValue as string).toEnNumber(), 'fa', _format.toUpperCase());
-  const currentValueAsEn = moment(currentValue.toDate()).locale('en');
-  me.inputElement.value = currentValueAsEn.format('YYYY/MM/DD').toEnNumber();
-
-  this.kendoDate = this.getKendoDate(currentValue.toDate());
-  // if (moment((this.inputValue as string).toEnNumber()).locale('fa').isValid()) {
-  //   this.writeValue(currentValue.toDate());
-  //   this.putDateInRange();
-  //   this.triggerChange();
-  //   this.updateIncompleteValidationStatus();
-  //   this.notify();
-  //   return;
-  // }
-  // const diff = approximateStringMatching(this.currentValue, this.currentFormat, this.inputValue, this.caret()[0]);
-  // const d = (diff[0] && diff[0][0] as string)?.toLowerCase();
-  const diff = ['d', '26'];
-
-  let parsedPart;
-  let switchPart;
-  for (let i = 0; i < diff.length; i++) {
-    parsedPart = this.kendoDate.parsePart(diff[i][0], diff[i][1], this.resetSegmentValue);
-    switchPart = parsedPart.switchToNext;
-  }
-  const candidate = this.kendoDate.getDateObject();
-  if (this.value && candidate && !this.formatSections.date) {
-    this.kendoDate = this.getKendoDate(setTime(this.value, candidate));
-  }
-  if (switchPart) {
-    this.switchDateSegment(1);
-  }
-  // if (currentValue.locale('fa').month() > currentValueAsEn.month()) {
-  //   (me.inputElement as HTMLInputElement).selectionStart--;
-  //   (me.inputElement as HTMLInputElement).selectionEnd--;
-  // } else if (currentValue.locale('fa').month() > currentValueAsEn.month()) {
-  //   (me.inputElement as HTMLInputElement).selectionStart++;
-  //   (me.inputElement as HTMLInputElement).selectionEnd++;
-  // }
-  // if (currentValue.locale('fa').date() < currentValueAsEn.date()) {
-  //   (me.inputElement as HTMLInputElement).selectionStart--;
-  //   (me.inputElement as HTMLInputElement).selectionEnd--;
-  // } else if (currentValue.locale('fa').date() > currentValueAsEn.date()) {
-  //   (me.inputElement as HTMLInputElement).selectionStart++;
-  //   (me.inputElement as HTMLInputElement).selectionEnd++;
-  // }
-  // (me.inputElement as HTMLInputElement).selectionStart = 8;
-  // (me.inputElement as HTMLInputElement).selectionEnd = 8;
-  locale = 'en';
-  oldHandleInput.call(this);
-  locale = '';
 }
+
 // const oldHandleKeydown = DateInputComponent.prototype['handleKeydown']
 // DateInputComponent.prototype['handleKeydown'] = function (event) {
 //   oldHandleKeydown.call(this, event);
@@ -213,6 +141,9 @@ export const getTextAndFormat = (value: Date, format: string, localeId: string) 
     return format;
   }
   const m = moment(value);
+  if (moment(value).format('y').length < 4) {
+    localeId='en'
+  }
   const dt = moment(value).locale(localeId);
   const MAX_VALUE = 9;
   if ((dt.date() > MAX_VALUE) !== (m.date() > MAX_VALUE)) {
@@ -294,3 +225,15 @@ export const setTime = (origin, candidate) => {
   date.setHours(candidate.getHours(), candidate.getMinutes(), candidate.getSeconds(), candidate.getMilliseconds());
   return date;
 };
+function setInputValue(value: Date, localeId: any) {
+  const f = (this.currentFormat as string).replace(/d/g, 'D').replace(/_/g, '/');
+  if (moment(value).format('y').length < 4) {
+    const dt = moment.from((this.inputValue as string).toEnNumber(), 'en', f);
+    this.currentFormat = this.kendoDate.dateFormatString(dt.toDate(), this.format).symbols.replace(/_/g, '/');
+    this.renderer.setProperty(this.inputElement, 'value', dt.format(f));
+    return;
+  }
+  const m = moment(value).locale(localeId);
+  this.renderer.setProperty(this.inputElement, 'value', m.format(f));
+}
+
