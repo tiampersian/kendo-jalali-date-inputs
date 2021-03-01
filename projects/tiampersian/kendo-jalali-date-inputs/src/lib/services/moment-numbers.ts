@@ -4,7 +4,7 @@ declare global {
   interface String {
     toPerNumber(): string;
     toEnNumber(): string;
-    toDateTimeFormat(): string;
+    toMomentDateTimeFormat(): string;
   }
 }
 
@@ -18,8 +18,8 @@ String.prototype.toEnNumber = function () {
     return perToEnNumberMap[match] || match;
   })
 }
-String.prototype.toDateTimeFormat = function () {
-  return this.replace(/d/g, 'D').replace(/_/g, '/')
+String.prototype.toMomentDateTimeFormat = function () {
+  return this.replace(/d/g, 'D').replace(/aa/ig, (m) => m[0]).replace(/_/g, '/')
 }
 export const enToPerNumberMap = {
   '1': '١',
