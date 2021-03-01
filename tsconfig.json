@@ -16,6 +16,12 @@
       "es2018",
       "dom"
     ],
+    "types": [
+      "node"
+    ],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
     "paths": {
       "@tiampersian/kendo-jalali-date-inputs": [
         "projects/tiampersian/kendo-jalali-date-inputs/src/public-api.ts"
