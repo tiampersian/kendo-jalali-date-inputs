@@ -106,7 +106,7 @@ function dateFormatString(date, format) {
   const parts = [];
   const partMap = [];
   for (let i = 0; i < dateFormatParts.length; i++) {
-    let partLength = getValue.call(this, date).format(dateFormatParts[i].pattern?.toUpperCase()).length
+    let partLength = getValue.call(this, date).format(dateFormatParts[i].pattern?.replace(/d/g, 'D')).length
     // this.kendoDate.intl.formatDate(date, { pattern: dateFormatParts[i].pattern }).length;
     while (partLength > 0) {
       parts.push(this.kendoDate.symbols[dateFormatParts[i].pattern[0]] || "_");
@@ -276,8 +276,11 @@ export const setTime = (origin, candidate) => {
 export const isPresent = (value) => value !== undefined && value !== null;
 
 function setInputValue(value: Date, localeId: any) {
-  // const m = getDateFormatString2.call(this, this.hasFormat ? this.currentFormat : this.format, localeId, value);
-  this.renderer.setProperty(this.inputElement, 'value', getValue.call(this, value, localeId).format(this.format.toUpperCase()));
+  let format = this.format;
+  if (['d', 't', 'g'].some(x => x == format)) {
+    format = this.currentFormat.toDateTimeFormat();
+  }
+  this.renderer.setProperty(this.inputElement, 'value', getValue.call(this, value, localeId).format(format));
 }
 
 function getValue(value: Date | string, localeId?: string) {
@@ -290,5 +293,4 @@ function resetExistingInputs() {
   existInputs.m = false;
   existInputs.d = false;
   existInputs.y = false;
-  window['counter'] = 0;
 }
