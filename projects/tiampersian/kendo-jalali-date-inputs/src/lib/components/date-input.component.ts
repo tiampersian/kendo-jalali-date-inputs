@@ -280,7 +280,7 @@ function setInputValue(value: Date, localeId: any) {
   if (['d', 't', 'g'].some(x => x == format)) {
     format = this.currentFormat.toDateTimeFormat();
   }
-  this.renderer.setProperty(this.inputElement, 'value', getValue.call(this, value, localeId).format(format));
+  this.renderer.setProperty(this.inputElement, 'value', getValue.call(this, value, localeId).format(format.replace(/d/g, 'D')));
 }
 
 function getValue(value: Date | string, localeId?: string) {
