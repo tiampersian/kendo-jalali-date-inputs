@@ -20,14 +20,17 @@ DateInputComponent.prototype['updateElementValue'] = function (isActive: boolean
   const localeId = (this.intl as JalaliCldrIntlService).localeIdByDatePickerType;
   const showPlaceholder = !this.isActive && isPresent(this.placeholder) && !this.kendoDate.hasValue();
   const input = this.inputElement;
-  // const texts = this.kendoDate.getTextAndFormat(format);
+  const texts = this.kendoDate.getTextAndFormat(format);
   this.currentFormat = getDateFormatString.call(this, format, localeId);
-  this.currentValue = !showPlaceholder ? this.intl.formatDate(this.kendoDate.value, format) : '';
+  // this.currentValue = !showPlaceholder ? this.intl.formatDate(this.kendoDate.value, format) : '';
+  this.currentValue = !showPlaceholder ? texts[0] : '';
   let value = this.intl.parseDate(this.currentValue, this.inputFormat) || this.currentValue;
-  if (moment.isDate(value)) {
-    setInputValue.call(this, value, localeId);
+  if (this.kendoDate.hasValue()) {
+    setInputValue.call(this, this.kendoDate.value, localeId);
   } else {
     this.renderer.setProperty(input, 'value', this.currentValue);
+    this.currentFormat = texts[1];
+
   }
   if (input.placeholder !== '' + this.placeholder) {
     this.renderer.setProperty(input, "placeholder", this.placeholder);
@@ -139,15 +142,17 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
   if (intl.localeIdByDatePickerType !== 'fa') {
     return;
   }
+  if (!this.kendoDate.hasValue()) {
+    this.kendoDate.value = (MIN_JALALI_DATE.clone().toDate());
+  }
   const dt = getValue.call(this, this.kendoDate.value, 'fa');
   if (!dt) {
     return;
   }
-  if (debuggerCounter(1)) { }
+  if (debuggerCounter(3)) { debugger }
 
   diff.forEach(d => {
     if (!d[0]) {
-      debugger
       return;
     }
     if ((d[0] as string).toLocaleLowerCase() === 'm') {
@@ -204,18 +209,22 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
     }
   });
 }
-const MIN_DATE_FA = moment.from('0001-01-01', 'fa', 'YYYY/MM/DD').diff(moment('0001-01-01'), 'year') + 1;
+const MIN_JALALI_DATE = moment.from('0001-01-01', 'fa', 'YYYY/MM/DD');
+const MIN_DATE_FA = moment(MIN_JALALI_DATE).diff(moment('0001-01-01'), 'year') + 1;
 
 function prepareYearValue(diff: any[]) {
 
   if (!diff[1]) {
+    // this.kendoDate.value = moment(this.kendoDate.value).year(MIN_DATE_FA).toDate();
     debugger
-
-    return diff[1];
+    return '';
   }
+  this.kendoDate.year = true;;
+
   var temp = +diff[1];
   if (!existInputs.y || !temp || moment(this.value).locale('en').format('y').length > 3) {
     existInputs.y = true;
+    diff[2] = false
     return '' + ((+diff[1]) + MIN_DATE_FA);
   }
 
