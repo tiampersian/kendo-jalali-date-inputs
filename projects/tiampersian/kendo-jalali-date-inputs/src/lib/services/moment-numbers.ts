@@ -4,6 +4,7 @@ declare global {
   interface String {
     toPerNumber(): string;
     toEnNumber(): string;
+    toDateTimeFormat(): string;
   }
 }
 
@@ -16,6 +17,9 @@ String.prototype.toEnNumber = function () {
   return this.replace(/[١٢٣٤٥٦٧٨٩٠]/g, (match) => {
     return perToEnNumberMap[match] || match;
   })
+}
+String.prototype.toDateTimeFormat = function () {
+  return this.replace(/d/g, 'D').replace(/_/g, '/')
 }
 export const enToPerNumberMap = {
   '1': '١',
@@ -59,8 +63,10 @@ export class MomentNumberService {
 
   init() {
     const me = this;
+    moment.localeData().months()
     const te = moment.fn.format;
     (<any>moment).fn.format = function (format) {
+
       if (me.localeId !== 'fa-IR') {
         return te.call(this, format);
       }
@@ -70,23 +76,5 @@ export class MomentNumberService {
       }).replace(/,/g, '،')
       return result;
     };
-    // moment.updateLocale('fa', {
-    //   preparse: function (v) {
-    //     if (me.localeId === 'fa-IR') {
-    //       return v;
-    //     }
-    //     return v.replace(/\u200f/g, '').replace(/[١٢٣٤٥٦٧٨٩٠]/g, function (match) {
-    //       return numberMap[match];
-    //     }).replace(/،/g, ',');
-    //   },
-    //   postformat: function (v) {
-    //     if (me.localeId !== 'fa-IR') {
-    //       return v;
-    //     }
-    //     return v.replace(/\d/g, function (match) {
-    //       return symbolMap[match];
-    //     }).replace(/,/g, '،');
-    //   },
-    // })
   }
 }
