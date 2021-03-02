@@ -1,5 +1,5 @@
 import { DateInputComponent } from '@progress/kendo-angular-dateinputs';
-import moment from 'jalali-moment';
+import moment, { Moment } from 'jalali-moment';
 import { JalaliCldrIntlService } from '../services/locale.service';
 
 
@@ -59,18 +59,24 @@ DateInputComponent.prototype['handleInput'] = function () {
   let diff = [];
 
   let prevValue = this.currentValue;
-  if (intl.localeIdByDatePickerType === 'fa') {
-    prevValue = this.value ? getValue.call(this, this.value).format(this.currentFormat.toMomentDateTimeFormat()).toEnNumber() : this.currentValue;
+  const isJalali = intl.localeIdByDatePickerType === 'fa';
+  if (isJalali) {
+    // TODO Check me
+    // prevValue = this.value ? getValue.call(this, this.value).format(this.currentFormat.toMomentDateTimeFormat()).toEnNumber() : this.currentValue;
+    prevValue = this.value ? getValue.call(this, this.value).format(this.format.toMomentDateTimeFormat()).toEnNumber() : this.currentValue;
   }
 
   diff = approximateStringMatching(prevValue, this.currentFormat, this.inputValue.toEnNumber(), this.caret()[0]);
-
+  if (debuggerCounter(2)) {
+    debugger
+  }
   prepareDiffInJalaliMode.call(this, intl, diff);
   const navigationOnly = (diff.length === 1 && diff[0][1] === "_");
   let switchPart = false;
   console.log('diff', diff);
   if (!navigationOnly) {
     let parsedPart;
+
     for (let i = 0; i < diff.length; i++) {
       if (diff[i][2] === undefined) {
         parsedPart = this.kendoDate.parsePart(diff[i][0], diff[i][1], this.resetSegmentValue);
@@ -100,7 +106,7 @@ DateInputComponent.prototype['handleInput'] = function () {
   if (switchPart || navigationOnly) {
     this.switchDateSegment(1);
   }
-  if (this.backspace) {
+  if (this.backspace ) {
     this.switchDateSegment(-1);
   }
   this.backspace = false;
@@ -142,8 +148,14 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
   if (intl.localeIdByDatePickerType !== 'fa') {
     return;
   }
-  if (!this.kendoDate.hasValue()) {
-    this.kendoDate.value = (MIN_JALALI_DATE.clone().toDate());
+  if (!this.inputValue || !this.kendoDate.hasValue()) {
+    this.kendoDate.date = false;
+    this.kendoDate.year = false;
+    this.kendoDate.month = false;
+    this.kendoDate = this.getKendoDate((MIN_JALALI_DATE.clone().toDate()));
+  }
+  if (!this.inputValue) {
+    return;
   }
   const dt = getValue.call(this, this.kendoDate.value, 'fa');
   if (!dt) {
@@ -155,20 +167,25 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
     if (!d[0]) {
       return;
     }
-    if ((d[0] as string).toLocaleLowerCase() === 'm') {
 
+    d[2] = false;
+    if ((d[0] as string).toLocaleLowerCase() === 'm') {
+      this.kendoDate.month = d[1] != '';
+      if (d[1] === '') {
+        existInputs.m = false;
+        this.kendoDate = this.getKendoDate(dt.month((+d[1])).toDate());
+        return '';
+      }
       let month = d[1];
       if (existInputs.m) {
         d[2] = true;
         month = +(dt.month() + 1) + d[1];
-        if (!this.kendoDate.month) {
-          month = 0 + d[1];
-        }
         resetExistingInputs();
       } else {
         d[2] = +month > 1;
         existInputs.m = !d[2];
       }
+      // TODO check me
       if (month === '0') {
         d[3] = dt.set('month', 0).toDate();
         d[4] = 'month';
@@ -181,13 +198,19 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
       return;
     }
     if ((d[0] as string).toLocaleLowerCase() === 'd') {
+      if (d[1] === '') {
+        existInputs.d = false;
+        this.kendoDate = this.getKendoDate(dt.date((+d[1])).toDate());
+        return '';
+      }
+      this.kendoDate.date = true;;
       let day = d[1];
       if (existInputs.d) {
         d[2] = true;
         day = +(dt.date()) + d[1];
-        if (!this.kendoDate.date) {
-          day = 0 + d[1];
-        }
+        // if (!this.kendoDate.date) {
+        //   day = 0 + d[1];
+        // }
         resetExistingInputs();
       } else {
         d[2] = +day > 3;
@@ -205,46 +228,42 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
       return;
     }
     if (d[0].toLocaleLowerCase() === 'y') {
-      d[1] = prepareYearValue.call(this, d);
+      d[1] = prepareYearValue.call(this, d, dt);
     }
   });
 }
-const MIN_JALALI_DATE = moment.from('0001-01-01', 'fa', 'YYYY/MM/DD');
-const MIN_DATE_FA = moment(MIN_JALALI_DATE).diff(moment('0001-01-01'), 'year') + 1;
+const MIN_JALALI_DATE = moment.from('0000-01-01', 'fa', 'YYYY/MM/DD');
+// TODO check +1
+const MIN_DATE_FA = moment(MIN_JALALI_DATE).diff(moment('0000-01-01'), 'year') + 1;
 
-function prepareYearValue(diff: any[]) {
-
-  if (!diff[1]) {
-    // this.kendoDate.value = moment(this.kendoDate.value).year(MIN_DATE_FA).toDate();
-    debugger
+function prepareYearValue(diff: any[], dt) {
+  diff[2] = false
+  this.kendoDate.year = false;;
+  if (diff[1] === '') {
+    existInputs.y = false;
+    this.kendoDate = this.getKendoDate(dt.year((+diff[1])).toDate());
     return '';
   }
-  this.kendoDate.year = true;;
-
-  var temp = +diff[1];
-  if (!existInputs.y || !temp || moment(this.value).locale('en').format('y').length > 3) {
+  this.kendoDate.year = true;
+  if (!existInputs.y || dt.format('y').length > 3) {
     existInputs.y = true;
-    diff[2] = false
-    return '' + ((+diff[1]) + MIN_DATE_FA);
+    this.kendoDate = this.getKendoDate(dt.year((+diff[1])).toDate());
+    return diff[1] === '' ? '' : dt.format('y');
   }
 
-  const yearsInGregorian = '' + (+('' + (this.value.getFullYear() % MIN_DATE_FA) + temp) + MIN_DATE_FA);
-  const current = yearsInGregorian.slice(0, yearsInGregorian.length - 1);
-  this.kendoDate.value = (moment(this.kendoDate.value).year(+current).toDate());
-  if (!(this.kendoDate.value as Date).getTime()) {
-    debugger
-  }
-  if (yearsInGregorian.length > 3) {
+  this.kendoDate.value = dt.year(+(dt.year() + diff[1])).toDate();
+
+  if (dt.format('y').length > 3) {
     resetExistingInputs();
     diff[2] = true;
   }
-  return yearsInGregorian.slice(yearsInGregorian.length - 1);
+  return dt.format('y');
 }
 
 export function getDateFormatString(format: string, localeId: string, value?: Date) {
   const dt = getValue.call(this, (value || this.kendoDate.value), localeId)?.toDate();
   return dateFormatString.call(this, dt, format, localeId)?.symbols || '';
-}
+};
 
 export const approximateStringMatching = (oldTextOrigin, oldFormat, newTextOrigin, caret) => {
   // Remove the right part of the cursor.
@@ -312,14 +331,9 @@ function setInputValue(value: Date, localeId: any) {
   this.renderer.setProperty(this.inputElement, 'value', getValue.call(this, value, localeId).format(format.replace(/d/g, 'D')));
 }
 
-// function excludeFromFormat(format: string, item: string) {
-//   return format.replace(new RegExp(item, 'gi'), '').replace('//', '/').replace(/^\//, '');
-// }
+function getValue(value: Date | string, localeId?: string): Moment {
+  if (!value) { return null; }
 
-function getValue(value: Date | string, localeId?: string) {
-  if (!value) {
-    return null;
-  }
   let formatter = (localeId || this.intl.localeIdByDatePickerType) == 'fa' ? 'doAsJalali' : 'doAsGregorian';
   return moment(value).locale(this.intl.localeId)[formatter]();
 }
@@ -330,6 +344,7 @@ function resetExistingInputs() {
   existInputs.d = false;
   existInputs.y = false;
 }
+
 window['counter'] = 0;
 function debuggerCounter(counter) {
   const result = window['counter'] === counter;
