@@ -1,6 +1,7 @@
 import { DateInputComponent } from '@progress/kendo-angular-dateinputs';
 import moment, { Moment } from 'jalali-moment';
 import { JalaliCldrIntlService } from '../services/locale.service';
+import { reverseString } from '../services/moment-numbers';
 
 
 const existInputs = {
@@ -21,16 +22,19 @@ DateInputComponent.prototype['updateElementValue'] = function (isActive: boolean
   const showPlaceholder = !this.isActive && isPresent(this.placeholder) && !this.kendoDate.hasValue();
   const input = this.inputElement;
   const texts = this.kendoDate.getTextAndFormat(format);
-  this.currentFormat = getDateFormatString.call(this, format, localeId);
   // this.currentValue = !showPlaceholder ? this.intl.formatDate(this.kendoDate.value, format) : '';
   this.currentValue = !showPlaceholder ? texts[0] : '';
-  let value = this.intl.parseDate(this.currentValue, this.inputFormat) || this.currentValue;
+
+  this.currentFormat = texts[1];
+  if ((this.intl as JalaliCldrIntlService).isJalali) {
+  }
+  this.currentFormat = getDateFormatString.call(this, format, localeId);
+
   if (this.kendoDate.hasValue()) {
     setInputValue.call(this, this.kendoDate.value, localeId);
   } else {
     this.renderer.setProperty(input, 'value', this.currentValue);
     this.currentFormat = texts[1];
-
   }
   if (input.placeholder !== '' + this.placeholder) {
     this.renderer.setProperty(input, "placeholder", this.placeholder);
@@ -41,10 +45,12 @@ DateInputComponent.prototype['updateElementValue'] = function (isActive: boolean
 };
 const oldHandleInput = DateInputComponent.prototype['handleInput'];
 DateInputComponent.prototype['handleInput'] = function () {
-  if (window['useOld']) {
-    oldHandleInput.call(this);
-    return;
-  }
+  const intl = (this.intl as JalaliCldrIntlService);
+
+  // if (!intl.isJalali) {
+  //   oldHandleInput.call(this);
+  //   return;
+  // }
   const me: DateInputComponent = this;
 
   if (me.disabled || me.readonly) {
@@ -55,21 +61,16 @@ DateInputComponent.prototype['handleInput'] = function () {
     this.paste = false;
     return;
   }
-  const intl = (this.intl as JalaliCldrIntlService);
   let diff = [];
 
   let prevValue = this.currentValue;
-  const isJalali = intl.localeIdByDatePickerType === 'fa';
-  if (isJalali) {
+  if (intl.isJalali) {
     // TODO Check me
-    // prevValue = this.value ? getValue.call(this, this.value).format(this.currentFormat.toMomentDateTimeFormat()).toEnNumber() : this.currentValue;
-    prevValue = this.value ? getValue.call(this, this.value).format(this.format.toMomentDateTimeFormat()).toEnNumber() : this.currentValue;
+    prevValue = this.value ? getValue.call(this, this.value).format(dateFormatString.call(this, this.value, this.format, 'fa').format).toEnNumber() : this.currentValue;
+    // prevValue = this.value ? getValue.call(this, this.value).format(this.format.toMomentDateTimeFormat()).toEnNumber() : this.currentValue;
   }
 
   diff = approximateStringMatching(prevValue, this.currentFormat, this.inputValue.toEnNumber(), this.caret()[0]);
-  if (debuggerCounter(2)) {
-    debugger
-  }
   prepareDiffInJalaliMode.call(this, intl, diff);
   const navigationOnly = (diff.length === 1 && diff[0][1] === "_");
   let switchPart = false;
@@ -106,36 +107,30 @@ DateInputComponent.prototype['handleInput'] = function () {
   if (switchPart || navigationOnly) {
     this.switchDateSegment(1);
   }
-  if (this.backspace ) {
+  if (this.backspace) {
     this.switchDateSegment(-1);
   }
   this.backspace = false;
-  if (intl.localeId === 'fa-IR') {
+  if (intl.isLocaleIran) {
     me.inputElement.value = (me.inputElement.value as string).toPerNumber();
   }
 };
 
-class Mask {
-  symbols = "";
-  partMap;
-}
-
-function dateFormatString(date, format) {
+function dateFormatString(date, format): { format: string, symbol: string } {
   const dateFormatParts = this.kendoDate.intl.splitDateFormat(format);
   const parts = [];
   const partMap = [];
+  const partSymbols = [];
   for (let i = 0; i < dateFormatParts.length; i++) {
     let partLength = getValue.call(this, date)?.format(dateFormatParts[i].pattern?.replace(/d/g, 'D')).length || 0;
     while (partLength > 0) {
-      parts.push(this.kendoDate.symbols[dateFormatParts[i].pattern[0]] || "_");
+      parts.push(this.kendoDate.symbols[dateFormatParts[i].pattern[0]] || dateFormatParts[i].pattern[0] || "_");
+      partSymbols.push(this.kendoDate.symbols[dateFormatParts[i].pattern[0]] || "_");
       partMap.push(dateFormatParts[i]);
       partLength--;
     }
   }
-  const returnValue = new Mask();
-  returnValue.symbols = parts.join("");
-  returnValue.partMap = partMap;
-  return returnValue;
+  return { format: parts.join(""), symbol: partSymbols.join("") };
 }
 
 const oldHandleBlur = DateInputComponent.prototype['handleBlur'];
@@ -183,14 +178,14 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
         resetExistingInputs();
       } else {
         d[2] = +month > 1;
-        existInputs.m = !d[2];
+        existInputs.m = true;
       }
-      // TODO check me
-      if (month === '0') {
-        d[3] = dt.set('month', 0).toDate();
-        d[4] = 'month';
-        return;
-      }
+      // // TODO check me
+      // if (month === '0') {
+      //   d[3] = dt.set('month', 0).toDate();
+      //   d[4] = 'month';
+      //   return;
+      // }
 
       this.kendoDate.value = (dt.set('month', month - 1).toDate());
       d[1] = '' + (dt.locale('en').month() + 1);
@@ -214,13 +209,13 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
         resetExistingInputs();
       } else {
         d[2] = +day > 3;
-        existInputs.d = !d[2];
+        existInputs.d = true;
       }
-      if (day === '0') {
-        d[3] = dt.set('date', 1).toDate();
-        d[4] = 'date';
-        return;
-      }
+      // if (day === '0') {
+      //   d[3] = dt.set('date', 1).toDate();
+      //   d[4] = 'date';
+      //   return;
+      // }
       dt.set('date', +day);
       this.kendoDate.value = (dt.toDate());
 
@@ -260,9 +255,9 @@ function prepareYearValue(diff: any[], dt) {
   return dt.format('y');
 }
 
-export function getDateFormatString(format: string, localeId: string, value?: Date) {
+export function getDateFormatString(format: string, localeId: string, value?: Date): string {
   const dt = getValue.call(this, (value || this.kendoDate.value), localeId)?.toDate();
-  return dateFormatString.call(this, dt, format, localeId)?.symbols || '';
+  return dateFormatString.call(this, dt, format, localeId).symbol || '';
 };
 
 export const approximateStringMatching = (oldTextOrigin, oldFormat, newTextOrigin, caret) => {
@@ -328,7 +323,11 @@ function setInputValue(value: Date, localeId: any) {
   if (['d', 't', 'g'].some(x => x == format)) {
     format = this.currentFormat.toMomentDateTimeFormat();
   }
-  this.renderer.setProperty(this.inputElement, 'value', getValue.call(this, value, localeId).format(format.replace(/d/g, 'D')));
+  const result = getValue.call(this, value, localeId);
+  if (this.intl.isLocaleIran && format.search('MMM') > -1) {
+    format = format.replace('MMM', reverseString(result.format('MMM')));
+  }
+  this.renderer.setProperty(this.inputElement, 'value', result.format(format.replace(/d/g, 'D')));
 }
 
 function getValue(value: Date | string, localeId?: string): Moment {

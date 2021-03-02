@@ -36,4 +36,8 @@
       }
     }
   }
+
+  kendo-dateinput input{
+    unicode-bidi: bidi-override;
+  }
 }

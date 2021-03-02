@@ -1,5 +1,6 @@
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import moment from 'jalali-moment';
+import { IConfig } from '../models/config.model';
 declare global {
   interface String {
     toPerNumber(): string;
@@ -45,13 +46,15 @@ export const perToEnNumberMap = {
   '٩': '9',
   '٠': '0'
 }
+export const reverseString = str => [...str].reverse().join('');
 
 @Injectable()
 export class MomentNumberService {
   localeId: string;
 
   constructor(
-    @Inject(LOCALE_ID) localeId: string
+    @Inject(LOCALE_ID) localeId: string,
+    @Inject('CONFIGS') private configs: IConfig
   ) {
     this.setLocaleId(localeId);
     this.init()
@@ -62,6 +65,9 @@ export class MomentNumberService {
   }
 
   init() {
+    if (this.configs?.usePersianNumber === false) {
+      return;
+    }
     const me = this;
     moment.localeData().months()
     const te = moment.fn.format;
@@ -70,10 +76,9 @@ export class MomentNumberService {
       if (me.localeId !== 'fa-IR') {
         return te.call(this, format);
       }
+
       let result = te.call(this, format);
-      result = result.replace(/\d/g, function (match) {
-        return enToPerNumberMap[match];
-      }).replace(/,/g, '،')
+      result = result.toPerNumber().replace(/,/g, '،')
       return result;
     };
   }
