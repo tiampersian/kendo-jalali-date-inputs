@@ -33,7 +33,7 @@ DateInputComponent.prototype['updateElementValue'] = function (isActive: boolean
   if (this.kendoDate.hasValue()) {
     setInputValue.call(this, this.kendoDate.value, localeId);
   } else {
-    this.renderer.setProperty(input, 'value', this.currentValue);
+    this.renderer.setProperty(input, 'value', this.currentValue.revertPersianWord());
     this.currentFormat = texts[1];
   }
   if (input.placeholder !== '' + this.placeholder) {
@@ -324,8 +324,9 @@ function setInputValue(value: Date, localeId: any) {
     format = this.currentFormat.toMomentDateTimeFormat();
   }
   const result = getValue.call(this, value, localeId);
-  if (this.intl.isLocaleIran && format.search('MMM') > -1) {
-    format = format.replace('MMM', reverseString(result.format('MMM')));
+  if (this.intl.isLocaleIran) {
+    this.renderer.setProperty(this.inputElement, 'value', result.format(format.replace(/d/g, 'D')).revertPersianWord());
+    return;
   }
   this.renderer.setProperty(this.inputElement, 'value', result.format(format.replace(/d/g, 'D')));
 }

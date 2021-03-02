@@ -6,6 +6,7 @@ declare global {
     toPerNumber(): string;
     toEnNumber(): string;
     toMomentDateTimeFormat(): string;
+    revertPersianWord(): string;
   }
 }
 
@@ -21,6 +22,9 @@ String.prototype.toEnNumber = function () {
 }
 String.prototype.toMomentDateTimeFormat = function () {
   return this.replace(/d/g, 'D').replace(/aa/ig, (m) => m[0]).replace(/_/g, '/')
+}
+String.prototype.revertPersianWord = function () {
+  return this.replace(/(?:(?![٠-٩])[\u0600-\u06FF]){2,}/g, (m) => reverseString(m));
 }
 export const enToPerNumberMap = {
   '1': '١',
