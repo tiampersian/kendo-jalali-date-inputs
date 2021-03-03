@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, LOCALE_ID, Injector } from '@angular/core';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { RTL } from '@progress/kendo-angular-l10n';
 import { DatePickerType, JalaliCldrIntlService } from '@tiampersian/kendo-jalali-date-inputs';
 
 @Component({
@@ -8,13 +7,12 @@ import { DatePickerType, JalaliCldrIntlService } from '@tiampersian/kendo-jalali
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [
-    // { provide: LOCALE_ID, useFactory: localeIdFactory, deps: ['LOCALE_ID'] },
   ],
 
 })
 export class AppComponent {
   title = 'kendo-jalali-date-inputs';
-  public value: Date = new Date('2020-02-01T19:30:00.000Z');
+  public value: Date = new Date();
   rerender = true;
   locales = ['fa-IR', 'en-US', 'en'];
   calendarTypes = Object.values(DatePickerType);
@@ -54,9 +52,3 @@ export class AppComponent {
   }
 }
 
-export function isRtl(intlService: JalaliCldrIntlService): boolean {
-  return intlService.localeId === 'fa-IR';
-}
-export function localeIdFactory(originalLocalId: string): string {
-  return localStorage.getItem('localeId') || originalLocalId || 'fa-IR';
-}
