@@ -8,7 +8,7 @@
       "@progress/kendo-angular-intl": "@progress/kendo-angular-intl",
       "@progress/kendo-date-math": "@progress/kendo-date-math",
       "jalali-moment": "jalali-moment",
-      "@progress/kendo-angular-intl/locales/json/fa/calendar.json": "@progress/kendo-angular-intl/locales/json/fa/calendar.json"
+      "@progress/kendo-angular-intl/locales/fa/calendar": "@progress/kendo-angular-intl/locales/fa/calendar"
     }
   },
   "allowedNonPeerDependencies": [

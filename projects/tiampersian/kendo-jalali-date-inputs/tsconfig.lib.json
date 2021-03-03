@@ -14,9 +14,6 @@
       "es2018"
     ]
   },
-  "files": [
-    "./src/lib/typings.d.ts"
-  ],
   "angularCompilerOptions": {
     "skipTemplateCodegen": true,
     "strictMetadataEmit": true,

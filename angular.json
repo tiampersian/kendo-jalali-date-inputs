@@ -34,7 +34,7 @@
             "scripts": [],
             "allowedCommonJsDependencies": [
               "jalali-moment",
-              "@progress/kendo-angular-intl/locales/fa/all"
+              "@progress/kendo-angular-intl/locales/fa/calendar"
             ]
           },
           "configurations": {
