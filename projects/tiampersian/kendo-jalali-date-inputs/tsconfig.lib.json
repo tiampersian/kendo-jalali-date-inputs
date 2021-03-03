@@ -7,12 +7,16 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
+    "resolveJsonModule": true,
     "types": [],
     "lib": [
       "dom",
       "es2018"
     ]
   },
+  "files": [
+    "./src/lib/typings.d.ts"
+  ],
   "angularCompilerOptions": {
     "skipTemplateCodegen": true,
     "strictMetadataEmit": true,
