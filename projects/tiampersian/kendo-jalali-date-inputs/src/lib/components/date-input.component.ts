@@ -74,7 +74,6 @@ DateInputComponent.prototype['handleInput'] = function () {
   prepareDiffInJalaliMode.call(this, intl, diff);
   const navigationOnly = (diff.length === 1 && diff[0][1] === "_");
   let switchPart = false;
-  console.log('diff', diff);
   if (!navigationOnly) {
     let parsedPart;
 
