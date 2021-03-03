@@ -2,7 +2,7 @@
   "name": "@tiampersian/kendo-jalali-date-inputs",
   "version": "0.8.0",
   "license": "MIT",
-  "description": "This is a configurable jalali (persian, khorshidi, shamsi, jalali) date-picker for Angular 2 applications based on kendo-dateinputs",
+  "description": "angular jalali ( persian ) date time picker base on kendo-angular-dateinputs ",
   "homepage": "https://github.com/tiampersian/kendo-jalali-date-inputs",
   "bugs": "https://github.com/tiampersian/kendo-jalali-date-inputs/issues",
   "peerDependencies": {
