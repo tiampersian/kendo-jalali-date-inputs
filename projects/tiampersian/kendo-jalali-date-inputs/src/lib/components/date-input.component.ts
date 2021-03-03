@@ -31,7 +31,7 @@ DateInputComponent.prototype['updateElementValue'] = function (isActive: boolean
   this.currentFormat = getDateFormatString.call(this, format, localeId);
 
   if (this.kendoDate.hasValue()) {
-    setInputValue.call(this, this.kendoDate.value, localeId);
+    setInputValue.call(this, localeId);
   } else {
     this.renderer.setProperty(input, 'value', this.currentValue.revertPersianWord());
     this.currentFormat = texts[1];
@@ -122,7 +122,7 @@ function dateFormatString(date, format): { format: string, symbol: string } {
   const partMap = [];
   const partSymbols = [];
   for (let i = 0; i < dateFormatParts.length; i++) {
-    let partLength = getValue.call(this, date)?.format(dateFormatParts[i].pattern?.replace(/d/g, 'D')).length || 0;
+    let partLength = getValue.call(this, date)?.format(dateFormatParts[i].pattern?.toMomentDateTimeFormat()).length || 0;
     while (partLength > 0) {
       parts.push(this.kendoDate.symbols[dateFormatParts[i].pattern[0]] || dateFormatParts[i].pattern[0] || "_");
       partSymbols.push(this.kendoDate.symbols[dateFormatParts[i].pattern[0]] || "_");
@@ -165,6 +165,7 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
 
     d[2] = false;
     if ((d[0] as string).toLocaleLowerCase() === 'm') {
+
       this.kendoDate.month = d[1] != '';
       if (d[1] === '') {
         existInputs.m = false;
@@ -179,6 +180,13 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
       } else {
         d[2] = +month > 1;
         existInputs.m = true;
+        if (month === '0') {
+          existInputs.m = false;
+          this.kendoDate.month = false;
+          // this.kendoDate.value = dt.set('date', 1).toDate();
+          d[1] = '0'
+          return;
+        }
       }
 
       this.kendoDate.value = (dt.set('month', month - 1).toDate());
@@ -203,7 +211,8 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
         existInputs.d = true;
         if (day === '0') {
           existInputs.d = false;
-          this.kendoDate.value = dt.set('date', 1).toDate();
+          this.kendoDate.date = false;
+          // this.kendoDate.value = dt.set('date', 1).toDate();
           d[1] = '0'
           return;
         }
@@ -222,19 +231,25 @@ const MIN_JALALI_DATE = moment.from('0000-01-01', 'fa', 'YYYY/MM/DD');
 function prepareYearValue(diff: any[], dt) {
   diff[2] = false
   this.kendoDate.year = false;;
-  if (diff[1] === '') {
+  const year = diff[1];
+  if (year === '') {
     existInputs.y = false;
-    this.kendoDate = this.getKendoDate(dt.year((+diff[1])).toDate());
+    this.kendoDate = this.getKendoDate(dt.year((+year)).toDate());
     return '';
   }
   this.kendoDate.year = true;
+  // if (!existInputs.y && year === '0') {
+  //   existInputs.y = false;
+  //   this.kendoDate.year = false;
+  //   return;
+  // }
   if (!existInputs.y || dt.format('y').length > 3) {
     existInputs.y = true;
-    this.kendoDate = this.getKendoDate(dt.year((+diff[1])).toDate());
-    return diff[1] === '' ? '' : dt.format('y');
+    this.kendoDate = this.getKendoDate(dt.year((+year)).toDate());
+    return year === '' ? '' : dt.format('y');
   }
 
-  this.kendoDate.value = dt.year(+(dt.year() + diff[1])).toDate();
+  this.kendoDate.value = dt.year(+(dt.year() + year)).toDate();
 
   if (dt.format('y').length > 3) {
     resetExistingInputs();
@@ -306,17 +321,28 @@ export const setTime = (origin, candidate) => {
 
 export const isPresent = (value) => value !== undefined && value !== null;
 
-function setInputValue(value: Date, localeId: any) {
+function setInputValue(localeId: string) {
+  const value: Date = this.kendoDate.value;
   let format = this.format;
   if (['d', 't', 'g'].some(x => x == format)) {
     format = this.currentFormat.toMomentDateTimeFormat();
   }
+  if (!this.kendoDate.year) {
+    format = format.replace(/y/gi, '0');
+  }
+  if (!this.kendoDate.date) {
+    format = format.replace(/d/gi, '0');
+  }
+  if (!this.kendoDate.month) {
+    format = format.replace(/m/gi, '0');
+  }
+
   const result = getValue.call(this, value, localeId);
   if (this.intl.isLocaleIran) {
-    this.renderer.setProperty(this.inputElement, 'value', result.format(format.replace(/d/g, 'D')).revertPersianWord());
+    this.renderer.setProperty(this.inputElement, 'value', result.format(format.toMomentDateTimeFormat()).revertPersianWord());
     return;
   }
-  this.renderer.setProperty(this.inputElement, 'value', result.format(format.replace(/d/g, 'D')));
+  this.renderer.setProperty(this.inputElement, 'value', result.format(format.toMomentDateTimeFormat()));
 }
 
 function getValue(value: Date | string, localeId?: string): Moment {
