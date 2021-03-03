@@ -180,12 +180,6 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
         d[2] = +month > 1;
         existInputs.m = true;
       }
-      // // TODO check me
-      // if (month === '0') {
-      //   d[3] = dt.set('month', 0).toDate();
-      //   d[4] = 'month';
-      //   return;
-      // }
 
       this.kendoDate.value = (dt.set('month', month - 1).toDate());
       d[1] = '' + (dt.locale('en').month() + 1);
@@ -203,22 +197,18 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
       if (existInputs.d) {
         d[2] = true;
         day = +(dt.date()) + d[1];
-        // if (!this.kendoDate.date) {
-        //   day = 0 + d[1];
-        // }
         resetExistingInputs();
       } else {
         d[2] = +day > 3;
         existInputs.d = true;
+        if (day === '0') {
+          existInputs.d = false;
+          this.kendoDate.value = dt.set('date', 1).toDate();
+          d[1] = '0'
+          return;
+        }
       }
-      // if (day === '0') {
-      //   d[3] = dt.set('date', 1).toDate();
-      //   d[4] = 'date';
-      //   return;
-      // }
-      dt.set('date', +day);
-      this.kendoDate.value = (dt.toDate());
-
+      this.kendoDate.value = (dt.set('date', +day).toDate());
       d[1] = '' + (dt.locale('en').date());
       return;
     }
@@ -228,8 +218,6 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
   });
 }
 const MIN_JALALI_DATE = moment.from('0000-01-01', 'fa', 'YYYY/MM/DD');
-// TODO check +1
-const MIN_DATE_FA = moment(MIN_JALALI_DATE).diff(moment('0000-01-01'), 'year') + 1;
 
 function prepareYearValue(diff: any[], dt) {
   diff[2] = false
