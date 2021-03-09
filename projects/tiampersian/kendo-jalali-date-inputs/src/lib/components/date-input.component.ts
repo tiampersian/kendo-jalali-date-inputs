@@ -66,7 +66,7 @@ DateInputComponent.prototype['handleInput'] = function () {
   let prevValue = this.currentValue;
   if (intl.isJalali) {
     // TODO Check me
-    prevValue = this.value ? getValue.call(this, this.value).format(dateFormatString.call(this, this.value, this.format, 'fa').format).toEnNumber() : this.currentValue;
+    prevValue = this.value ? getValue.call(this, this.value).format(dateFormatString.call(this, this.value, this.format, 'fa').format.toMomentDateTimeFormat()).toEnNumber() : this.currentValue;
     // prevValue = this.value ? getValue.call(this, this.value).format(this.format.toMomentDateTimeFormat()).toEnNumber() : this.currentValue;
   }
 
@@ -134,8 +134,8 @@ function dateFormatString(date, format): { format: string, symbol: string } {
 
 const oldHandleBlur = DateInputComponent.prototype['handleBlur'];
 DateInputComponent.prototype['handleBlur'] = function (event) {
-  oldHandleBlur.call(this, event);
   resetExistingInputs();
+  oldHandleBlur.call(this, event);
 };
 
 function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
@@ -155,7 +155,7 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
   if (!dt) {
     return;
   }
-  if (debuggerCounter(3)) { debugger }
+  if (debuggerCounter(3)) {  }
 
   diff.forEach(d => {
     if (!d[0]) {

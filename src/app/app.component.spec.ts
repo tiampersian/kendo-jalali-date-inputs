@@ -7,6 +7,11 @@ import { DatePickerType, KendoJalaliDateInputsModule } from '@tiampersian/kendo-
 import moment from 'jalali-moment';
 import { AppComponent } from './app.component';
 import '@progress/kendo-angular-intl/locales/fa/all';
+function keyPress(key) {
+  return new KeyboardEvent("keypress", {
+    "key": key
+  });
+}
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -25,13 +30,7 @@ describe('AppComponent', () => {
     }).compileComponents();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
-  });
-
-  ([
+  const testCases = [
     { input: '2020-03-20T20:30:00.000Z' },
     { input: '2020-03-20T20:15:00.000Z' },
     { input: '2020-03-20T21:15:00.000Z' },
@@ -56,7 +55,14 @@ describe('AppComponent', () => {
     { input: '2018-10-11T07:00:00.000Z' },
     { input: '2020-11-01T07:00:00.000Z' },
     { input: '2020-11-01T07:59:59.000Z' }
-  ]).forEach(item => {
+  ];
+  it('should create the app', () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    expect(app).toBeTruthy();
+  });
+
+  (testCases).forEach(item => {
     it(`should have as proper value date input in jalali mode with ${item.input} value`, async () => {
       // arrange
       const fixture = TestBed.createComponent(AppComponent);
@@ -72,14 +78,38 @@ describe('AppComponent', () => {
 
       // expected
       expect(fixture.componentInstance.calendarType).toBe(DatePickerType.jalali);
-      expect(input.value).toBe(moment(item.input).locale('fa').format('DD/MM/YYYY'));
+      expect(input.value).toBe(moment(item.input).locale('fa').format('YYYY/M/D'));
     });
   });
 
-  // it('should render title', () => {
-  //   const fixture = TestBed.createComponent(AppComponent);
-  //   fixture.detectChanges();
-  //   const compiled = fixture.nativeElement;
-  //   expect(compiled.querySelector('.content span').textContent).toContain('kendo-jalali-date app is running!');
-  // });
+  it(`should have as proper value date input in jalali mode with 2020-03-20T20:30:00.000Z value`, async () => {
+    // arrange
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.componentInstance.value = new Date('2020-03-20T20:30:00.000Z');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    const dataPicker = fixture.debugElement.query(By.css('kendo-datepicker'));
+    const input = fixture.debugElement.query(By.css('kendo-datepicker input'));
+    input.nativeElement.selectionStart = 5;
+    input.nativeElement.selectionEnd = 6;
+    debugger
+    fixture.detectChanges();
+    input.nativeElement.focus();
+    input.nativeElement.value/*?*/;
+    input.nativeElement.value = '١٣٩٩/٢/٢';
+    input.nativeElement.dispatchEvent(
+      new KeyboardEvent('keyup', { bubbles: true, cancelable: true, key: '2', shiftKey: true }),
+    );
+    input.triggerEventHandler('change', {})
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    // action
+    fixture.detectChanges();
+
+    // expected
+    expect(moment(fixture.componentInstance.value).locale('fa').format('yyyy/M/D')).toEqual('١٣٩٩/٢/٢')
+    // expect(input.nativeElement.value/*?*/).not.toBe(moment(testCases[0].input).locale('fa').format('YYYY/M/D'));
+  });
 });
