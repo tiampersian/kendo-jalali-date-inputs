@@ -72,8 +72,41 @@ fdescribe('SUT(integration): DateInputComponent', () => {
       expect(sutPage.component.inputValue).toEqual(expected_inputValue);
     });
   });
+  // current input value 11/2/2020
+
+  ([
+    { case: [['5/2/2020', 1]], scenario: 'month (1 digit)' },
+    { case: [['1/2/2020', 1], ['11/2/2020', 2]], scenario: 'month (2 digit)' },
+    { case: [['0/2/2020', 1], ['4/2/2020', 1]], scenario: 'month (1 digit and start with zero)' },
+    { case: [['1/2/2020', 1], ['10/2/2020', 2]], scenario: 'month (2 digit and end with zero)' },
+
+    { case: [['11/3/2020', 4]], scenario: 'day (1 digit)' },
+    { case: [['11/1/2020', 4], ['11/12/2020', 5]], scenario: 'day (2 digit)' },
+    { case: [['11/0/2020', 4], ['11/1/2020', 4]], scenario: 'day (1 digit and start with zero)' },
+    { case: [['11/1/2020', 4], ['11/10/2020', 5]], scenario: 'day (2 digit and end with zero)' },
+
+    { case: [['11/2/2', 6], ['11/2/20', 7], ['11/2/203', 8], ['11/2/2031', 9]], scenario: 'year (4 digit)' },
+    { case: [['11/2/0', 6], ['11/2/03', 7], ['11/2/038', 8], ['11/2/0388', 9]], scenario: 'year (3 digit and start with zero)' },
+    { case: [['11/2/0', 6], ['11/2/00', 7], ['11/2/000', 8], ['11/2/0008', 9]], scenario: '' },
+  ] as { case: [string, number][], scenario: string }[]).forEach((testCase) => {
+    it(`should set proper value and show proper value when input value has change in ${(testCase.scenario)}`, async () => {
+
+      // arrange
+      await sutPage.with_gregorian_mode().with_payloadValue(some_value).detectChanges().whenStable();
+      await sutPage.with_send_inputValue(testCase.case);
+
+      // assert
+      const expected_inputValue = testCase.case[testCase.case.length - 1][0];
+      const expectedValue = getGregorianValue(expected_inputValue);
+      expect(sutPage.component.value.toISOString()).toEqual(expectedValue);
+      expect(sutPage.component.inputValue).toEqual(expected_inputValue);
+    });
+  });
 });
 function getJalaliValue(value: string) {
   return moment.from(value, 'fa', 'M/D/YYYY').toDate().toISOString();
+}
+function getGregorianValue(value: string) {
+  return moment.from(value, 'en', 'M/D/YYYY').toDate().toISOString();
 }
 
