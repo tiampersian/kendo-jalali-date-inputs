@@ -358,8 +358,13 @@ function resetExistingInputs() {
   existInputs.y = false;
 }
 
-window['counter'] = 0;
 function debuggerCounter(counter) {
+  if(typeof window===undefined){
+    return;
+  }
+  if(typeof window['counter']===undefined){
+    window['counter'] = 0;
+  }
   const result = window['counter'] === counter;
   window['counter']++;
   if (result) {
