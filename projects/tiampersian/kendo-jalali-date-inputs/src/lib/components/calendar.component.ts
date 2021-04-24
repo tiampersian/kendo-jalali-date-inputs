@@ -29,12 +29,12 @@ Object.defineProperty(MultiViewCalendarComponent.prototype, 'headerTitleTemplate
   configurable: true
 });
 
-const oldNgOnInit = CalendarComponent.prototype['ngOnInit'];
-CalendarComponent.prototype['ngOnInit'] = function (): void {
+const oldNgOnInit = CalendarComponent.prototype.ngOnInit;
+CalendarComponent.prototype.ngOnInit = function (): void {
   const me: CalendarComponent = this;
   oldNgOnInit.call(this);
   const intl: JalaliCldrIntlService = this.bus.service(this.activeViewEnum).intlService;
-  intl.$calendarType.pipe(debounceTime(100)).subscribe(x => {
+  intl.$calendarType.pipe(debounceTime(10)).subscribe(x => {
     this.onResize();
-  })
-}
+  });
+};

@@ -16,11 +16,12 @@ export class JalaliCldrIntlService extends CldrIntlService {
   isGregorian: boolean;
   datePickerType: DatePickerType;
   localeIdByDatePickerType = '';
-  get isLocaleIran() {
+  get isLocaleIran(): boolean {
     return this.localeId === 'fa-IR';
   }
   defaultTitleTemplate: any;
   $calendarType = new Subject();
+  isFirst = true;
 
   constructor(
     @Inject(LOCALE_ID) private originalLocaleId: string,
@@ -33,8 +34,8 @@ export class JalaliCldrIntlService extends CldrIntlService {
   setTitleTemplate(template): void {
     this.defaultTitleTemplate = template;
   }
-
   changeType(value?: DatePickerType): void {
+
     this.datePickerType = this.getType(value);
     if (this.datePickerType === DatePickerType.jalali) {
       this.isJalali = true;
@@ -50,12 +51,11 @@ export class JalaliCldrIntlService extends CldrIntlService {
   }
 
   reload(): void {
-    this.changes.next(super.localeId);
-    this.notify();
     const tem = super.localeId;
     this.changeLocaleId('en');
     this.changeLocaleId(tem);
     this.$calendarType.next(this.localeIdByDatePickerType);
+    this.changes.next(super.localeId);
   }
 
   changeLocaleId(value): void {
@@ -66,6 +66,15 @@ export class JalaliCldrIntlService extends CldrIntlService {
 
   toggleType(): void {
     this.changeType(this.datePickerType === DatePickerType.jalali ? DatePickerType.gregorian : DatePickerType.jalali);
+    if (this.isFirst) {
+      this.isFirst = false;
+      setTimeout(() => {
+        this.toggleType();
+        setTimeout(() => {
+          this.toggleType();
+        }, 10);
+      }, 10);
+    }
   }
 
   private getType(value: DatePickerType): DatePickerType {

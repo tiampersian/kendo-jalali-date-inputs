@@ -47,10 +47,10 @@ const oldHandleInput = DateInputComponent.prototype['handleInput'];
 DateInputComponent.prototype['handleInput'] = function () {
   const intl = (this.intl as JalaliCldrIntlService);
 
-  // if (!intl.isJalali) {
-  //   oldHandleInput.call(this);
-  //   return;
-  // }
+  if (window['useOld']) {
+    oldHandleInput.call(this);
+    return;
+  }
   const me: DateInputComponent = this;
 
   if (me.disabled || me.readonly) {
@@ -155,7 +155,7 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
   if (!dt) {
     return;
   }
-  if (debuggerCounter(3)) {  }
+  if (debuggerCounter(3)) { }
 
   diff.forEach(d => {
     if (!d[0]) {
@@ -359,10 +359,10 @@ function resetExistingInputs() {
 }
 
 function debuggerCounter(counter) {
-  if(typeof window===undefined){
+  if (typeof window === undefined) {
     return;
   }
-  if(typeof window['counter']===undefined){
+  if (typeof window['counter'] === undefined) {
     window['counter'] = 0;
   }
   const result = window['counter'] === counter;
