@@ -419,6 +419,7 @@
     <p><strong>Final Value</strong>: {{value}}</p>
   </div>
   <div class="card-container"
+       [dir]="isRtl?'rtl':'ltr'"
        *ngIf="rerender">
     <div class="row example-wrapper"
          *ngIf="1"
@@ -429,7 +430,8 @@
         <p>(use <code>←</code> and <code>→</code> to navigate, <code>↑</code> and <code>↓</code> to update)</p>
 
         <p>DatePicker</p>
-        <kendo-datepicker [(ngModel)]="value"></kendo-datepicker>
+        <kendo-datepicker [format]="'yyyy/MMM/dd'"
+                          [(ngModel)]="value"></kendo-datepicker>
         <p>(use <code>Alt</code>+<code>↓</code> to open the Calendar)</p>
 
         <p>TimePicker</p>

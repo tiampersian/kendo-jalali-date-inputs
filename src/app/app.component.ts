@@ -1,3 +1,4 @@
+import { RTL } from '@progress/kendo-angular-l10n';
 import { ChangeDetectorRef, Component, Inject, LOCALE_ID, Injector } from '@angular/core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { DatePickerType, JalaliCldrIntlService } from '@tiampersian/kendo-jalali-date-inputs';
@@ -20,6 +21,7 @@ export class AppComponent {
   currentLocaleId = '';
   constructor(
     @Inject(IntlService) private localeService: JalaliCldrIntlService,
+    @Inject(RTL) public isRtl: string,
     private cdr: ChangeDetectorRef
   ) {
     this.calendarType = localeService.isJalali ? DatePickerType.jalali : DatePickerType.gregorian;
@@ -47,7 +49,6 @@ export class AppComponent {
   }
 
   changeValue($event): void {
-    debugger
     this.value = $event;
   }
 }

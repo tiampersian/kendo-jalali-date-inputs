@@ -44,8 +44,8 @@ export class KendoJalaliDateInputsModule {
       providers: [
         { provide: 'CONFIGS', useValue: configs || {} }
       ]
-    }
-  };
+    };
+  }
 }
 
 
