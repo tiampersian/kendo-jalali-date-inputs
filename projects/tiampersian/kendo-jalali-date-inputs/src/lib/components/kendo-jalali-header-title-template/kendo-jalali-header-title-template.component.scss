@@ -39,7 +39,7 @@
 
   kendo-dateinput input{
     unicode-bidi: bidi-override;
-    direction: ltr;
+    direction: ltr!important;
   }
   .rtl,[dir=rtl]{
     kendo-calendar-navigation.k-calendar-navigation kendo-virtualization {
