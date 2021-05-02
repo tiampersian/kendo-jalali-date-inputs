@@ -78,6 +78,12 @@ export class JalaliCldrIntlService extends CldrIntlService {
   }
 
   private getType(value: DatePickerType): DatePickerType {
-    return value || (this.originalLocaleId !== 'fa-IR' ? DatePickerType.gregorian : DatePickerType.jalali);
+    if (value) { return value; }
+
+    if (this.originalLocaleId === 'fa-IR' || this.originalLocaleId === 'fa') {
+      return DatePickerType.jalali;
+    }
+
+    return DatePickerType.gregorian;
   }
 }
