@@ -15,13 +15,12 @@ export class AppComponent {
   title = 'kendo-jalali-date-inputs';
   public value: Date = new Date();
   rerender = true;
-  locales = ['fa-IR', 'en-US', 'en'];
+  locales = ['fa-IR', 'fa', 'en-US', 'en'];
   calendarTypes = Object.values(DatePickerType);
   calendarType = '';
   currentLocaleId = '';
   constructor(
     @Inject(IntlService) private localeService: JalaliCldrIntlService,
-    @Inject(RTL) public isRtl: string,
     private cdr: ChangeDetectorRef
   ) {
     this.calendarType = localeService.isJalali ? DatePickerType.jalali : DatePickerType.gregorian;
@@ -46,6 +45,7 @@ export class AppComponent {
     localStorage.setItem('localeId', value);
     this.localeService.changeLocaleId(value);
     this.localeService.reload();
+    this.currentLocaleId = value;
   }
 
   changeValue($event): void {

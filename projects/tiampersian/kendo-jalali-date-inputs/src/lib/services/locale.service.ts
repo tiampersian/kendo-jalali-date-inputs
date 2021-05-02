@@ -17,7 +17,7 @@ export class JalaliCldrIntlService extends CldrIntlService {
   datePickerType: DatePickerType;
   localeIdByDatePickerType = '';
   get isLocaleIran(): boolean {
-    return this.localeId === 'fa-IR';
+    return this.localeId === 'fa-IR' || this.localeId === 'fa';
   }
   defaultTitleTemplate: any;
   $calendarType = new Subject();

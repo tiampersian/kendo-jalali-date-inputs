@@ -54,7 +54,7 @@ export const reverseString = str => [...str].reverse().join('');
 
 @Injectable()
 export class MomentNumberService {
-  localeId: string;
+  usePersianNumber: boolean;
 
   constructor(
     @Inject(LOCALE_ID) localeId: string,
@@ -65,7 +65,7 @@ export class MomentNumberService {
   }
 
   setLocaleId(value: string) {
-    this.localeId = value;
+    this.usePersianNumber = value === 'fa' || value === 'fa-IR';
   }
 
   init() {
@@ -77,7 +77,7 @@ export class MomentNumberService {
     const te = moment.fn.format;
     (moment as any).fn.format = function (format) {
 
-      if (me.localeId !== 'fa-IR') {
+      if (!me.usePersianNumber) {
         return te.call(this, format);
       }
 

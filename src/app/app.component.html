@@ -419,7 +419,7 @@
     <p><strong>Final Value</strong>: {{value}}</p>
   </div>
   <div class="card-container"
-       [dir]="isRtl?'rtl':'ltr'"
+       [dir]="currentLocaleId=='fa-IR'?'rtl':'ltr'"
        *ngIf="rerender">
     <div class="row example-wrapper"
          *ngIf="1"
