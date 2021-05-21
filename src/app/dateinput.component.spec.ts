@@ -1,9 +1,9 @@
 import { fakeAsync } from '@angular/core/testing';
 import { DatePickerType } from '@tiampersian/kendo-jalali-date-inputs';
 import moment from 'jalali-moment';
-import { DateInputComponentPage } from "./dateinput.component.spec.page";
+import { DateInputComponentPage } from './dateinput.component.spec.page';
 
-fdescribe('SUT(integration): DateInputComponent', () => {
+describe('SUT(integration): DateInputComponent', () => {
   let sutPage: DateInputComponentPage;
   const some_value = new Date('2020-11-01T20:30:00.000Z');
   const expected_value_jalali = moment(some_value).locale('fa').format('M/D/yyyy')/*?*/;
