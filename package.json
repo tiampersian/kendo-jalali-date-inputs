@@ -11,6 +11,7 @@
     "e2e": "ng e2e",
     "setversion": "node update-version.js",
     "build:ci": "ng build @tiampersian/kendo-jalali-date-inputs --prod",
+    "test:ci": "ng test --browsers=ChromeHeadlessCI --watch=false",
     "build:app:ci": "ng build --prod",
     "publish": "npm publish dist/tiampersian/kendo-jalali-date-inputs  --access public"
   },
