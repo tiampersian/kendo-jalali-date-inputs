@@ -31,7 +31,7 @@ describe('SUT(integration): DateInputComponent', () => {
 
     // assert
 
-    expect(sutPage.component.inputValue).toEqual(expected_value_jalali/*?*/);
+    expect(sutPage.component.inputValue.toPerNumber()).toEqual(expected_value_jalali.toPerNumber()/*?*/);
     expect(sutPage.component.value.toISOString()).toEqual(some_value.toISOString()/*?*/);
   });
 
@@ -41,7 +41,7 @@ describe('SUT(integration): DateInputComponent', () => {
     sutPage.with_gregorian_mode().with_payloadValue(some_value).detectChanges();
 
     // assert
-    expect(sutPage.component.inputValue).toEqual(expected_value_gregorian);
+    expect(sutPage.component.inputValue.toPerNumber()).toEqual(expected_value_gregorian.toPerNumber());
   });
   // current input value 8/12/1399
   ([
@@ -69,7 +69,7 @@ describe('SUT(integration): DateInputComponent', () => {
       const expected_inputValue = testCase.case[testCase.case.length - 1][0];
       const expectedValue = getJalaliValue(expected_inputValue);
       expect(sutPage.component.value.toISOString()).toEqual(expectedValue);
-      expect(sutPage.component.inputValue).toEqual(expected_inputValue);
+      expect(sutPage.component.inputValue.toPerNumber()).toEqual(expected_inputValue.toPerNumber());
     });
   });
   // current input value 11/2/2020
@@ -99,7 +99,7 @@ describe('SUT(integration): DateInputComponent', () => {
       const expected_inputValue = testCase.case[testCase.case.length - 1][0];
       const expectedValue = getGregorianValue(expected_inputValue);
       expect(sutPage.component.value.toISOString()).toEqual(expectedValue);
-      expect(sutPage.component.inputValue).toEqual(expected_inputValue);
+      expect(sutPage.component.inputValue.toPerNumber()).toEqual(expected_inputValue.toPerNumber());
     });
   });
 });
