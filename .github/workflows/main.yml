@@ -40,6 +40,7 @@ jobs:
           restore-keys: |
             ${{ runner.OS }}-npm-cache-
       - name: npm install and npm run build
+      - uses: actions/checkout@v1
         run: |
           npm install
           npm run setversion 0.1.${{ github.run_number }}
