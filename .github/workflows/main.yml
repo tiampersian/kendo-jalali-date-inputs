@@ -39,8 +39,8 @@ jobs:
           key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.OS }}-npm-cache-
-      - name: npm install and npm run build
       - uses: actions/checkout@v1
+      - name: npm install and npm run build
         run: |
           npm install
           npm run setversion 0.1.${{ github.run_number }}
