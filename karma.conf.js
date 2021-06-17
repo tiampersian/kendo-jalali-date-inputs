@@ -32,7 +32,7 @@ module.exports = function (config) {
         { type: 'text-summary' }
       ]
     },
-    browsers: ['Chrome'],
+    browsers: ['Chrome','ChromeHeadless','ChromeHeadlessCustom'],
     customLaunchers: {
       ChromeHeadlessCustom: {
         base: 'ChromeHeadless',
