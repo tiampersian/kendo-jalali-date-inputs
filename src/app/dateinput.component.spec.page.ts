@@ -46,11 +46,12 @@ export class DateInputComponentPage {
     this.fixture = TestBed.createComponent(DateInputComponent);
     this.component = this.fixture.componentInstance;
     this.component.format = 'M/d/yyyy';
-    this.intl = this.component['intl'] as JalaliCldrIntlService;
+    this.intl = (this.component as any).intl as JalaliCldrIntlService;
     this.with_en_localeId();
     this.with_jalali_mode();
     return this;
   }
+
   with_jalali_mode() {
     this.intl.changeType(DatePickerType.jalali);
     return this;
@@ -66,24 +67,24 @@ export class DateInputComponentPage {
   }
 
   with_send_inputValue(items: [string, number][]) {
-    console.log(this.inputElement.selectionStart)
-    console.log(this.component.format)
+    console.log(this.inputElement.selectionStart);
+    console.log(this.component.format);
 
     items.forEach((item, index) => {
       this.inputElement.value = item[0];
-      console.log(this.inputElement.value)
+      console.log(this.inputElement.value);
       this.with_selection(item[1], item[1]);
-      this.component['handleInput']();
-      console.log(this.inputElement.value)
+      (this.component as any).handleInput();
+      console.log(this.inputElement.value);
     });
-    console.log(this.inputElement.selectionStart)
-    this.component['handleBlur'](null);
+    console.log(this.inputElement.selectionStart);
+    this.component.handleBlur(null);
 
     return this.detectChanges().whenStable();
   }
 
   private get inputElement(): HTMLInputElement {
-    return this.component['inputElement'];
+    return this.component.inputElement;
   }
 
   detectChanges() {

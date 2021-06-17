@@ -25,10 +25,9 @@ DateInputComponent.prototype['updateElementValue'] = function (isActive: boolean
   // this.currentValue = !showPlaceholder ? this.intl.formatDate(this.kendoDate.value, format) : '';
   this.currentValue = !showPlaceholder ? texts[0] : '';
 
-  this.currentFormat = texts[1];
-  if ((this.intl as JalaliCldrIntlService).isJalali) {
-  }
-  this.currentFormat = getDateFormatString.call(this, format, localeId);
+  const temp= getDateFormatString.call(this, format, localeId);
+  this.currentFormat =temp.symbol;
+  this.outputFormat=temp.format;
 
   if (this.kendoDate.hasValue()) {
     setInputValue.call(this, localeId);
@@ -259,7 +258,7 @@ function prepareYearValue(diff: any[], dt) {
 
 export function getDateFormatString(format: string, localeId: string, value?: Date): string {
   const dt = getValue.call(this, (value || this.kendoDate.value), localeId)?.toDate();
-  return dateFormatString.call(this, dt, format, localeId).symbol || '';
+  return dateFormatString.call(this, dt, format, localeId) || '';
 };
 
 export const approximateStringMatching = (oldTextOrigin, oldFormat, newTextOrigin, caret) => {
@@ -324,7 +323,7 @@ function setInputValue(localeId: string) {
   const value: Date = this.kendoDate.value;
   let format = this.format;
   if (['d', 't', 'g'].some(x => x == format)) {
-    format = this.currentFormat.toMomentDateTimeFormat();
+    format = (this.outputFormat||this.currentFormat).toMomentDateTimeFormat();
   }
   if (!this.kendoDate.year) {
     format = format.replace(/y/gi, '0');

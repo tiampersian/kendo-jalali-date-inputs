@@ -5,7 +5,7 @@ import { DateInputComponentPage } from './dateinput.component.spec.page';
 
 describe('SUT(integration): DateInputComponent', () => {
   let sutPage: DateInputComponentPage;
-  const some_value = new Date('2020-11-01T20:30:00.000Z');
+  const some_value = new Date('2020/11/01');
   const expected_value_jalali = moment(some_value).locale('fa').format('M/D/yyyy')/*?*/;
   const expected_value_gregorian = moment(some_value).locale('en').format('M/D/yyyy')/*?*/;
 
@@ -45,19 +45,62 @@ describe('SUT(integration): DateInputComponent', () => {
   });
   // current input value 8/12/1399
   ([
-    { case: [['5/12/1399', 1]], scenario: 'month (1 digit)' },
-    { case: [['1/12/1399', 1], ['11/12/1399', 2]], scenario: 'month (2 digit)' },
-    { case: [['0/12/1399', 1], ['4/12/1399', 1]], scenario: 'month (1 digit and start with zero)' },
-    { case: [['1/12/1399', 1], ['10/12/1399', 2]], scenario: 'month (2 digit and end with zero)' },
+    {
+      case: [
+        [moment(some_value).locale('fa').format('5/D/YYYY'), 1]
+      ], scenario: 'month (1 digit)'
+    },
+    {
+      case: [
+        [moment(some_value).locale('fa').format('1/D/YYYY'), 1], [moment(some_value).locale('fa').format('11/D/YYYY'), 2]
+      ], scenario: 'month (2 digit)'
+    },
+    {
+      case: [
+        [moment(some_value).locale('fa').format('0/D/YYYY'), 1], [moment(some_value).locale('fa').format('4/D/YYYY'), 1]
+      ], scenario: 'month (1 digit and start with zero)'
+    },
+    {
+      case: [
+        [moment(some_value).locale('fa').format('1/D/YYYY'), 1], [moment(some_value).locale('fa').format('10/D/YYYY'), 2]
+      ], scenario: 'month (2 digit and end with zero)'
+    },
 
-    { case: [['8/3/1399', 3]], scenario: 'day (1 digit)' },
-    { case: [['8/1/1399', 3], ['8/12/1399', 4]], scenario: 'day (2 digit)' },
-    { case: [['8/0/1399', 3], ['8/1/1399', 3]], scenario: 'day (1 digit and start with zero)' },
-    { case: [['8/1/1399', 3], ['8/10/1399', 4]], scenario: 'day (2 digit and end with zero)' },
+    { case: [[moment(some_value).locale('fa').format('M/3/YYYY'), 3]], scenario: 'day (1 digit)' },
+    {
+      case: [
+        [moment(some_value).locale('fa').format('M/1/YYYY'), 3], [moment(some_value).locale('fa').format('M/12/YYYY'), 4]
+      ], scenario: 'day (2 digit)'
+    },
+    {
+      case: [
+        [moment(some_value).locale('fa').format('M/0/YYYY'), 3], [moment(some_value).locale('fa').format('M/1/YYYY'), 3]
+      ], scenario: 'day (1 digit and start with zero)'
+    },
+    {
+      case: [
+        [moment(some_value).locale('fa').format('M/1/YYYY'), 3], [moment(some_value).locale('fa').format('M/10/YYYY'), 4]
+      ], scenario: 'day (2 digit and end with zero)'
+    },
 
-    { case: [['8/12/1', 6], ['8/12/13', 7], ['8/12/138', 8], ['8/12/1388', 9]], scenario: 'year (4 digit)' },
-    { case: [['8/12/0', 6], ['8/12/03', 7], ['8/12/038', 8], ['8/12/0388', 9]], scenario: 'year (3 digit and start with zero)' },
-    { case: [['8/12/0', 6], ['8/12/00', 7], ['8/12/000', 8], ['8/12/0008', 9]], scenario: '' },
+    {
+      case: [
+        [moment(some_value).locale('fa').format('M/D/1'), 6], [moment(some_value).locale('fa').format('M/D/13'), 7],
+        [moment(some_value).locale('fa').format('M/D/138'), 8], [moment(some_value).locale('fa').format('M/D/1388'), 9]
+      ], scenario: 'year (4 digit)'
+    },
+    {
+      case: [
+        [moment(some_value).locale('fa').format('M/D/0'), 6], [moment(some_value).locale('fa').format('M/D/03'), 7],
+        [moment(some_value).locale('fa').format('M/D/038'), 8], [moment(some_value).locale('fa').format('M/D/0388'), 9]
+      ], scenario: 'year (3 digit and start with zero)'
+    },
+    {
+      case: [
+        [moment(some_value).locale('fa').format('M/D/0'), 6], [moment(some_value).locale('fa').format('M/D/00'), 7],
+        [moment(some_value).locale('fa').format('M/D/000'), 8], [moment(some_value).locale('fa').format('M/D/0008'), 9]
+      ], scenario: ''
+    },
   ] as { case: [string, number][], scenario: string }[]).forEach((testCase) => {
     it(`should set proper value and show proper value when input value has change in ${(testCase.scenario)}`, async () => {
 
@@ -66,28 +109,43 @@ describe('SUT(integration): DateInputComponent', () => {
       await sutPage.with_send_inputValue(testCase.case);
 
       // assert
-      const expected_inputValue = testCase.case[testCase.case.length - 1][0];
-      const expectedValue = getJalaliValue(expected_inputValue);
+      const expectedInputValue = testCase.case[testCase.case.length - 1][0];
+      const expectedValue = getJalaliValue(expectedInputValue);
       expect(sutPage.component.value.toISOString()).toEqual(expectedValue);
-      expect(sutPage.component.inputValue.toPerNumber()).toEqual(expected_inputValue.toPerNumber());
+      expect(sutPage.component.inputValue.toPerNumber()).toEqual(expectedInputValue.toPerNumber());
     });
   });
   // current input value 11/2/2020
 
   ([
-    { case: [['5/2/2020', 1]], scenario: 'month (1 digit)' },
-    { case: [['1/2/2020', 1], ['11/2/2020', 2]], scenario: 'month (2 digit)' },
-    { case: [['0/2/2020', 1], ['4/2/2020', 1]], scenario: 'month (1 digit and start with zero)' },
-    { case: [['1/2/2020', 1], ['10/2/2020', 2]], scenario: 'month (2 digit and end with zero)' },
+    { case: [[moment(some_value).format('5/D/YYYY'), 1]], scenario: 'month (1 digit)' },
+    { case: [[moment(some_value).format('1/D/YYYY'), 1], [moment(some_value).format('11/D/YYYY'), 2]], scenario: 'month (2 digit)' },
+    { case: [[moment(some_value).format('0/D/YYYY'), 1], [moment(some_value).format('4/D/YYYY'), 1]], scenario: 'month (1 digit and start with zero)' },
+    { case: [[moment(some_value).format('1/D/YYYY'), 1], [moment(some_value).format('10/D/YYYY'), 2]], scenario: 'month (2 digit and end with zero)' },
 
-    { case: [['11/3/2020', 4]], scenario: 'day (1 digit)' },
-    { case: [['11/1/2020', 4], ['11/12/2020', 5]], scenario: 'day (2 digit)' },
-    { case: [['11/0/2020', 4], ['11/1/2020', 4]], scenario: 'day (1 digit and start with zero)' },
-    { case: [['11/1/2020', 4], ['11/10/2020', 5]], scenario: 'day (2 digit and end with zero)' },
+    { case: [[moment(some_value).format('M/3/YYYY'), 4]], scenario: 'day (1 digit)' },
+    { case: [[moment(some_value).format('M/1/YYYY'), 4], [moment(some_value).format('M/12/YYYY'), 5]], scenario: 'day (2 digit)' },
+    { case: [[moment(some_value).format('M/0/YYYY'), 4], [moment(some_value).format('M/1/YYYY'), 4]], scenario: 'day (1 digit and start with zero)' },
+    { case: [[moment(some_value).format('M/1/YYYY'), 4], [moment(some_value).format('M/10/YYYY'), 5]], scenario: 'day (2 digit and end with zero)' },
 
-    { case: [['11/2/2', 6], ['11/2/20', 7], ['11/2/203', 8], ['11/2/2031', 9]], scenario: 'year (4 digit)' },
-    { case: [['11/2/0', 6], ['11/2/03', 7], ['11/2/038', 8], ['11/2/0388', 9]], scenario: 'year (3 digit and start with zero)' },
-    { case: [['11/2/0', 6], ['11/2/00', 7], ['11/2/000', 8], ['11/2/0008', 9]], scenario: '' },
+    {
+      case: [
+        [moment(some_value).format('M/D/2'), 6], [moment(some_value).format('M/D/20'), 7]
+        , [moment(some_value).format('M/D/203'), 8], [moment(some_value).format('M/D/2031'), 9]
+      ], scenario: 'year (4 digit)'
+    },
+    {
+      case: [
+        [moment(some_value).format('M/D/0'), 6], [moment(some_value).format('M/D/03'), 7],
+        [moment(some_value).format('M/D/038'), 8], [moment(some_value).format('M/D/0388'), 9]
+      ], scenario: 'year (3 digit and start with zero)'
+    },
+    {
+      case: [
+        [moment(some_value).format('M/D/0'), 6], [moment(some_value).format('M/D/00'), 7],
+        [moment(some_value).format('M/D/000'), 8], [moment(some_value).format('M/D/0008'), 9]
+      ], scenario: ''
+    },
   ] as { case: [string, number][], scenario: string }[]).forEach((testCase) => {
     it(`should set proper value and show proper value when input value has change in ${(testCase.scenario)}`, async () => {
 
@@ -96,10 +154,10 @@ describe('SUT(integration): DateInputComponent', () => {
       await sutPage.with_send_inputValue(testCase.case);
 
       // assert
-      const expected_inputValue = testCase.case[testCase.case.length - 1][0];
-      const expectedValue = getGregorianValue(expected_inputValue);
+      const expectedInputValue = testCase.case[testCase.case.length - 1][0];
+      const expectedValue = getGregorianValue(expectedInputValue);
       expect(sutPage.component.value.toISOString()).toEqual(expectedValue);
-      expect(sutPage.component.inputValue.toPerNumber()).toEqual(expected_inputValue.toPerNumber());
+      expect(sutPage.component.inputValue.toPerNumber()).toEqual(expectedInputValue.toPerNumber());
     });
   });
 });

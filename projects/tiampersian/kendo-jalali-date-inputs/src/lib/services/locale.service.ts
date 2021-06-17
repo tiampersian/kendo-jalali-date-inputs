@@ -68,12 +68,13 @@ export class JalaliCldrIntlService extends CldrIntlService {
     this.changeType(this.datePickerType === DatePickerType.jalali ? DatePickerType.gregorian : DatePickerType.jalali);
     if (this.isFirst) {
       this.isFirst = false;
-      setTimeout(() => {
-        this.toggleType();
-        setTimeout(() => {
-          this.toggleType();
-        }, 10);
-      }, 10);
+      // to fix old version of chrome
+      // setTimeout(() => {
+      //   this.toggleType();
+      //   setTimeout(() => {
+      //     this.toggleType();
+      //   }, 0);
+      // }, 0);
     }
   }
 
