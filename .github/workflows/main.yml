@@ -25,13 +25,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
-          node-version: 12.8
+          node-version: 14.15
       - name: Cache NPM dependencies
         uses: actions/cache@v1
         with:
@@ -59,15 +59,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v1
-      - name: Use Node.js 12.8
+      - name: Use Node.js 14.15
         uses: actions/setup-node@v1
         with:
-          node-version: 12.8
+          node-version: 14.15
           registry-url: 'https://npm.pkg.github.com'
       - name: Download a single artifact
         uses: actions/download-artifact@v2
@@ -86,15 +86,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v1
-      - name: Use Node.js 12.8
+      - name: Use Node.js 14.15
         uses: actions/setup-node@v1
         with:
-          node-version: 12.8
+          node-version: 14.15
           registry-url: 'https://registry.npmjs.org/'
       - name: Download a single artifact
         uses: actions/download-artifact@v2
@@ -113,7 +113,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -133,7 +133,7 @@ jobs:
           SINGLE_COMMIT: true
       - uses: actions/setup-node@v1
         with:
-          node-version: 12.8
+          node-version: 14.15
       - name: Cache NPM dependencies
         uses: actions/cache@v1
         with:
