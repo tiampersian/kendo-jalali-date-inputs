@@ -8,7 +8,6 @@
     "declarationMap": true,
     "inlineSources": true,
     "resolveJsonModule": true,
-    "types": [],
     "lib": [
       "dom",
       "es2018"

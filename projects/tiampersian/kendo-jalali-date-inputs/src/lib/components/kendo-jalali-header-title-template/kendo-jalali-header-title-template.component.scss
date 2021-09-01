@@ -1,4 +1,12 @@
 ::ng-deep{
+  body * {
+    /* direction: rtl; */
+    text-align: right;
+}
+
+body {
+    direction: rtl;
+}
   .k-calendar{
     direction: ltr;
   }
@@ -47,6 +55,9 @@
   .rtl,[dir=rtl]{
     kendo-calendar-navigation.k-calendar-navigation kendo-virtualization {
           right: unset!important;
+          ul>li{
+            text-align: center;
+          }
     }
   }
 }
