@@ -66,8 +66,17 @@
             },
             "fa": {
               "i18nLocale": "fa"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
-          }
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -78,10 +87,14 @@
             "production": {
               "browserTarget": "tiampersian:build:production"
             },
+            "development": {
+              "browserTarget": "tiampersian:build:development"
+            },
             "fa": {
               "browserTarget": "tiampersian:build:fa"
             }
-          }
+          },
+            "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",

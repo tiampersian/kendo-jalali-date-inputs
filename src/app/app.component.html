@@ -444,9 +444,10 @@
         </kendo-datetimepicker>
         <p>(use Alt+↓ to open the popup, Alt+<code>←</code> and Alt+<code>→</code> to switch between the tabs when open)
         </p>
-
+        <br>
+        <br>
         <p>Calendar</p>
-        <kendo-calendar [(ngModel)]="value"></kendo-calendar>
+        <kendo-calendar [activeView]="'decade'" [(ngModel)]="value"></kendo-calendar>
       </div>
     </div>
     <div class="row example-wrapper">

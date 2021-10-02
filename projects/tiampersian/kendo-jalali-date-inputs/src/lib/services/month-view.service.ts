@@ -58,7 +58,9 @@ export class JalaliMonthViewService extends MonthViewService {
     )
     return diff;
   }
-
+  rowLength(options = {}) {
+    return CELLS_LENGTH + (options['prependCell'] ? 1 : 0);
+  }
   total(min, max) {
     return moment(max).diff(min, 'month') + 1;
   }

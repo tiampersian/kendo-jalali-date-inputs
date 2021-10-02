@@ -4,7 +4,7 @@ import moment from 'jalali-moment';
 import { firstDecadeOfCentury, firstYearOfDecade, getToday, isInRange, isInSelectionRange, lastDecadeOfCentury, range } from './utils';
 import { Inject, Injectable } from '@angular/core';
 const EMPTY_DATA = [[]];
-const CELLS_LENGTH = 5;
+const CELLS_LENGTH = 4;
 const ROWS_LENGTH = 2;
 import { CldrIntlService, IntlService } from '@progress/kendo-angular-intl';
 import { JalaliCldrIntlService } from './locale.service';

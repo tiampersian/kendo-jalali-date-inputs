@@ -42,7 +42,7 @@
     "url": "https://github.com/tiampersian/kendo-jalali-date-inputs"
   },
   "dependencies": {
-    "@progress/kendo-angular-dateinputs": "5.2.2",
+    "@progress/kendo-angular-dateinputs": "5.2.3",
     "@progress/kendo-angular-intl": "3.1.1",
     "@progress/kendo-angular-l10n": "3.0.2",
     "@progress/kendo-angular-common": "2.0.1",

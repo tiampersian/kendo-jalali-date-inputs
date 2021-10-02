@@ -27,7 +27,7 @@ export const firstYearOfDecade = (dt, localeId) => {
 }
 export const lastYearOfDecade = (dt, localeId) => {
   const year = moment(dt).locale(localeId).year();
-  return moment(dt).locale(localeId).add((10 - (year % 10)), 'year').toDate();
+  return moment(dt).locale(localeId).add((9 - (year % 10)), 'year').toDate();
 }
 export const firstDayOfMonth = (dt, localeId) => {
   return moment(dt).locale(localeId).startOf('month').toDate();
