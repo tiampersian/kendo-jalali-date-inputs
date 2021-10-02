@@ -155,12 +155,14 @@
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "tsConfig": "projects/tiampersian/kendo-jalali-date-inputs/tsconfig.lib.json",
             "project": "projects/tiampersian/kendo-jalali-date-inputs/ng-package.json"
           },
           "configurations": {
             "production": {
               "tsConfig": "projects/tiampersian/kendo-jalali-date-inputs/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/tiampersian/kendo-jalali-date-inputs/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
