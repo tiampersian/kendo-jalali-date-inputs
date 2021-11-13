@@ -145,6 +145,7 @@ jobs:
       - name: npm install and npm run build
         run: |
           npm install
+          npm install capture-website
           node update-screenshot.js
       - name: Update resources
         uses: test-room-7/action-update-file@v1
