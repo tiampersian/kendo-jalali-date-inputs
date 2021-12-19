@@ -1,5 +1,5 @@
 import { Inject, Injectable, LOCALE_ID, Optional } from '@angular/core';
-import { CldrIntlService } from '@progress/kendo-angular-intl';
+import { CldrIntlService, NumberFormatOptions } from '@progress/kendo-angular-intl';
 import { Subject } from 'rxjs';
 import { NumberPipe } from '../pipes/number.pipe';
 import {
@@ -86,5 +86,13 @@ export class JalaliCldrIntlService extends CldrIntlService {
     }
 
     return DatePickerType.gregorian;
+  }
+
+  formatNumber(value: number, format: string | NumberFormatOptions, localeId?: string): string {
+    localeId = localeId || this.localeId;
+    if (localeId === 'fa' || localeId === 'ar') {
+      return super.formatNumber(value, format, localeId).toPerNumber();
+    }
+    return super.formatNumber(value, format, localeId);
   }
 }

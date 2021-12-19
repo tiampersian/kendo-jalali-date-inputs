@@ -9,6 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "add:capture": "npm install capture-website --save-dev",
     "setversion": "node update-version.js",
     "build:ci": "ng build @tiampersian/kendo-jalali-date-inputs",
     "test:ci": "ng test tiampersian --browsers=ChromeHeadless --watch=false",
