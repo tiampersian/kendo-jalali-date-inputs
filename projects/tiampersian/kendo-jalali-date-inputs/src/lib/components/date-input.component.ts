@@ -25,9 +25,9 @@ DateInputComponent.prototype['updateElementValue'] = function (isActive: boolean
   // this.currentValue = !showPlaceholder ? this.intl.formatDate(this.kendoDate.value, format) : '';
   this.currentValue = !showPlaceholder ? texts[0] : '';
 
-  const temp= getDateFormatString.call(this, format, localeId);
-  this.currentFormat =temp.symbol;
-  this.outputFormat=temp.format;
+  const temp = getDateFormatString.call(this, format, localeId);
+  this.currentFormat = temp.symbol;
+  this.outputFormat = temp.format;
 
   if (this.kendoDate.hasValue()) {
     setInputValue.call(this, localeId);
@@ -156,7 +156,7 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
   }
   if (debuggerCounter(3)) { }
 
-  diff.forEach(d => {
+  diff.forEach((d): void => {
     if (!d[0]) {
       return;
     }
@@ -168,7 +168,7 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
       if (d[1] === '') {
         existInputs.m = false;
         this.kendoDate = this.getKendoDate(dt.month((+d[1])).toDate());
-        return '';
+        return;
       }
       let month = d[1];
       if (existInputs.m) {
@@ -196,7 +196,7 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
       if (d[1] === '') {
         existInputs.d = false;
         this.kendoDate = this.getKendoDate(dt.date((+d[1])).toDate());
-        return '';
+        return;
       }
       this.kendoDate.date = true;;
       let day = d[1];
@@ -323,7 +323,7 @@ function setInputValue(localeId: string) {
   const value: Date = this.kendoDate.value;
   let format = this.format;
   if (['d', 't', 'g'].some(x => x == format)) {
-    format = (this.outputFormat||this.currentFormat).toMomentDateTimeFormat();
+    format = (this.outputFormat || this.currentFormat).toMomentDateTimeFormat();
   }
   if (!this.kendoDate.year) {
     format = format.replace(/y/gi, '0');
@@ -357,7 +357,7 @@ function resetExistingInputs() {
   existInputs.y = false;
 }
 
-function debuggerCounter(counter) {
+function debuggerCounter(counter): any {
   if (typeof window === undefined) {
     return;
   }
