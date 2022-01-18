@@ -7,9 +7,9 @@
   "bugs": "https://github.com/tiampersian/kendo-jalali-date-inputs/issues",
   "peerDependencies": {
     "@progress/kendo-licensing": "^1.2.1",
-    "@angular/common": "~12.2.13",
-    "@angular/localize": "~12.2.13",
-    "@angular/core": "~12.2.13"
+    "@angular/common": "~13.1.2",
+    "@angular/localize": "~13.1.2",
+    "@angular/core": "~13.1.2"
   },
   "authors": [
     "Abbas Mirzaei <tiampersian@gmail.com>"
@@ -35,7 +35,9 @@
     "angular-jalali-date-input",
     "angular-jalali-date-picker",
     "angular-jalali-calendar",
-    "angular-jalali-date-time"
+    "angular-jalali-date-time",
+    "angular calendar",
+    "jalali angular date picker"
   ],
   "repository": {
     "type": "git",
@@ -46,9 +48,9 @@
     "@progress/kendo-angular-intl": "3.1.2",
     "@progress/kendo-angular-l10n": "3.0.3",
     "@progress/kendo-angular-common": "2.0.2",
-    "@progress/kendo-angular-popup": "4.0.2",
+    "@progress/kendo-angular-popup": "4.0.3",
     "jalali-moment": "3.3.10",
-    "tslib": "^2.0.0"
+    "tslib": "^2.3.1"
   },
   "scripts": {
     "setversion": "npm version"
