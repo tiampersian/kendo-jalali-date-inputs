@@ -2,13 +2,7 @@
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../../dist/tiampersian/kendo-jalali-date-inputs",
   "lib": {
-    "entryFile": "src/public-api.ts",
-    "umdModuleIds": {
-      "@progress/kendo-angular-dateinputs": "@progress/kendo-angular-dateinputs",
-      "@progress/kendo-angular-intl": "@progress/kendo-angular-intl",
-      "@progress/kendo-date-math": "@progress/kendo-date-math",
-      "jalali-moment": "jalali-moment"
-    }
+    "entryFile": "src/public-api.ts"
   },
   "allowedNonPeerDependencies": [
     "."
