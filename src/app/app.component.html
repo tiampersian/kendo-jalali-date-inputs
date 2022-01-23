@@ -395,7 +395,7 @@
     <div style="flex:1;">
       <p style="font-weight: bold;">calendar type</p>
       <br>
-      <select (change)="changeCalendarType($event.target.value)">
+      <select (change)="changeCalendarType($event.target?.['value'])">
         <option *ngFor="let item of calendarTypes"
                 [value]="item"
                 [selected]="item===calendarType">{{item}}</option>
@@ -406,7 +406,7 @@
       <p style="font-weight: bold;">locale id</p>
       <br>
 
-      <select (change)="changeLocaleId($event.target.value)">
+      <select (change)="changeLocaleId($event.target?.['value'])">
         <option *ngFor="let item of locales"
                 [value]="item"
                 [selected]="item===currentLocaleId">{{item}}</option>
