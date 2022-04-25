@@ -7,9 +7,9 @@
   "bugs": "https://github.com/tiampersian/kendo-jalali-date-inputs/issues",
   "peerDependencies": {
     "@progress/kendo-licensing": "^1.2.1",
-    "@angular/common": "~13.1.3",
-    "@angular/localize": "~13.1.3",
-    "@angular/core": "~13.1.3"
+    "@angular/common": "8 - 13",
+    "@angular/localize": "8 - 13",
+    "@angular/core": "8 - 13"
   },
   "authors": [
     "Abbas Mirzaei <tiampersian@gmail.com>"
