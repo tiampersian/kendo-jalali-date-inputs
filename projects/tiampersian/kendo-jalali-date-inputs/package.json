@@ -6,7 +6,7 @@
   "homepage": "https://github.com/tiampersian/kendo-jalali-date-inputs",
   "bugs": "https://github.com/tiampersian/kendo-jalali-date-inputs/issues",
   "peerDependencies": {
-    "@progress/kendo-licensing": "^1.2.1",
+    "@progress/kendo-licensing": "^1.2.2",
     "@angular/common": "8 - 13",
     "@angular/localize": "8 - 13",
     "@angular/core": "8 - 13"
@@ -20,14 +20,14 @@
     "shamsi",
     "date-time",
     "date-picker",
-    "datePicker",
+    "date picker",
     "calendare",
     "date-input",
     "dateInput",
-    "jalali-date-input",
-    "jalali-date-picker",
-    "jalali-calendar",
-    "jalali-date-time",
+    "jalali date input",
+    "jalali date picker",
+    "jalali calendar",
+    "jalali date time",
     "kendo-jalali-date-input",
     "kendo-jalali-date-picker",
     "kendo-jalali-calendar",
@@ -44,13 +44,13 @@
     "url": "https://github.com/tiampersian/kendo-jalali-date-inputs"
   },
   "dependencies": {
-    "@progress/kendo-angular-dateinputs": "6.0.0",
-    "@progress/kendo-angular-intl": "3.1.2",
-    "@progress/kendo-angular-l10n": "3.0.3",
-    "@progress/kendo-angular-common": "2.0.2",
-    "@progress/kendo-angular-popup": "4.0.4",
-    "jalali-moment": "3.3.10",
-    "tslib": "^2.3.1"
+    "@progress/kendo-angular-dateinputs": "7.0.1",
+    "@progress/kendo-angular-intl": "4.0.0",
+    "@progress/kendo-angular-l10n": "4.0.0",
+    "@progress/kendo-angular-common": "3.1.0",
+    "@progress/kendo-angular-popup": "5.0.0",
+    "jalali-moment": "3.3.11",
+    "tslib": "^2.4.0"
   },
   "scripts": {
     "setversion": "npm version"
