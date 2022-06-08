@@ -215,7 +215,7 @@ export class JalaliYearViewService extends YearViewService {
     const currentYear = moment(firstDate).locale(this.intlService.localeIdByDatePickerType).year();
     const cells = range(0, CELLS_LENGTH);
     const today = getToday();
-    debugger
+
     const xxx = range(0, ROWS_LENGTH).map(rowOffset => {
       const baseDate = addMonths(firstDate, rowOffset * CELLS_LENGTH);
       return cells.map(cellOffset => {
