@@ -3,6 +3,7 @@ import { JalaliCldrIntlService } from './../services/locale.service';
 import { TemplateRef } from '@angular/core';
 import { CalendarComponent, MultiViewCalendarComponent } from '@progress/kendo-angular-dateinputs';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { services } from '../providers';
 
 let headerTitleTemplate: TemplateRef<any>;
 Object.defineProperty(CalendarComponent.prototype, 'headerTitleTemplate', {
@@ -24,6 +25,21 @@ Object.defineProperty(MultiViewCalendarComponent.prototype, 'headerTitleTemplate
 
   set(template: TemplateRef<any>): void {
     headerTitleTemplate = template;
+  },
+  enumerable: true,
+  configurable: true
+});
+let bus;
+Object.defineProperty(CalendarComponent.prototype, 'bus', {
+  get(): any {
+    return bus;
+  },
+
+  set(value: any): void {
+    bus = value;
+    bus.service = (view) => {
+      return this.bus.injector.get(services[view]) as any;
+    }
   },
   enumerable: true,
   configurable: true

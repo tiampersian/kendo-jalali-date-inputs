@@ -21,19 +21,19 @@ export const isInSelectionRange = (value, selectionRange) => {
 export const isInRange = (dt, min, max) => {
   return moment(dt).isBetween(min, max);
 }
-export const firstYearOfDecade = (dt, localeId) => {
-  const year = moment(dt).locale(localeId).year();
-  return moment(dt).locale(localeId).add(-(year % 10), 'year').toDate();
+export const firstYearOfDecade = (dt, localeId?) => {
+  const year = moment(dt).locale(localeId||'en').year();
+  return moment(dt).locale(localeId||'en').add(-(year % 10), 'year').toDate();
 }
-export const lastYearOfDecade = (dt, localeId) => {
-  const year = moment(dt).locale(localeId).year();
-  return moment(dt).locale(localeId).add((9 - (year % 10)), 'year').toDate();
+export const lastYearOfDecade = (dt, localeId?) => {
+  const year = moment(dt).locale(localeId||'en').year();
+  return moment(dt).locale(localeId||'en').add((9 - (year % 10)), 'year').toDate();
 }
-export const firstDayOfMonth = (dt, localeId) => {
-  return moment(dt).locale(localeId).startOf('month').toDate();
+export const firstDayOfMonth = (dt, localeId?) => {
+  return moment(dt).locale(localeId||'en').startOf('month').toDate();
 }
-export const lastDayOfMonth = (dt, localeId) => {
-  return moment(dt).locale(localeId).endOf('month').toDate();
+export const lastDayOfMonth = (dt, localeId?) => {
+  return moment(dt).locale(localeId||'en').endOf('month').toDate();
 }
 // export const addMonths2 = (date, offset) => {
 //   var newDate = moment(date).toDate();
@@ -42,14 +42,29 @@ export const lastDayOfMonth = (dt, localeId) => {
 //   newDate.setMonth(newDate.getMonth() + offset);
 //   return normalize(adjust_dst_1.adjustDST(newDate, date.getHours()), expectedMonth);
 // };
-export const firstDecadeOfCentury = (dt, localeId) => {
-  const x = moment(dt).locale(localeId).year();
-  return moment(dt).locale(localeId).add((-(x % 100)) , 'year').toDate();
+export const firstDecadeOfCentury = (dt, localeId?) => {
+  const x = moment(dt).locale(localeId||'en').year();
+  return moment(dt).locale(localeId||'en').add((-(x % 100)) , 'year').toDate();
 }
-export const lastDecadeOfCentury = (dt, localeId) => {
-  const x = moment(dt).locale(localeId).year();
-  return moment(dt).locale(localeId).add((-(x % 100)) + 90, 'year').toDate();
+export const lastDecadeOfCentury = (dt, localeId?) => {
+  const x = moment(dt).locale(localeId||'en').year();
+  return moment(dt).locale(localeId||'en').add((-(x % 100)) + 90, 'year').toDate();
 
 }
 
+export const shiftWeekNames = (names, offset) => (names.slice(offset).concat(names.slice(0, offset)));
 
+export var Action;
+(function (Action) {
+    Action[Action["Left"] = 0] = "Left";
+    Action[Action["Right"] = 1] = "Right";
+    Action[Action["Up"] = 2] = "Up";
+    Action[Action["Down"] = 3] = "Down";
+    Action[Action["PrevView"] = 4] = "PrevView";
+    Action[Action["NextView"] = 5] = "NextView";
+    Action[Action["FirstInView"] = 6] = "FirstInView";
+    Action[Action["LastInView"] = 7] = "LastInView";
+    Action[Action["LowerView"] = 8] = "LowerView";
+    Action[Action["UpperView"] = 9] = "UpperView";
+})(Action || (Action = {}));
+export const isPresent = (value) => value !== undefined && value !== null;

@@ -2,6 +2,7 @@ import { DateInputComponent } from '@progress/kendo-angular-dateinputs';
 import moment, { Moment } from 'jalali-moment';
 import { JalaliCldrIntlService } from '../services/locale.service';
 import { reverseString } from '../services/moment-numbers';
+import { isPresent } from '../services/utils';
 
 
 const existInputs = {
@@ -317,7 +318,6 @@ export const setTime = (origin, candidate) => {
   return date;
 };
 
-export const isPresent = (value) => value !== undefined && value !== null;
 
 function setInputValue(localeId: string) {
   const value: Date = this.kendoDate.value;

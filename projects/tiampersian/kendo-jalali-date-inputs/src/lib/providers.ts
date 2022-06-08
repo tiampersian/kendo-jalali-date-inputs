@@ -1,5 +1,4 @@
 import { ComponentFactoryResolver, Injector } from '@angular/core';
-import { CenturyViewService, DecadeViewService, MonthViewService, WeekNamesService, YearViewService } from '@progress/kendo-angular-dateinputs';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { HeaderTitleTemplateFactory } from './HeaderTitleTemplateFactory';
 import { JalaliCenturyViewService } from './services/century-view.service';
@@ -10,11 +9,25 @@ import { JalaliWeekNamesService } from './services/week-names.service';
 import { JalaliYearViewService } from './services/year-view.services';
 
 export const Providers = [
-  { provide: CenturyViewService, useClass: JalaliCenturyViewService },
-  { provide: DecadeViewService, useClass: JalaliDecadeViewService },
-  { provide: YearViewService, useClass: JalaliYearViewService },
-  { provide: MonthViewService, useClass: JalaliMonthViewService },
-  { provide: WeekNamesService, useClass: JalaliWeekNamesService },
+  JalaliCenturyViewService,
+  JalaliDecadeViewService,
+  JalaliYearViewService,
+  JalaliMonthViewService,
+  JalaliWeekNamesService,
   { provide: IntlService, useClass: JalaliCldrIntlService },
   { provide: 'HeaderTitleTemplate', useFactory: HeaderTitleTemplateFactory, deps: [Injector, ComponentFactoryResolver] },
 ];
+var CalendarViewEnum;
+(function (CalendarViewEnum) {
+    CalendarViewEnum[CalendarViewEnum["month"] = 0] = "month";
+    CalendarViewEnum[CalendarViewEnum["year"] = 1] = "year";
+    CalendarViewEnum[CalendarViewEnum["decade"] = 2] = "decade";
+    CalendarViewEnum[CalendarViewEnum["century"] = 3] = "century";
+})(CalendarViewEnum || (CalendarViewEnum = {}));
+
+export const services = {
+  [CalendarViewEnum.month]: JalaliMonthViewService,
+  [CalendarViewEnum.year]: JalaliYearViewService,
+  [CalendarViewEnum.decade]: JalaliDecadeViewService,
+  [CalendarViewEnum.century]: JalaliCenturyViewService
+};
