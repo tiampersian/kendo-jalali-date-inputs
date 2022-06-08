@@ -30,6 +30,20 @@ Object.defineProperty(MultiViewCalendarComponent.prototype, 'headerTitleTemplate
   configurable: true
 });
 let bus;
+Object.defineProperty(MultiViewCalendarComponent.prototype, 'bus', {
+  get(): any {
+    return bus;
+  },
+
+  set(value: any): void {
+    bus = value;
+    bus.service = (view) => {
+      return this.bus.injector.get(services[view]) as any;
+    }
+  },
+  enumerable: true,
+  configurable: true
+});
 Object.defineProperty(CalendarComponent.prototype, 'bus', {
   get(): any {
     return bus;
