@@ -364,8 +364,9 @@
       </g>
     </svg>
 
-
-    <span>{{ title }} app is running!</span>
+    <a href="https://github.com/tiampersian/kendo-jalali-date-inputs">
+      <span style="color: white;">{{ title }} app is running!</span>
+    </a>
 
     <svg id="rocket-smoke"
          alt="Rocket Ship Smoke"
@@ -447,7 +448,8 @@
         <br>
         <br>
         <p>Calendar</p>
-        <kendo-calendar [activeView]="'decade'" [(ngModel)]="value"></kendo-calendar>
+        <kendo-calendar [activeView]="'decade'"
+                        [(ngModel)]="value"></kendo-calendar>
       </div>
     </div>
     <div class="row example-wrapper">
