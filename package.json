@@ -13,7 +13,7 @@
     "setversion": "node update-version.js",
     "build:ci": "ng build @tiampersian/kendo-jalali-date-inputs",
     "test:ci": "ng test tiampersian --browsers=ChromeHeadless --watch=false",
-    "build:app:ci": "ng build --prod",
+    "build:app:ci": "ng build",
     "publish": "npm publish dist/tiampersian/kendo-jalali-date-inputs  --access public"
   },
   "private": false,
