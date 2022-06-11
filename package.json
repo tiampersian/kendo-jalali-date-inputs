@@ -6,7 +6,7 @@
     "start": "node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve",
     "start2": "node --max_old_space_size=8048 ./node_modules/@angular/cli/bin/ng serve --port 4202",
     "build": "ng build",
-    "test": "ng test tiampersian",
+    "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "add:capture": "npm install capture-website --save-dev",
