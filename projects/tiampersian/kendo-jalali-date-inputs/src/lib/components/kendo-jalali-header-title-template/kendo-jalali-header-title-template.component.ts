@@ -38,6 +38,8 @@ export class KendoJalaliHeaderTitleTemplateComponent implements AfterViewInit {
     this.localeService.toggleType();
     this.calendarType = this.localeService.datePickerType;
     event.stopImmediatePropagation();
+    event.stopPropagation();
+    event.preventDefault();
   }
 }
 
