@@ -155,7 +155,7 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
   if (!dt) {
     return;
   }
-  if (debuggerCounter(3)) { }
+  // if (debuggerCounter(3)) { }
 
   diff.forEach((d): void => {
     if (!d[0]) {
