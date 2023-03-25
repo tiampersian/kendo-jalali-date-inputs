@@ -23,7 +23,7 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "deployUrl": "/kendo-jalali-date-inputs/",
+            "baseHref": "/kendo-jalali-date-inputs/",
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -94,7 +94,7 @@
               "browserTarget": "tiampersian:build:fa"
             }
           },
-            "defaultConfiguration": "development"
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -105,10 +105,12 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
             "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
+            "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
               "src/assets"
@@ -116,7 +118,8 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "browsers": "Chrome"
           }
         },
         "lint": {
@@ -170,9 +173,13 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/tiampersian/kendo-jalali-date-inputs/src/test.ts",
             "tsConfig": "projects/tiampersian/kendo-jalali-date-inputs/tsconfig.spec.json",
-            "karmaConfig": "projects/tiampersian/kendo-jalali-date-inputs/karma.conf.js"
+            "main": "projects/tiampersian/kendo-jalali-date-inputs/src/test.ts",
+            "karmaConfig": "projects/tiampersian/kendo-jalali-date-inputs/karma.conf.js",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
           }
         },
         "lint": {

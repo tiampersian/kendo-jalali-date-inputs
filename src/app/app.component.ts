@@ -27,7 +27,7 @@ export class AppComponent {
     this.currentLocaleId = localeService.localeId;
   }
 
-  changeCalendarType(value): void {
+  changeCalendarType(value: string): void {
     localStorage.setItem('locale', value);
     this.calendarType = value;
     this.localeService.toggleType();
@@ -41,14 +41,14 @@ export class AppComponent {
     this.rerender = true;
   }
 
-  changeLocaleId(value): void {
+  changeLocaleId(value: any): void {
     localStorage.setItem('localeId', value);
     this.localeService.changeLocaleId(value);
     this.localeService.reload();
     this.currentLocaleId = value;
   }
 
-  changeValue($event): void {
+  changeValue($event: any): void {
     this.value = $event;
   }
 }

@@ -199,7 +199,7 @@ export class JalaliYearViewService extends YearViewService {
     return moment().locale(this.intlService.localeId).localeData().monthsShort();
   }
 
-  data(options) {
+  override data(options) {
     const { cellUID, focusedDate, isActiveView, max, min, selectedDate, selectionRange = EMPTY_SELECTIONRANGE, viewDate } = options;
     if (!viewDate) {
       return EMPTY_DATA;
@@ -251,10 +251,10 @@ export class JalaliYearViewService extends YearViewService {
 
     return xxx;
   }
-  title(current) {
+  override title(current: any) {
     return `${moment(current).locale(this.intlService.localeIdByDatePickerType).format('YYYY')}`;
   }
-  navigationTitle(value) {
+  override navigationTitle(value: any) {
     return `${moment(value).locale(this.intlService.localeIdByDatePickerType).format('YYYY')}`;
 
   }
