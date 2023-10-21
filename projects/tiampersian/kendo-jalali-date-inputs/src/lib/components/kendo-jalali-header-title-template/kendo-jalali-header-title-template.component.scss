@@ -26,7 +26,8 @@
       text-transform: capitalize;
       width: 50%;
       padding: 0;
-      .k-icon{
+
+      .k-icon {
         font-size: 14px;
         font-weight: bold;
       }
@@ -51,13 +52,15 @@
     }
   }
 
-  kendo-dateinput input {
-    unicode-bidi: bidi-override;
-    direction: ltr !important;
-  }
 
   .rtl,
   [dir=rtl] {
+    kendo-dateinput input {
+      direction: rtl !important;
+      text-align: right !important;
+      unicode-bidi: embed !important;
+    }
+
     kendo-calendar-navigation.k-calendar-navigation kendo-virtualization {
       right: unset !important;
 
