@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule, By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DatePickerType, KendoJalaliDateInputsModule } from '@tiampersian/kendo-jalali-date-inputs';
-import moment from 'jalali-moment';
+import moment from 'dayjs';
 import { AppComponent } from './app.component';
 import '@progress/kendo-angular-intl/locales/fa/all';
 function keyPress(key) {
@@ -78,7 +78,7 @@ describe('AppComponent', () => {
 
       // expected
       expect(fixture.componentInstance.calendarType).toBe(DatePickerType.jalali);
-      expect(input.value).toBe(moment(item.input).locale('fa').format('YYYY/M/D'));
+      expect(input.value).toBe(moment(item.input).calendar('jalali').locale('fa').format('YYYY/M/D'));
     });
   });
 
@@ -108,7 +108,7 @@ describe('AppComponent', () => {
     fixture.detectChanges();
 
     // expected
-    expect(moment(fixture.componentInstance.value).locale('fa').format('yyyy/M/D')).toEqual('١٣٩٩/٢/٢')
+    expect(moment(fixture.componentInstance.value).locale('fa').format('YYYY/M/D')).toEqual('١٣٩٩/٢/٢')
     // expect(input.nativeElement.value/*?*/).not.toBe(moment(testCases[0].input).locale('fa').format('YYYY/M/D'));
   });
 });

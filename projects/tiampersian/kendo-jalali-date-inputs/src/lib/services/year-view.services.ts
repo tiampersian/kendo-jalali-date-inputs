@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { CldrIntlService, IntlService } from '@progress/kendo-angular-intl';
-import moment from 'jalali-moment';
+import dayjs from 'dayjs';
+
 import { JalaliCldrIntlService } from './locale.service';
 import { Action, EMPTY_SELECTIONRANGE, getToday, isInSelectionRange, isPresent, range } from './utils';
 import { addMonths, addYears, cloneDate, createDate, durationInYears, firstMonthOfYear, lastDayOfMonth, lastMonthOfYear } from '@progress/kendo-date-math';
@@ -194,9 +195,12 @@ export class JalaliYearViewService extends YearViewService {
 
   abbrMonthNames2() {
     if (this.intlService.isJalali) {
-      return moment().locale(this.intlService.localeId).localeData().jMonthsShort();
+      return Array.from(Array(12).keys()).map((x, i) => {
+        return dayjs('' + i, 'M').calendar(this.intlService.calendarType).locale(this.intlService.localeId).format('MMMM');
+      });
     }
-    return moment().locale(this.intlService.localeId).localeData().monthsShort();
+
+    return dayjs().locale(this.intlService.localeId).localeData().monthsShort();
   }
 
   override data(options) {
@@ -206,13 +210,13 @@ export class JalaliYearViewService extends YearViewService {
     }
 
     const months = this.abbrMonthNames2();
-    const isSelectedDateInRange = moment(selectedDate).isBetween(min, max);
+    const isSelectedDateInRange = dayjs(selectedDate).isBetween(min, max);
     //firstMonthOfYear
-    const firstDate = moment(viewDate).locale(this.intlService.localeIdByDatePickerType).startOf('year').add(moment(viewDate).locale(this.intlService.localeIdByDatePickerType).date() - 1, 'day').toDate();
-    const lastDate = moment(viewDate).locale(this.intlService.localeIdByDatePickerType).endOf('year').add(-1, 'month').add(moment(viewDate).locale(this.intlService.localeIdByDatePickerType).date(), 'day').toDate();
-    // const firstDate = moment(viewDate).locale('fa').startOf('month').toDate();
-    // const lastDate = moment(viewDate).locale('fa').endOf('month').toDate();
-    const currentYear = moment(firstDate).locale(this.intlService.localeIdByDatePickerType).year();
+    const firstDate = dayjs(viewDate).calendar(this.intlService.calendarType).locale(this.intlService.localeId).startOf('year').add(dayjs(viewDate).calendar(this.intlService.calendarType).locale(this.intlService.localeId).date() - 1, 'day').toDate();
+    const lastDate = dayjs(viewDate).calendar(this.intlService.calendarType).locale(this.intlService.localeId).endOf('year').add(-1, 'month').add(dayjs(viewDate).calendar(this.intlService.calendarType).locale(this.intlService.localeId).date(), 'day').toDate();
+    // const firstDate = dayjs(viewDate).calendar(this.intlService.calendarType).locale('fa').startOf('month').toDate();
+    // const lastDate = dayjs(viewDate).calendar(this.intlService.calendarType).locale('fa').endOf('month').toDate();
+    const currentYear = dayjs(firstDate).calendar(this.intlService.calendarType).locale(this.intlService.localeId).year();
     const cells = range(0, CELLS_LENGTH);
     const today = getToday();
 
@@ -220,8 +224,8 @@ export class JalaliYearViewService extends YearViewService {
       const baseDate = addMonths(firstDate, rowOffset * CELLS_LENGTH);
       return cells.map(cellOffset => {
         const cellDate = this['normalize'](addMonths(baseDate, cellOffset), min, max);
-        const changedYear = currentYear < moment(cellDate).locale(this.intlService.localeIdByDatePickerType).year();
-        if (!moment(cellDate).isBetween(min, max)) {
+        const changedYear = currentYear < dayjs(cellDate).calendar(this.intlService.calendarType).locale(this.intlService.localeId).year();
+        if (!dayjs(cellDate).isBetween(min, max)) {
           return null;
         }
         if (changedYear) {
@@ -232,7 +236,7 @@ export class JalaliYearViewService extends YearViewService {
         const isInMiddle = !isRangeStart && !isRangeEnd;
         const isRangeMid = isInMiddle && isInSelectionRange(cellDate, selectionRange);
         return {
-          formattedValue: months[moment(cellDate).locale(this.intlService.localeIdByDatePickerType).month()],
+          formattedValue: months[dayjs(cellDate).calendar(this.intlService.calendarType).locale(this.intlService.localeId).month()],
           id: `${cellUID}${cellDate.getTime()}`,
           isFocused: this.isEqual(cellDate, focusedDate),
           isSelected: isActiveView && isSelectedDateInRange && this.isEqual(cellDate, selectedDate),
@@ -252,10 +256,10 @@ export class JalaliYearViewService extends YearViewService {
     return xxx;
   }
   override title(current: any) {
-    return `${moment(current).locale(this.intlService.localeIdByDatePickerType).format('YYYY')}`;
+    return `${dayjs(current).calendar(this.intlService.calendarType).locale(this.intlService.localeId).format('YYYY')}`;
   }
   override navigationTitle(value: any) {
-    return `${moment(value).locale(this.intlService.localeIdByDatePickerType).format('YYYY')}`;
+    return `${dayjs(value).calendar(this.intlService.calendarType).locale(this.intlService.localeId).format('YYYY')}`;
 
   }
 }

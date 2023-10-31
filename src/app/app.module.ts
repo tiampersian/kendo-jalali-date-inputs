@@ -33,5 +33,5 @@ export function originalLocaleIdFactory(originalLocalId: string): string {
 }
 
 export function isRtl(): boolean {
-  return localStorage.getItem('localeId') === 'fa-IR';
+  return localStorage.getItem('localeId')?.startsWith('fa');
 }

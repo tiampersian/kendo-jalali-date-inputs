@@ -5,6 +5,7 @@ import { NumberPipe } from '../pipes/number.pipe';
 import {
   MomentNumberService
 } from './moment-numbers';
+import dayjs from 'dayjs';
 export enum DatePickerType {
   jalali = 'jalali',
   gregorian = 'gregorian'
@@ -19,6 +20,9 @@ export class JalaliCldrIntlService extends CldrIntlService {
   get isLocaleIran(): boolean {
     return this.localeId === 'fa-IR' || this.localeId === 'fa';
   }
+  get calendarType(): any {
+    return this.localeIdByDatePickerType === 'fa' ? 'jalali' : 'gregory';
+  }
   defaultTitleTemplate: any;
   $calendarType = new Subject();
   isFirst = true;
@@ -29,6 +33,10 @@ export class JalaliCldrIntlService extends CldrIntlService {
   ) {
     super(originalLocaleId);
     this.changeType();
+  }
+
+  firstDay(localeId?: string): number {
+    return super.firstDay(this.localeIdByDatePickerType);
   }
 
   setTitleTemplate(template): void {

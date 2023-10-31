@@ -30,8 +30,6 @@ export class DateInputComponentPage {
     return this;
   }
 
-
-
   async init() {
     await TestBed.configureTestingModule({
       imports: [

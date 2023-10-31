@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { addCenturies, addDecades, cloneDate, createDate, durationInCenturies, lastDayOfMonth, lastMonthOfYear, lastYearOfDecade } from '@progress/kendo-date-math';
-import moment from 'jalali-moment';
+import moment from 'dayjs';
 import { JalaliCldrIntlService } from './locale.service';
 import { Action, EMPTY_SELECTIONRANGE, firstDecadeOfCentury, firstYearOfDecade, getToday, isInRange, isInSelectionRange, isPresent, lastDecadeOfCentury, range } from './utils';
 const EMPTY_DATA = [[]];
@@ -176,11 +176,12 @@ export class JalaliCenturyViewService extends CenturyViewService {
       return '';
     }
 
-    const temp = moment(lastDecadeOfCentury(current, this.intlService.localeIdByDatePickerType)).locale(this.intlService.localeIdByDatePickerType).format('YYYY');
-    return `${moment(firstDecadeOfCentury(current, this.intlService.localeIdByDatePickerType)).locale(this.intlService.localeIdByDatePickerType).format('YYYY')} - ${temp}`;
+    const temp = moment(lastDecadeOfCentury(current, this.intlService.localeIdByDatePickerType)).calendar(this.intlService.calendarType).locale(this.intlService.localeId).format('YYYY');
+    return `${moment(firstDecadeOfCentury(current, this.intlService.localeIdByDatePickerType)).calendar(this.intlService.calendarType).locale(this.intlService.localeId).format('YYYY')} - ${temp}`;
   }
+
   navigationTitle(value) {
-    return `${moment(firstDecadeOfCentury(value, this.intlService.localeIdByDatePickerType)).locale(this.intlService.localeIdByDatePickerType).format('YYYY')}`;
+    return `${moment(firstDecadeOfCentury(value, this.intlService.localeIdByDatePickerType)).calendar(this.intlService.calendarType).locale(this.intlService.localeId).format('YYYY')}`;
   }
 
 
@@ -205,7 +206,7 @@ export class JalaliCenturyViewService extends CenturyViewService {
         const isRangeEnd = this.isEqual(cellDate, selectionRange.end);
         const isInMiddle = !isRangeStart && !isRangeEnd;
         const isRangeMid = isInMiddle && isInSelectionRange(cellDate, selectionRange);
-        const title = moment(cellDate).locale(this.intlService.localeIdByDatePickerType).format('YYYY');
+        const title = moment(cellDate).calendar(this.intlService.calendarType).locale(this.intlService.localeId).format('YYYY');
 
         return {
           formattedValue: title,

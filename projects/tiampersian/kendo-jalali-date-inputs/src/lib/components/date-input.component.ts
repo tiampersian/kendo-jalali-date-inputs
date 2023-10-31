@@ -1,5 +1,6 @@
 import { DateInputComponent } from '@progress/kendo-angular-dateinputs';
-import moment, { Moment } from 'jalali-moment';
+import dayjs, * as  moment from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { JalaliCldrIntlService } from '../services/locale.service';
 import { reverseString } from '../services/moment-numbers';
 import { isPresent } from '../services/utils';
@@ -122,6 +123,7 @@ function dateFormatString(date, format): { format: string, symbol: string } {
   const partSymbols = [];
   for (let i = 0; i < dateFormatParts.length; i++) {
     let partLength = getValue.call(this, date)?.format(dateFormatParts[i].pattern?.toMomentDateTimeFormat()).length || 0;
+    // let partLength = dayjs(date)?.format(dateFormatParts[i].pattern?.toMomentDateTimeFormat()).length || 0;
     while (partLength > 0) {
       parts.push(this.kendoDate.symbols[dateFormatParts[i].pattern[0]] || dateFormatParts[i].pattern[0] || "_");
       partSymbols.push(this.kendoDate.symbols[dateFormatParts[i].pattern[0]] || "_");
@@ -225,7 +227,7 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
     }
   });
 }
-const MIN_JALALI_DATE = moment.from('0000-01-01', 'fa', 'YYYY/MM/DD');
+const MIN_JALALI_DATE = dayjs('0000-01-01', 'YYYY/MM/DD', 'fa');
 
 function prepareYearValue(diff: any[], dt) {
   diff[2] = false
@@ -340,16 +342,13 @@ function setInputValue(localeId: string) {
     this.renderer.setProperty(this.inputElement, 'value', result.format(format.toMomentDateTimeFormat()));
     return;
   }
-
-  
   this.renderer.setProperty(this.inputElement, 'value', result.format(format.toMomentDateTimeFormat()));
 }
 
-function getValue(value: Date | string, localeId?: string): Moment {
+function getValue(value: Date | string, localeId?: string): Dayjs {
   if (!value) { return null; }
 
-  let formatter = (localeId || this.intl.localeIdByDatePickerType) == 'fa' ? 'doAsJalali' : 'doAsGregorian';
-  return moment(value).locale(this.intl.localeId)[formatter]();
+  return dayjs(value).calendar(this.intl.calendarType).locale(localeId || this.intl.locale);
 }
 
 

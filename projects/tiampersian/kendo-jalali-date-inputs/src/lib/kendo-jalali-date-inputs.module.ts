@@ -8,6 +8,29 @@ import { IConfig } from './models/config.model';
 import { NumberPipe } from './pipes/number.pipe';
 import { Providers } from './providers';
 import { MomentNumberService } from './services/moment-numbers';
+import dayjs, { GlobalLocaleDataReturn } from 'dayjs'
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+import isBetween from 'dayjs/plugin/isBetween';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import localeData from 'dayjs/plugin/localeData';
+import jalaliday from 'jalaliday';
+
+dayjs.extend(jalaliday);
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isBetween);
+dayjs.extend(localeData);
+if (typeof window !== 'undefined') {
+  window['dayjs'] = dayjs;
+}
+// debugger
+// const oldLocaleData = dayjs.prototype.localeData as () => GlobalLocaleDataReturn;
+// dayjs.prototype.localeData = function (a) {
+//   debugger
+//   return oldLocaleData.call(this)
+// };
 
 setData({
   name: "fa",

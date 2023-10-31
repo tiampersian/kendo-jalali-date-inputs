@@ -7,7 +7,7 @@ import { DatePickerType, JalaliCldrIntlService } from '../../services/locale.ser
   template: `
   <ng-template #template kendoCalendarHeaderTitleTemplate let-title>
     <span class="header-title k-button k-button k-rounded-lg k-button-sm k-button-link-base k-button-link">{{title}}</span>
-    <button class="header-calendar-type k-button k-rounded-lg k-button-sm k-button-link-base k-button-link" (click)="toggleCalendarType($event)">
+    <button i18n-title="@@changeCalendarType" title="Change Calendar Type" class="header-calendar-type k-button k-rounded-lg k-button-sm k-button-link-base k-button-link" (click)="toggleCalendarType($event)">
       {{calendarTypes[calendarType]}}
       <i class="k-icon k-i-arrows-swap {{calendarType!=='jalali'&&'k-flip-h'}}" ></i>
     </button>

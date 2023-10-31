@@ -1,5 +1,5 @@
 import { Inject, Injectable, LOCALE_ID } from '@angular/core';
-import moment from 'jalali-moment';
+import dayjs from 'dayjs';
 import { IConfig } from '../models/config.model';
 declare global {
   interface String {
@@ -21,7 +21,12 @@ String.prototype.toEnNumber = function () {
   });
 };
 String.prototype.toMomentDateTimeFormat = function () {
-  return this.replace(/d/g, 'D').replace(/aa/ig, (m) => m[0]).replace(/_/g, '/');
+  let x = this.replace(/d/g, 'D')
+  .replace(/aa/ig, (m) => m[0])
+  .replace(/_/g, '/')
+  .replace(/[y]{1,}/, 'YYYY');
+
+  return x;
 };
 String.prototype.revertPersianWord = function () {
   return this.replace(/(?:(?![٠-٩])[\u0600-\u06FF]){2,}/g, (m) => reverseString(m));
@@ -73,9 +78,9 @@ export class MomentNumberService {
       return;
     }
     const me = this;
-    moment.localeData().months();
-    const te = moment.fn.format;
-    (moment as any).fn.format = function (format) {
+    // dayjs.localeData().months();
+    const te = dayjs.prototype.format;
+    dayjs.prototype.format = function (format) {
 
       if (!me.usePersianNumber) {
         return te.call(this, format);

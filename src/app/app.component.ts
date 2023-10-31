@@ -13,7 +13,7 @@ import { DatePickerType, JalaliCldrIntlService } from '@tiampersian/kendo-jalali
 })
 export class AppComponent {
   title = 'kendo-jalali-date-inputs';
-  public value: Date = new Date('2020-11-01T20:30:00.000Z');
+  public value: Date = new Date();
   rerender = true;
   locales = ['fa-IR', 'fa', 'en-US', 'en'];
   calendarTypes = Object.values(DatePickerType);

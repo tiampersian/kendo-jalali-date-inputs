@@ -1,6 +1,12 @@
 ::ng-deep {
   .k-calendar {
     direction: ltr;
+    kendo-virtualization.k-flex.k-content.k-scrollable {
+      --kendo-scrollbar-width: -15px;
+    }
+    kendo-calendar-navigation kendo-virtualization.k-flex.k-content.k-scrollable {
+      --kendo-scrollbar-width: 0px;
+    }
   }
 
   .k-calendar-title {

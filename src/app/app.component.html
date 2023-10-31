@@ -420,7 +420,7 @@
     <p><strong>Final Value</strong>: {{value}}</p>
   </div>
   <div class="card-container"
-       [dir]="currentLocaleId=='fa-IR'?'rtl':'ltr'"
+       [dir]="(currentLocaleId=='fa-IR'||currentLocaleId=='fa')?'rtl':'ltr'"
        *ngIf="rerender">
     <div class="row example-wrapper"
          *ngIf="1"
@@ -448,7 +448,7 @@
         <br>
         <br>
         <p>Calendar</p>
-        <kendo-calendar [activeView]="'decade'"
+        <kendo-calendar 
                         [(ngModel)]="value"></kendo-calendar>
       </div>
     </div>

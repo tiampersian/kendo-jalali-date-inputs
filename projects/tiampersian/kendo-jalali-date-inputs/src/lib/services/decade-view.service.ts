@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { CldrIntlService, IntlService } from '@progress/kendo-angular-intl';
 import { addDecades, addYears, cloneDate, durationInDecades, createDate, lastMonthOfYear, lastDayOfMonth } from '@progress/kendo-date-math';
-import moment from 'jalali-moment';
+import moment from 'dayjs';
 import { JalaliCldrIntlService } from './locale.service';
 import { Action, EMPTY_SELECTIONRANGE, firstYearOfDecade, getToday, isInRange, isInSelectionRange, isPresent, lastYearOfDecade, range } from './utils';
 
@@ -175,8 +175,8 @@ export class JalaliDecadeViewService extends DecadeViewService {
     if (!value) {
       return '';
     }
-    const firstYear = moment(firstYearOfDecade(value, this.intlService.localeIdByDatePickerType)).locale(this.intlService.localeIdByDatePickerType).format('YYYY');
-    const lastYear = moment(lastYearOfDecade(value, this.intlService.localeIdByDatePickerType)).locale(this.intlService.localeIdByDatePickerType).format('YYYY');
+    const firstYear = moment(firstYearOfDecade(value, this.intlService.localeIdByDatePickerType)).calendar(this.intlService.calendarType).locale(this.intlService.localeId).format('YYYY');
+    const lastYear = moment(lastYearOfDecade(value, this.intlService.localeIdByDatePickerType)).calendar(this.intlService.calendarType).locale(this.intlService.localeId).format('YYYY');
     if (this.intlService.isLocaleIran) {
       return `${lastYear} - ${firstYear}`;
     }
@@ -187,7 +187,7 @@ export class JalaliDecadeViewService extends DecadeViewService {
     if (!value) {
       return '';
     }
-    return `${moment(firstYearOfDecade(value, this.intlService.localeIdByDatePickerType)).locale(this.intlService.localeIdByDatePickerType).format('YYYY')}`;
+    return `${moment(firstYearOfDecade(value, this.intlService.localeIdByDatePickerType)).calendar(this.intlService.calendarType).locale(this.intlService.localeId).format('YYYY')}`;
   }
   data(options) {
     const { cellUID, focusedDate, isActiveView, max, min, selectedDates, selectionRange = EMPTY_SELECTIONRANGE, viewDate } = options;
@@ -212,7 +212,7 @@ export class JalaliDecadeViewService extends DecadeViewService {
         const isRangeEnd = this.isEqual(cellDate, selectionRange.end);
         const isInMiddle = !isRangeStart && !isRangeEnd;
         const isRangeMid = isInMiddle && isInSelectionRange(cellDate, selectionRange);
-        const title = moment(cellDate).locale(this.intlService.localeIdByDatePickerType).format('YYYY');
+        const title = moment(cellDate).calendar(this.intlService.calendarType).locale(this.intlService.localeId).format('YYYY');
         return {
           formattedValue: title,
           id: `${cellUID}${cellDate.getTime()}`,

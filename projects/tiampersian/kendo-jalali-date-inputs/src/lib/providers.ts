@@ -4,7 +4,7 @@ import { HeaderTitleTemplateFactory } from './HeaderTitleTemplateFactory';
 import { JalaliCenturyViewService } from './services/century-view.service';
 import { JalaliDecadeViewService } from './services/decade-view.service';
 import { JalaliCldrIntlService } from './services/locale.service';
-import { JalaliMonthViewService } from './services/month-view.service';
+import { JalaliMonthViewService } from './services/jalali-month-view.service';
 import { JalaliWeekNamesService } from './services/week-names.service';
 import { JalaliYearViewService } from './services/year-view.services';
 
