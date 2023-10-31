@@ -340,6 +340,8 @@ function setInputValue(localeId: string) {
     this.renderer.setProperty(this.inputElement, 'value', result.format(format.toMomentDateTimeFormat()));
     return;
   }
+
+  
   this.renderer.setProperty(this.inputElement, 'value', result.format(format.toMomentDateTimeFormat()));
 }
 
