@@ -1,7 +1,7 @@
 import { CldrIntlService } from '@progress/kendo-angular-intl';
 import { addDays, addWeeks, addMonths, cloneDate, dayOfWeek, durationInMonths, getDate, createDate } from '@progress/kendo-date-math';
 import localeData from 'dayjs/plugin/localeData';
-import { firstDayOfMonth, getToday, isInSelectionRange, range, lastDayOfMonth, Action, isPresent, EMPTY_SELECTIONRANGE } from './utils';
+import { firstDayOfMonth, getToday, isInSelectionRange, range, lastDayOfMonth, Action, isPresent, EMPTY_SELECTIONRANGE } from '../kendo-util-overrides';
 export const EMPTY_DATA = [[]];
 export const CELLS_LENGTH = 7;
 export const ROWS_LENGTH = 6;
@@ -29,7 +29,7 @@ export class MonthViewService {
     return result;
   };
 
-  constructor(private _intlService) {
+  constructor(private _intl) {
   }
   addToDate(min, skip) {
     return addMonths(min, skip);
@@ -47,7 +47,7 @@ export class MonthViewService {
     const lastMonthDate = lastDayOfMonth(viewDate);
     const lastMonthDay = getDate(lastMonthDate);
     const backward = -1;
-    const date = dayOfWeek(firstMonthDate, this._intlService.firstDay(), backward);
+    const date = dayOfWeek(firstMonthDate, this._intl.firstDay(), backward);
     const cells = range(0, CELLS_LENGTH);
     const today = getToday();
     return range(0, ROWS_LENGTH).map(rowOffset => {
@@ -124,7 +124,7 @@ export class MonthViewService {
     return modifier(value);
   }
   cellTitle(value) {
-    return this._intlService.formatDate(value, 'D');
+    return this._intl.formatDate(value, 'D');
   }
   navigationTitle(value) {
     if (!value) {
@@ -156,7 +156,7 @@ export class MonthViewService {
     return date;
   }
   isWeekend(date) {
-    const { start, end } = this._intlService.weekendRange();
+    const { start, end } = this._intl.weekendRange();
     const day = date.getDay();
     if (end < start) {
       return day <= end || start <= day;
@@ -164,7 +164,7 @@ export class MonthViewService {
     return start <= day && day <= end;
   }
   abbrMonthNames() {
-    return this._intlService.dateFormatNames({ nameType: 'abbreviated', type: 'months' });
+    return this._intl.dateFormatNames({ nameType: 'abbreviated', type: 'months' });
   }
   normalize(cellDate, min, max) {
     if (cellDate < min && this.isEqual(cellDate, min)) {
@@ -176,7 +176,7 @@ export class MonthViewService {
     return cellDate;
   }
   wideMonthNames() {
-    return this._intlService.dateFormatNames({ nameType: 'wide', type: 'months' });
+    return this._intl.dateFormatNames({ nameType: 'wide', type: 'months' });
   }
 }
 

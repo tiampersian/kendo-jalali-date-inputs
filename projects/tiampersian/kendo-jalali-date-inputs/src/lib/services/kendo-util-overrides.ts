@@ -1,5 +1,5 @@
 import { getDate } from '@progress/kendo-date-math';
-import moment from 'dayjs';
+import dayjs from 'dayjs';
 
 export const range = (start, end, step = 1) => {
   const result = [];
@@ -8,50 +8,52 @@ export const range = (start, end, step = 1) => {
   }
   return result;
 };
+
 export const EMPTY_SELECTIONRANGE = { start: null, end: null };
 
 export const getToday = () => getDate(new Date());
+
 export const isInSelectionRange = (value, selectionRange) => {
   const { start, end } = selectionRange || EMPTY_SELECTIONRANGE;
   if (!start || !end) {
     return false;
   }
   return start < value && value < end;
-};
+}
+
 export const isInRange = (dt, min, max) => {
-  return moment(dt).isBetween(min, max);
+  return dayjs(dt).isBetween(min, max);
 }
+
 export const firstYearOfDecade = (dt, localeId?) => {
-  const year = moment(dt).calendar(getCalendarType(localeId)).year();
-  return moment(dt).calendar(getCalendarType(localeId)).add(-(year % 10), 'year').toDate();
+  return getDayJsValue(dt, localeId).add(-(getYear(dt, localeId) % 10), 'year').toDate();
 }
+
 export const lastYearOfDecade = (dt, localeId?) => {
-  const year = moment(dt).calendar(getCalendarType(localeId)).year();
-  return moment(dt).calendar(getCalendarType(localeId)).add((9 - (year % 10)), 'year').toDate();
+  return getDayJsValue(dt, localeId).add((9 - (getYear(dt, localeId) % 10)), 'year').toDate();
 }
+
 export const firstDayOfMonth = (dt, localeId?) => {
-  return moment(dt).calendar(getCalendarType(localeId)).startOf('month').toDate();
+  return getDayJsValue(dt, localeId).startOf('month').toDate();
 }
+
 export const lastDayOfMonth = (dt, localeId?) => {
-  return moment(dt).calendar(getCalendarType(localeId)).endOf('month').toDate();
+  return getDayJsValue(dt, localeId).endOf('month').toDate();
 }
-// export const addMonths2 = (date, offset) => {
-//   var newDate = moment(date).toDate();
-//   var diff = (newDate.getMonth() + offset) % 12;
-//   var expectedMonth = (12 + diff) % 12;
-//   newDate.setMonth(newDate.getMonth() + offset);
-//   return normalize(adjust_dst_1.adjustDST(newDate, date.getHours()), expectedMonth);
-// };
-export const getCalendarType = (localeId: string) => {
+
+const getCalendarType = (localeId: string) => {
   return (localeId === 'fa' || localeId === 'fa-IR') ? 'jalali' : 'gregory';
 }
-export const firstDecadeOfCentury = (dt, localeId?) => {
-  const x = moment(dt).calendar(getCalendarType(localeId)).year();
-  return moment(dt).calendar(getCalendarType(localeId)).add((-(x % 100)), 'year').toDate();
+const getDayJsValue = (dt: any, localeId: string) => {
+  return dayjs(dt).calendar(getCalendarType(localeId))
 }
+
+export const firstDecadeOfCentury = (dt, localeId?) => {
+  return getDayJsValue(dt, localeId).add((-(getYear(dt, localeId) % 100)), 'year').toDate();
+}
+
 export const lastDecadeOfCentury = (dt, localeId?) => {
-  const x = moment(dt).calendar(getCalendarType(localeId)).year();
-  return moment(dt).calendar(getCalendarType(localeId)).add((-(x % 100)) + 90, 'year').toDate();
+  return getDayJsValue(dt, localeId).add((-(getYear(dt, localeId) % 100)) + 90, 'year').toDate();
 
 }
 
@@ -70,4 +72,10 @@ export var Action;
   Action[Action["LowerView"] = 8] = "LowerView";
   Action[Action["UpperView"] = 9] = "UpperView";
 })(Action || (Action = {}));
+
 export const isPresent = (value) => value !== undefined && value !== null;
+
+function getYear(dt: any, localeId: any) {
+  return getDayJsValue(dt, localeId).year();
+}
+

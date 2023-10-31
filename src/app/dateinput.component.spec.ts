@@ -7,7 +7,6 @@ import localeData from 'dayjs/plugin/localeData';
 import 'dayjs/locale/fa';
 dayjs.extend(isBetween);
 dayjs.extend(localeData);
-window['dayjs'] = dayjs;
 
 describe('SUT(integration): DateInputComponent', () => {
   let sutPage: DateInputComponentPage;
@@ -16,12 +15,9 @@ describe('SUT(integration): DateInputComponent', () => {
   const expected_value_gregorian = dayjs(some_value).locale('en').format('M/D/YYYY')/*?*/;
 
   beforeEach(async () => {
-    sutPage = await (await new DateInputComponentPage().init());
+    sutPage = await new DateInputComponentPage().init();
   });
 
-  afterEach(() => {
-    sutPage.fixture.destroy();
-  });
 
   it(`should create properly`, () => {
     // assert
@@ -167,7 +163,16 @@ describe('SUT(integration): DateInputComponent', () => {
 });
 
 function getJalaliValue(value: string) {
-  return dayjs(dayjs(value).format('YYYY/M/D'), { jalali: true } as any).toDate().toISOString();
+  try {
+    if (dayjs(value).isValid()) {
+      return dayjs(dayjs(value).format('YYYY/M/D'), { jalali: true } as any).toDate().toISOString();
+    }
+    return dayjs(value, 'YYYY/M/D', { jalali: true } as any).toDate().toISOString();
+
+  } catch (error) {
+    console.log(error)
+  }
+  return dayjs().toDate().toISOString();
 }
 function getGregorianValue(value: string) {
   return dayjs(value, 'M/D/YYYY', 'en').toDate().toISOString();

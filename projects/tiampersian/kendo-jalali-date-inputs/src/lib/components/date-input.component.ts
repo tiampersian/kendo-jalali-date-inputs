@@ -1,9 +1,8 @@
 import { DateInputComponent } from '@progress/kendo-angular-dateinputs';
-import dayjs, * as  moment from 'dayjs';
+import dayjs from 'dayjs';
 import { Dayjs } from 'dayjs';
-import { JalaliCldrIntlService } from '../services/locale.service';
-import { reverseString } from '../services/moment-numbers';
-import { isPresent } from '../services/utils';
+import { JalaliCldrIntlService } from '../services/jalali-cldr-intl.service';
+import { isPresent } from '../services/kendo-util-overrides';
 
 
 const existInputs = {
@@ -67,7 +66,7 @@ DateInputComponent.prototype['handleInput'] = function () {
   let prevValue = this.currentValue;
   if (intl.isJalali) {
     // TODO Check me
-    prevValue = this.value ? getValue.call(this, this.value).format(dateFormatString.call(this, this.value, this.format, 'fa').format.toMomentDateTimeFormat()).toEnNumber() : this.currentValue;
+    prevValue = this.value ? this.intl.getDayJsValue(this.value).format(dateFormatString.call(this, this.value, this.format, 'fa').format.toMomentDateTimeFormat()).toEnNumber() : this.currentValue;
     // prevValue = this.value ? getValue.call(this, this.value).format(this.format.toMomentDateTimeFormat()).toEnNumber() : this.currentValue;
   }
 
@@ -122,7 +121,7 @@ function dateFormatString(date, format): { format: string, symbol: string } {
   const partMap = [];
   const partSymbols = [];
   for (let i = 0; i < dateFormatParts.length; i++) {
-    let partLength = getValue.call(this, date)?.format(dateFormatParts[i].pattern?.toMomentDateTimeFormat()).length || 0;
+    let partLength = this.intl.getDayJsValue(date)?.format(dateFormatParts[i].pattern?.toMomentDateTimeFormat()).length || 0;
     // let partLength = dayjs(date)?.format(dateFormatParts[i].pattern?.toMomentDateTimeFormat()).length || 0;
     while (partLength > 0) {
       parts.push(this.kendoDate.symbols[dateFormatParts[i].pattern[0]] || dateFormatParts[i].pattern[0] || "_");
@@ -153,7 +152,7 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
   if (!this.inputValue) {
     return;
   }
-  const dt = getValue.call(this, this.kendoDate.value, 'fa');
+  const dt = this.intl.getDayJsValue(this.kendoDate.value, 'fa');
   if (!dt) {
     return;
   }
@@ -260,7 +259,7 @@ function prepareYearValue(diff: any[], dt) {
 }
 
 export function getDateFormatString(format: string, localeId: string, value?: Date): string {
-  const dt = getValue.call(this, (value || this.kendoDate.value), localeId)?.toDate();
+  const dt = this.intl.getDayJsValue(value || this.kendoDate.value, localeId)?.toDate();
   return dateFormatString.call(this, dt, format, localeId) || '';
 };
 
@@ -337,18 +336,12 @@ function setInputValue(localeId: string) {
     format = format.replace(/m/gi, '0');
   }
 
-  const result = getValue.call(this, value, localeId);
+  const result = this.intl.getDayJsValue(value, localeId);
   if (this.intl.isLocaleIran) {
     this.renderer.setProperty(this.inputElement, 'value', result.format(format.toMomentDateTimeFormat()));
     return;
   }
   this.renderer.setProperty(this.inputElement, 'value', result.format(format.toMomentDateTimeFormat()));
-}
-
-function getValue(value: Date | string, localeId?: string): Dayjs {
-  if (!value) { return null; }
-
-  return dayjs(value).calendar(this.intl.calendarType).locale(localeId || this.intl.locale);
 }
 
 

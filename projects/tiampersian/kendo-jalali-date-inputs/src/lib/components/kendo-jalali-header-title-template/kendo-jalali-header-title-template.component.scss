@@ -1,11 +1,19 @@
 ::ng-deep {
   .k-calendar {
     direction: ltr;
+
     kendo-virtualization.k-flex.k-content.k-scrollable {
       --kendo-scrollbar-width: -15px;
     }
+
     kendo-calendar-navigation kendo-virtualization.k-flex.k-content.k-scrollable {
       --kendo-scrollbar-width: 0px;
+
+      &>ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
     }
   }
 

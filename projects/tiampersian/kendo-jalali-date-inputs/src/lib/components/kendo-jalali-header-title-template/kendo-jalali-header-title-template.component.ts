@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, Inject, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import '@angular/localize';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { DatePickerType, JalaliCldrIntlService } from '../../services/locale.service';
+import { JalaliCldrIntlService } from '../../services/jalali-cldr-intl.service';
+import { DatePickerType } from '../../models/date-picker-type';
 
 @Component({
   template: `
@@ -20,7 +21,7 @@ export class KendoJalaliHeaderTitleTemplateComponent implements AfterViewInit {
   @ViewChild('template', { read: TemplateRef }) templateRef = TemplateRef;
   calendarType: DatePickerType;
   calendarTypes = {
-    [DatePickerType.gregorian]: $localize`:@@jalali:Jalali`,
+    [DatePickerType.gregory]: $localize`:@@jalali:Jalali`,
     [DatePickerType.jalali]: $localize`:@@gregorian:Gregorian`,
   };
 

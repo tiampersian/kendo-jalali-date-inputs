@@ -23,7 +23,7 @@ export class AppComponent {
     @Inject(IntlService) private localeService: JalaliCldrIntlService,
     private cdr: ChangeDetectorRef
   ) {
-    this.calendarType = localeService.isJalali ? DatePickerType.jalali : DatePickerType.gregorian;
+    this.calendarType = localeService.isJalali ? DatePickerType.jalali : DatePickerType.gregory;
     this.currentLocaleId = localeService.localeId;
   }
 

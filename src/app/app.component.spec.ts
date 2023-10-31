@@ -19,8 +19,8 @@ describe('AppComponent', () => {
       imports: [
         NoopAnimationsModule,
         BrowserModule,
-        FormsModule,
-        KendoJalaliDateInputsModule],
+        KendoJalaliDateInputsModule
+      ],
       declarations: [
         AppComponent
       ],
