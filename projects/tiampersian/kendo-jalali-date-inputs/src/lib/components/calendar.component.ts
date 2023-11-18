@@ -1,5 +1,5 @@
 import { debounceTime } from 'rxjs/operators';
-import { JalaliCldrIntlService } from './../services/locale.service';
+import { JalaliCldrIntlService } from '../services/jalali-cldr-intl.service';
 import { TemplateRef } from '@angular/core';
 import { CalendarComponent, MultiViewCalendarComponent } from '@progress/kendo-angular-dateinputs';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -63,7 +63,7 @@ const oldNgOnInit = CalendarComponent.prototype.ngOnInit;
 CalendarComponent.prototype.ngOnInit = function (): void {
   const me: CalendarComponent = this;
   oldNgOnInit.call(this);
-  const intl: JalaliCldrIntlService = this.bus.service(this.activeViewEnum).intlService;
+  const intl: JalaliCldrIntlService = this.bus.service(this.activeViewEnum).intl;
   intl.$calendarType.pipe(debounceTime(10)).subscribe(x => {
     this.onResize();
   });

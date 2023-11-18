@@ -1,14 +1,13 @@
-import { Inject, Injectable } from '@angular/core';
-import { CldrIntlService, IntlService } from '@progress/kendo-angular-intl';
-import moment from 'jalali-moment';
-import { JalaliCldrIntlService } from './locale.service';
-import { Action, EMPTY_SELECTIONRANGE, getToday, isInSelectionRange, isPresent, range } from './utils';
+import { CldrIntlService } from '@progress/kendo-angular-intl';
+
+import { JalaliCldrIntlService } from '../jalali-cldr-intl.service';
+import { Action, EMPTY_SELECTIONRANGE, getToday, isInSelectionRange, isPresent, range } from '../kendo-util-overrides';
 import { addMonths, addYears, cloneDate, createDate, durationInYears, firstMonthOfYear, lastDayOfMonth, lastMonthOfYear } from '@progress/kendo-date-math';
 
 
-const EMPTY_DATA = [[]];
-const CELLS_LENGTH = 4;
-const ROWS_LENGTH = 3;
+export const EMPTY_DATA = [[]];
+export const CELLS_LENGTH = 4;
+export const ROWS_LENGTH = 3;
 const upStep = (month) => {
   if (month > 4) {
     return -5;
@@ -51,8 +50,8 @@ export class YearViewService {
     }
     return result;
   };
-  constructor(private _intlService: JalaliCldrIntlService) {
-    this._intlService = _intlService;
+  constructor(private _intl: JalaliCldrIntlService) {
+    this._intl = _intl;
   }
   addToDate(min, skip) {
     return addYears(min, skip);
@@ -171,7 +170,7 @@ export class YearViewService {
     return date;
   }
   abbrMonthNames() {
-    return this._intlService.dateFormatNames({ nameType: 'abbreviated', type: 'months' });
+    return this._intl.dateFormatNames({ nameType: 'abbreviated', type: 'months' });
   }
   normalize(cellDate, min, max) {
     if (cellDate < min && this.isEqual(cellDate, min)) {
@@ -181,82 +180,6 @@ export class YearViewService {
       return cloneDate(max);
     }
     return cellDate;
-  }
-}
-
-@Injectable()
-export class JalaliYearViewService extends YearViewService {
-  constructor(
-    @Inject(IntlService) protected intlService: JalaliCldrIntlService
-  ) {
-    super(intlService);
-  }
-
-  abbrMonthNames2() {
-    if (this.intlService.isJalali) {
-      return moment().locale(this.intlService.localeId).localeData().jMonthsShort();
-    }
-    return moment().locale(this.intlService.localeId).localeData().monthsShort();
-  }
-
-  override data(options) {
-    const { cellUID, focusedDate, isActiveView, max, min, selectedDate, selectionRange = EMPTY_SELECTIONRANGE, viewDate } = options;
-    if (!viewDate) {
-      return EMPTY_DATA;
-    }
-
-    const months = this.abbrMonthNames2();
-    const isSelectedDateInRange = moment(selectedDate).isBetween(min, max);
-    //firstMonthOfYear
-    const firstDate = moment(viewDate).locale(this.intlService.localeIdByDatePickerType).startOf('year').add(moment(viewDate).locale(this.intlService.localeIdByDatePickerType).date() - 1, 'day').toDate();
-    const lastDate = moment(viewDate).locale(this.intlService.localeIdByDatePickerType).endOf('year').add(-1, 'month').add(moment(viewDate).locale(this.intlService.localeIdByDatePickerType).date(), 'day').toDate();
-    // const firstDate = moment(viewDate).locale('fa').startOf('month').toDate();
-    // const lastDate = moment(viewDate).locale('fa').endOf('month').toDate();
-    const currentYear = moment(firstDate).locale(this.intlService.localeIdByDatePickerType).year();
-    const cells = range(0, CELLS_LENGTH);
-    const today = getToday();
-
-    const xxx = range(0, ROWS_LENGTH).map(rowOffset => {
-      const baseDate = addMonths(firstDate, rowOffset * CELLS_LENGTH);
-      return cells.map(cellOffset => {
-        const cellDate = this['normalize'](addMonths(baseDate, cellOffset), min, max);
-        const changedYear = currentYear < moment(cellDate).locale(this.intlService.localeIdByDatePickerType).year();
-        if (!moment(cellDate).isBetween(min, max)) {
-          return null;
-        }
-        if (changedYear) {
-          return null;
-        }
-        const isRangeStart = this.isEqual(cellDate, selectionRange.start);
-        const isRangeEnd = this.isEqual(cellDate, selectionRange.end);
-        const isInMiddle = !isRangeStart && !isRangeEnd;
-        const isRangeMid = isInMiddle && isInSelectionRange(cellDate, selectionRange);
-        return {
-          formattedValue: months[moment(cellDate).locale(this.intlService.localeIdByDatePickerType).month()],
-          id: `${cellUID}${cellDate.getTime()}`,
-          isFocused: this.isEqual(cellDate, focusedDate),
-          isSelected: isActiveView && isSelectedDateInRange && this.isEqual(cellDate, selectedDate),
-          isWeekend: false,
-          isRangeStart,
-          isRangeMid,
-          isRangeEnd,
-          isRangeSplitEnd: isRangeMid && this.isEqual(cellDate, lastDate),
-          isRangeSplitStart: isRangeMid && this.isEqual(cellDate, firstDate),
-          isToday: this.isEqual(cellDate, today),
-          title: this.cellTitle(cellDate),
-          value: cellDate
-        };
-      });
-    });
-
-    return xxx;
-  }
-  override title(current: any) {
-    return `${moment(current).locale(this.intlService.localeIdByDatePickerType).format('YYYY')}`;
-  }
-  override navigationTitle(value: any) {
-    return `${moment(value).locale(this.intlService.localeIdByDatePickerType).format('YYYY')}`;
-
   }
 }
 

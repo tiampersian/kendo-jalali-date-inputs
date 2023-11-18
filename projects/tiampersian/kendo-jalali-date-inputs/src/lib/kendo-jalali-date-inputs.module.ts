@@ -2,12 +2,23 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import '@angular/localize/init';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { IntlModule, setData } from '@progress/kendo-angular-intl';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+import localeData from 'dayjs/plugin/localeData';
+import jalaliday from 'jalaliday';
 import { KendoJalaliHeaderTitleTemplateComponent } from './components/kendo-jalali-header-title-template/kendo-jalali-header-title-template.component';
 import { KendoDatePickerDirective } from './components/navigation.directive';
 import { IConfig } from './models/config.model';
-import { NumberPipe } from './pipes/number.pipe';
 import { Providers } from './providers';
-import { MomentNumberService } from './services/moment-numbers';
+import { DateTimeNumberService } from './services/date-time-number.service';
+import './utils/string-prototypes';
+
+dayjs.extend(jalaliday);
+dayjs.extend(isBetween);
+dayjs.extend(localeData);
+if (typeof window !== 'undefined') {
+  window['dayjs'] = dayjs;
+}
 
 setData({
   name: "fa",
@@ -491,7 +502,6 @@ setData({
   declarations: [
     KendoJalaliHeaderTitleTemplateComponent,
     KendoDatePickerDirective,
-    NumberPipe
   ],
   imports: [
     IntlModule,
@@ -499,14 +509,12 @@ setData({
   ],
   providers: [
     ...Providers,
-    MomentNumberService,
-    NumberPipe,
+    DateTimeNumberService,
     { provide: 'CONFIGS', useValue: {} }
   ],
   exports: [
     DateInputsModule,
     KendoDatePickerDirective,
-    NumberPipe,
   ]
 })
 export class KendoJalaliDateInputsModule {

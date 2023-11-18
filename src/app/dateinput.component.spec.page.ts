@@ -1,5 +1,5 @@
 import { interval, Subject } from 'rxjs';
-import { DatePickerType } from './../../projects/tiampersian/kendo-jalali-date-inputs/src/lib/services/locale.service';
+import { DatePickerType } from 'projects/tiampersian/kendo-jalali-date-inputs/src/lib/models/date-picker-type';
 import { DateInputComponent } from '@progress/kendo-angular-dateinputs';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { BrowserModule } from '@angular/platform-browser';
@@ -30,8 +30,6 @@ export class DateInputComponentPage {
     return this;
   }
 
-
-
   async init() {
     await TestBed.configureTestingModule({
       imports: [
@@ -57,7 +55,7 @@ export class DateInputComponentPage {
     return this;
   }
   with_gregorian_mode() {
-    this.intl.changeType(DatePickerType.gregorian);
+    this.intl.changeType(DatePickerType.gregory);
     return this;
   }
 

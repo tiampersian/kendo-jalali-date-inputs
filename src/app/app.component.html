@@ -420,42 +420,42 @@
     <p><strong>Final Value</strong>: {{value}}</p>
   </div>
   <div class="card-container"
-       [dir]="currentLocaleId=='fa-IR'?'rtl':'ltr'"
+       [dir]="(currentLocaleId=='fa-IR'||currentLocaleId=='fa')?'rtl':'ltr'"
        *ngIf="rerender">
     <div class="row example-wrapper"
          *ngIf="1"
          style="min-height: 450px;display: flex;">
       <div class="col-xs-12 col-md-6 example-col">
         <p>DateInput</p>
-        <kendo-dateinput [(ngModel)]="value" [format]="'yyyy/MMM/dd'"></kendo-dateinput>
+        <kendo-dateinput [(value)]="value" [format]="'yyyy/MMM/dd'"></kendo-dateinput>
         <p>(use <code>←</code> and <code>→</code> to navigate, <code>↑</code> and <code>↓</code> to update)</p>
 
         <p>DatePicker</p>
-        <kendo-datepicker [(ngModel)]="value"></kendo-datepicker>
+        <kendo-datepicker [(value)]="value"></kendo-datepicker>
         <p>(use <code>Alt</code>+<code>↓</code> to open the Calendar)</p>
 
         <p>TimePicker</p>
-        <kendo-timepicker [(ngModel)]="value"></kendo-timepicker>
+        <kendo-timepicker [(value)]="value"></kendo-timepicker>
         <p>(use Alt+↓ to open the time list, Tab to move to the next time section in the popup, ↑ to increment and ↓ to
           decrement the value)</p>
       </div>
       <div class="col-xs-12 col-md-6 example-col">
         <p>DateTimePicker</p>
-        <kendo-datetimepicker [(ngModel)]="value"  [format]="'yyyy/MMM/dd hh:mm'">
+        <kendo-datetimepicker [(value)]="value"  [format]="'yyyy/MMM/dd hh:mm'">
         </kendo-datetimepicker>
         <p>(use Alt+↓ to open the popup, Alt+<code>←</code> and Alt+<code>→</code> to switch between the tabs when open)
         </p>
         <br>
         <br>
         <p>Calendar</p>
-        <kendo-calendar [activeView]="'decade'"
-                        [(ngModel)]="value"></kendo-calendar>
+        <kendo-calendar 
+                        [(value)]="value"></kendo-calendar>
       </div>
     </div>
     <div class="row example-wrapper">
       <div class="col-12 example-col">
         <p>MultiViewCalendar</p>
-        <kendo-multiviewcalendar [(ngModel)]="value"></kendo-multiviewcalendar>
+        <kendo-multiviewcalendar [(value)]="value"></kendo-multiviewcalendar>
       </div>
     </div>
 

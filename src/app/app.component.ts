@@ -13,7 +13,7 @@ import { DatePickerType, JalaliCldrIntlService } from '@tiampersian/kendo-jalali
 })
 export class AppComponent {
   title = 'kendo-jalali-date-inputs';
-  public value: Date = new Date('2020-11-01T20:30:00.000Z');
+  public value: Date = new Date();
   rerender = true;
   locales = ['fa-IR', 'fa', 'en-US', 'en'];
   calendarTypes = Object.values(DatePickerType);
@@ -23,7 +23,7 @@ export class AppComponent {
     @Inject(IntlService) private localeService: JalaliCldrIntlService,
     private cdr: ChangeDetectorRef
   ) {
-    this.calendarType = localeService.isJalali ? DatePickerType.jalali : DatePickerType.gregorian;
+    this.calendarType = localeService.isJalali ? DatePickerType.jalali : DatePickerType.gregory;
     this.currentLocaleId = localeService.localeId;
   }
 

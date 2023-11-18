@@ -1,13 +1,14 @@
 import { AfterViewInit, Component, Inject, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import '@angular/localize';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { DatePickerType, JalaliCldrIntlService } from '../../services/locale.service';
+import { JalaliCldrIntlService } from '../../services/jalali-cldr-intl.service';
+import { DatePickerType } from '../../models/date-picker-type';
 
 @Component({
   template: `
   <ng-template #template kendoCalendarHeaderTitleTemplate let-title>
     <span class="header-title k-button k-button k-rounded-lg k-button-sm k-button-link-base k-button-link">{{title}}</span>
-    <button class="header-calendar-type k-button k-rounded-lg k-button-sm k-button-link-base k-button-link" (click)="toggleCalendarType($event)">
+    <button i18n-title="@@changeCalendarType" title="Change Calendar Type" class="header-calendar-type k-button k-rounded-lg k-button-sm k-button-link-base k-button-link" (click)="toggleCalendarType($event)">
       {{calendarTypes[calendarType]}}
       <i class="k-icon k-i-arrows-swap {{calendarType!=='jalali'&&'k-flip-h'}}" ></i>
     </button>
@@ -20,7 +21,7 @@ export class KendoJalaliHeaderTitleTemplateComponent implements AfterViewInit {
   @ViewChild('template', { read: TemplateRef }) templateRef = TemplateRef;
   calendarType: DatePickerType;
   calendarTypes = {
-    [DatePickerType.gregorian]: $localize`:@@jalali:Jalali`,
+    [DatePickerType.gregory]: $localize`:@@jalali:Jalali`,
     [DatePickerType.jalali]: $localize`:@@gregorian:Gregorian`,
   };
 

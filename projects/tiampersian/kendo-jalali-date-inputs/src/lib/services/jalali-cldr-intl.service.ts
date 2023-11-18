@@ -1,14 +1,9 @@
-import { Inject, Injectable, LOCALE_ID, Optional } from '@angular/core';
+import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import { CldrIntlService, NumberFormatOptions } from '@progress/kendo-angular-intl';
+import dayjs, { Dayjs } from 'dayjs';
 import { Subject } from 'rxjs';
-import { NumberPipe } from '../pipes/number.pipe';
-import {
-  MomentNumberService
-} from './moment-numbers';
-export enum DatePickerType {
-  jalali = 'jalali',
-  gregorian = 'gregorian'
-}
+import { DatePickerType } from '../models/date-picker-type';
+import { DateTimeNumberService } from './date-time-number.service';
 
 @Injectable()
 export class JalaliCldrIntlService extends CldrIntlService {
@@ -19,16 +14,23 @@ export class JalaliCldrIntlService extends CldrIntlService {
   get isLocaleIran(): boolean {
     return this.localeId === 'fa-IR' || this.localeId === 'fa';
   }
+  get calendarType(): any {
+    return this.localeIdByDatePickerType === 'fa' ? 'jalali' : 'gregory';
+  }
   defaultTitleTemplate: any;
   $calendarType = new Subject();
   isFirst = true;
 
   constructor(
     @Inject(LOCALE_ID) private originalLocaleId: string,
-    private momentNumberService: MomentNumberService
+    private momentNumberService: DateTimeNumberService
   ) {
     super(originalLocaleId);
     this.changeType();
+  }
+
+  firstDay(localeId?: string): number {
+    return super.firstDay(this.localeIdByDatePickerType);
   }
 
   setTitleTemplate(template): void {
@@ -65,7 +67,7 @@ export class JalaliCldrIntlService extends CldrIntlService {
   }
 
   toggleType(): void {
-    this.changeType(this.datePickerType === DatePickerType.jalali ? DatePickerType.gregorian : DatePickerType.jalali);
+    this.changeType(this.datePickerType === DatePickerType.jalali ? DatePickerType.gregory : DatePickerType.jalali);
     if (this.isFirst) {
       this.isFirst = false;
       // to fix old version of chrome
@@ -85,7 +87,7 @@ export class JalaliCldrIntlService extends CldrIntlService {
       return DatePickerType.jalali;
     }
 
-    return DatePickerType.gregorian;
+    return DatePickerType.gregory;
   }
 
   formatNumber(value: number, format: string | NumberFormatOptions, localeId?: string): string {
@@ -94,5 +96,9 @@ export class JalaliCldrIntlService extends CldrIntlService {
       return super.formatNumber(value, format, localeId).toPerNumber();
     }
     return super.formatNumber(value, format, localeId);
+  }
+
+  getDayJsValue(value?: Date | string, localeId?: string): Dayjs {
+    return dayjs(value).calendar(this.calendarType).locale(localeId || this.localeId);
   }
 }
