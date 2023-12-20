@@ -92,8 +92,12 @@ export class JalaliCldrIntlService extends CldrIntlService {
 
   formatNumber(value: number, format: string | NumberFormatOptions, localeId?: string): string {
     localeId = localeId || this.localeId;
-    if (localeId === 'fa' || localeId === 'ar') {
-      return super.formatNumber(value, format, localeId).toPerNumber();
+    if (this.isJalali && (localeId === 'fa' || localeId === 'ar')) {
+      try {
+        return super.formatNumber(value, format, localeId).toPerNumber();
+      } catch (error) {
+        
+      }
     }
     return super.formatNumber(value, format, localeId);
   }

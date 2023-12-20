@@ -41,16 +41,19 @@ export class JalaliMonthViewService extends MonthViewService {
       return this.intl.getDayJsValue(value).format('YYYY');
     }
 
-    return this.abbrMonthNames2()[this.intl.getDayJsValue(value).month()];
+    return this.abbrMonthNames2()[value.getMonth()];
   }
 
   isRangeStart(value) {
     if (!value) { return false; }
-    return this.intl.getDayJsValue(value).month() === 0;
+    if (this.intl.isJalali) {
+      return this.intl.getDayJsValue(value).month() === 4;
+    }
+    return value.getMonth() === 0;
   }
 
   title(current) {
-    return `${this.abbrMonthNames2()[this.intl.getDayJsValue(current).month()]} ${this.intl.getDayJsValue(current).format('YYYY')}`;
+    return `${this.abbrMonthNames2()[current.getMonth()]} ${this.intl.getDayJsValue(current).format('YYYY')}`;
   }
 
   skip(value, min) {
@@ -88,7 +91,7 @@ export class JalaliMonthViewService extends MonthViewService {
     const isSelectedDateInRange = dayjs(selectedDate).isBetween(min, max);
     const date = dayOfWeek(firstMonthDate, this.intl.firstDay(), backward);
     const cells = range(0, CELLS_LENGTH);
-    console.log('console',this.intl.firstDay())
+    console.log('console', this.intl.firstDay())
     const today = getToday();
     return range(0, ROWS_LENGTH).map(rowOffset => {
       const baseDate = addDays(date, rowOffset * CELLS_LENGTH);

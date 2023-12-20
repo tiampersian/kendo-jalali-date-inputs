@@ -56,7 +56,7 @@ export class JalaliYearViewService extends YearViewService {
         const isInMiddle = !isRangeStart && !isRangeEnd;
         const isRangeMid = isInMiddle && isInSelectionRange(cellDate, selectionRange);
         return {
-          formattedValue: months[this.intl.getDayJsValue(cellDate).month()],
+          formattedValue: months[cellDate.getMonth()],
           id: `${cellUID}${cellDate.getTime()}`,
           isFocused: this.isEqual(cellDate, focusedDate),
           isSelected: isActiveView && isSelectedDateInRange && this.isEqual(cellDate, selectedDate),
