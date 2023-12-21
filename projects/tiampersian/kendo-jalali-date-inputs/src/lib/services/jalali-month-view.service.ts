@@ -46,10 +46,8 @@ export class JalaliMonthViewService extends MonthViewService {
 
   isRangeStart(value) {
     if (!value) { return false; }
-    if (this.intl.isJalali) {
-      return this.intl.getDayJsValue(value).month() === 4;
-    }
-    return value.getMonth() === 0;
+
+    return this.intl.getDayJsValue(value).month() === 1;
   }
 
   title(current) {

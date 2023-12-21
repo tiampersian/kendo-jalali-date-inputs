@@ -1,6 +1,6 @@
 {
   "name": "@tiampersian/kendo-jalali-date-inputs",
-  "version": "0.1.339",
+  "version": "0.1.340",
   "license": "MIT",
   "description": "angular jalali ( persian ) date time picker base on kendo-angular-dateinputs ",
   "homepage": "https://github.com/tiampersian/kendo-jalali-date-inputs",
