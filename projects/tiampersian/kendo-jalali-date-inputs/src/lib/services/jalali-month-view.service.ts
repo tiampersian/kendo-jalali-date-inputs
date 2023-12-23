@@ -26,7 +26,7 @@ export class JalaliMonthViewService extends MonthViewService {
   abbrMonthNames2() {
     if (this.intl.isJalali) {
       return Array.from(Array(12).keys()).map((x, i) => {
-        return this.intl.getDayJsValue('' + i).format('MMMM');
+        return this.intl.getDayJsValue('' + (i + 1)).format('MMMM');
       });
     }
     return this.intl.getDayJsValue().localeData().monthsShort();
@@ -47,7 +47,7 @@ export class JalaliMonthViewService extends MonthViewService {
   isRangeStart(value) {
     if (!value) { return false; }
 
-    return this.intl.getDayJsValue(value).month() === 1;
+    return !this.intl.getDayJsValue(value).month();
   }
 
   title(current) {
