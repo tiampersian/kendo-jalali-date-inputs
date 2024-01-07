@@ -36,7 +36,6 @@ export class KendoJalaliHeaderTitleTemplateComponent implements AfterViewInit {
   }
 
   toggleCalendarType(event: Event): void {
-    console.log('toggleCalendarType', event)
     this.localeService.toggleType();
     this.calendarType = this.localeService.datePickerType;
     event.stopImmediatePropagation();

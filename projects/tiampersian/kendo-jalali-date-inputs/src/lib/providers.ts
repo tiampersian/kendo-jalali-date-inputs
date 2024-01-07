@@ -15,7 +15,7 @@ export const Providers = [
   JalaliYearViewService,
   JalaliMonthViewService,
   JalaliWeekNamesService,
-  JalaliCldrIntlService,
+  // JalaliCldrIntlService,
   { provide: IntlService, useExisting: JalaliCldrIntlService },
   { provide: 'HeaderTitleTemplate', useFactory: HeaderTitleTemplateFactory, deps: [Injector] },
 ];

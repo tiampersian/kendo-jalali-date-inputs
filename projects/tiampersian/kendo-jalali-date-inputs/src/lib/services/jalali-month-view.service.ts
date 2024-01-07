@@ -1,18 +1,19 @@
 import { Inject, Injectable } from '@angular/core';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { addDays, addMonths, dayOfWeek, getDate } from '@progress/kendo-date-math';
 import dayjs from 'dayjs';
-import { firstDayOfMonth, getToday, isInSelectionRange, range, lastDayOfMonth } from './kendo-util-overrides';
+import { firstDayOfMonth, getToday, isInSelectionRange, range, lastDayOfMonth, addMonths, startOfDay, addDays, addWeeks } from './kendo-util-overrides';
 import { JalaliCldrIntlService } from './jalali-cldr-intl.service';
 import { MonthViewService, CELLS_LENGTH, EMPTY_DATA, ROWS_LENGTH } from './kendo-services/month-view.service';
 
 
 @Injectable()
 export class JalaliMonthViewService extends MonthViewService {
+
   constructor(
     @Inject(IntlService) protected intl: JalaliCldrIntlService
   ) {
     super(intl);
+
   }
 
   value(current) {
@@ -25,11 +26,9 @@ export class JalaliMonthViewService extends MonthViewService {
 
   abbrMonthNames2() {
     if (this.intl.isJalali) {
-      return Array.from(Array(12).keys()).map((x, i) => {
-        return this.intl.getDayJsValue('' + (i + 1)).format('MMMM');
-      });
+      return this.intl.jalaliMonths;
     }
-    return this.intl.getDayJsValue().localeData().monthsShort();
+    return this.intl.gregorianMonths;
   }
 
   navigationTitle(value) {
@@ -41,7 +40,7 @@ export class JalaliMonthViewService extends MonthViewService {
       return this.intl.getDayJsValue(value).format('YYYY');
     }
 
-    return this.abbrMonthNames2()[value.getMonth()];
+    return this.abbrMonthNames2()[this.intl.getDayJsValue(value).month()];
   }
 
   isRangeStart(value) {
@@ -51,7 +50,7 @@ export class JalaliMonthViewService extends MonthViewService {
   }
 
   title(current) {
-    return `${this.abbrMonthNames2()[current.getMonth()]} ${this.intl.getDayJsValue(current).format('YYYY')}`;
+    return `${this.abbrMonthNames2()[this.intl.getDayJsValue(current).month()]} ${this.intl.getDayJsValue(current).format('YYYY')}`;
   }
 
   skip(value, min) {
@@ -73,7 +72,7 @@ export class JalaliMonthViewService extends MonthViewService {
     return this.intl.getDayJsValue(date).startOf('month').toDate();
   }
   datesList(start, count) {
-    return range(0, count).map(i => addMonths(start, i));
+    return range(0, count).map(i => addMonths(start, i, this.intl.localeIdByDatePickerType));
   }
   data(options) {
     const { cellUID, focusedDate, isActiveView, max, min, selectedDate, selectionRange = [], viewDate, isDateDisabled = () => false } = options;
@@ -82,19 +81,19 @@ export class JalaliMonthViewService extends MonthViewService {
     }
     const dateValue = this.intl.getDayJsValue(viewDate).toDate();
     const firstMonthDate = firstDayOfMonth(dateValue, this.intl.localeIdByDatePickerType);
-    const firstMonthDay = getDate(firstMonthDate);
+    const firstMonthDay = startOfDay(firstMonthDate, this.intl.localeIdByDatePickerType);
     const lastMonthDate = lastDayOfMonth(dateValue, this.intl.localeIdByDatePickerType);
-    const lastMonthDay = getDate(lastMonthDate);
+    const lastMonthDay = startOfDay(lastMonthDate, this.intl.localeIdByDatePickerType);
     const backward = -1;
     const isSelectedDateInRange = dayjs(selectedDate).isBetween(min, max);
-    const date = dayOfWeek(firstMonthDate, this.intl.firstDay(), backward);
+    const date = addWeeks(firstMonthDate, this.intl.firstDay(), backward, this.intl.localeIdByDatePickerType);
     const cells = range(0, CELLS_LENGTH);
     const today = getToday();
     return range(0, ROWS_LENGTH).map(rowOffset => {
-      const baseDate = addDays(date, rowOffset * CELLS_LENGTH);
+      const baseDate = addDays(date, rowOffset * CELLS_LENGTH, this.intl.localeIdByDatePickerType);
       return cells.map(cellOffset => {
         const cellDate = this['normalize'](addDays(baseDate, cellOffset), min, max);
-        const cellDay = getDate(cellDate);
+        const cellDay = startOfDay(cellDate, this.intl.localeIdByDatePickerType);
         const otherMonth = cellDay < firstMonthDay || cellDay > lastMonthDay;
         const outOfRange = cellDate < min || cellDate > max;
         if (outOfRange) {

@@ -41,6 +41,31 @@ export const lastDayOfMonth = (dt, localeId?) => {
   return getDayJsValue(dt, localeId).endOf('month').toDate();
 }
 
+export const startOfDay = (dt, localeId?) => {
+  return getDayJsValue(dt, localeId).startOf('day').toDate();// .add(getDayJsValue(dt, localeId).date() - 1, 'day')
+}
+export const firstMonthOfYear = (dt, localeId?) => {
+  return getDayJsValue(dt, localeId).startOf('year').toDate();// .add(getDayJsValue(dt, localeId).date() - 1, 'day')
+}
+export const lastMonthOfYear = (dt, localeId?) => {
+  return getDayJsValue(dt, localeId).endOf('year').toDate();// .add(-1, 'day').add(getDayJsValue(dt, localeId).date(), 'day')
+}
+export const addDays = (dt, value, localeId?) => {
+  return getDayJsValue(dt, localeId).add(value, 'days').toDate();
+}
+export const addWeeks = (dt, value, direction, localeId?) => {
+  return getDayJsValue(dt, localeId).add(value * direction, 'days').toDate();
+}
+export const addMonths = (dt, value, localeId?) => {
+  return getDayJsValue(dt, localeId).add(value, 'month').toDate();
+}
+export const addYears = (dt, value, localeId?) => {
+  return getDayJsValue(dt, localeId).add(value, 'year').toDate();
+}
+export const addDecades = (dt, value, localeId?) => {
+  return getDayJsValue(dt, localeId).add(value * 100, 'year').toDate();
+}
+
 const getCalendarType = (localeId: string) => {
   return (localeId === 'fa' || localeId === 'fa-IR') ? 'jalali' : 'gregory';
 }

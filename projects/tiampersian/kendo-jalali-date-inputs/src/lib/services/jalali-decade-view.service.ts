@@ -1,9 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { addYears } from '@progress/kendo-date-math';
 import dayjs from 'dayjs';
 import { JalaliCldrIntlService } from './jalali-cldr-intl.service';
-import { EMPTY_SELECTIONRANGE, firstYearOfDecade, getToday, isInSelectionRange, lastYearOfDecade, range } from './kendo-util-overrides';
+import { EMPTY_SELECTIONRANGE, addYears, firstYearOfDecade, getToday, isInSelectionRange, lastYearOfDecade, range } from './kendo-util-overrides';
 import { DecadeViewService, EMPTY_DATA, CELLS_LENGTH, ROWS_LENGTH } from './kendo-services/decade-view.service';
 
 @Injectable()
@@ -19,7 +18,7 @@ export class JalaliDecadeViewService extends DecadeViewService {
     if (!value) {
       return '';
     }
-    
+
     const firstYear = this.intl.getDayJsValue(firstYearOfDecade(value, this.intl.localeIdByDatePickerType)).format('YYYY');
     const lastYear = this.intl.getDayJsValue(lastYearOfDecade(value, this.intl.localeIdByDatePickerType)).format('YYYY');
     if (this.intl.isLocaleIran) {
@@ -45,9 +44,9 @@ export class JalaliDecadeViewService extends DecadeViewService {
     const today = getToday();
     // isInRange(selectedDate, min, max)
     const data = range(0, ROWS_LENGTH).map(rowOffset => {
-      const baseDate = addYears(firstDate, rowOffset * CELLS_LENGTH);
+      const baseDate = addYears(firstDate, rowOffset * CELLS_LENGTH, this.intl.localeIdByDatePickerType);
       return cells.map(cellOffset => {
-        const cellDate = super['normalize'](addYears(baseDate, cellOffset), min, max);
+        const cellDate = super['normalize'](addYears(baseDate, cellOffset, this.intl.localeIdByDatePickerType), min, max);
         const nextDecade = cellDate.getFullYear() > lastDate.getFullYear();
 
         if (!this.isInRange(cellDate, min, max) || nextDecade) {

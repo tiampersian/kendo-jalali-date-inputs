@@ -1,8 +1,8 @@
 import { CldrIntlService } from '@progress/kendo-angular-intl';
 
 import { JalaliCldrIntlService } from '../jalali-cldr-intl.service';
-import { Action, EMPTY_SELECTIONRANGE, getToday, isInSelectionRange, isPresent, range } from '../kendo-util-overrides';
-import { addMonths, addYears, cloneDate, createDate, durationInYears, firstMonthOfYear, lastDayOfMonth, lastMonthOfYear } from '@progress/kendo-date-math';
+import { Action, EMPTY_SELECTIONRANGE, firstMonthOfYear, getToday, isInSelectionRange, isPresent, lastDayOfMonth, lastMonthOfYear, range } from '../kendo-util-overrides';
+import { addMonths, addYears, cloneDate, createDate, durationInYears, } from '@progress/kendo-date-math';
 
 
 export const EMPTY_DATA = [[]];
@@ -65,8 +65,8 @@ export class YearViewService {
       return EMPTY_DATA;
     }
     const months = this.abbrMonthNames();
-    const firstDate = firstMonthOfYear(viewDate);
-    const lastDate = lastMonthOfYear(viewDate);
+    const firstDate = firstMonthOfYear(viewDate, this._intl.localeId);
+    const lastDate = lastMonthOfYear(viewDate, this._intl.localeId);
     const currentYear = firstDate.getFullYear();
     const cells = range(0, CELLS_LENGTH);
     const today = getToday();

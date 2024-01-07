@@ -1,9 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { addDecades } from '@progress/kendo-date-math';
-import dayjs from 'dayjs';
 import { JalaliCldrIntlService } from './jalali-cldr-intl.service';
-import { firstDecadeOfCentury, firstYearOfDecade, getToday, isInRange, isInSelectionRange, lastDecadeOfCentury, range } from './kendo-util-overrides';
+import { addDecades, firstDecadeOfCentury, firstYearOfDecade, getToday, isInRange, isInSelectionRange, lastDecadeOfCentury, range } from './kendo-util-overrides';
 import { CenturyViewService, EMPTY_DATA, CELLS_LENGTH, ROWS_LENGTH } from './kendo-services/century-view.service';
 
 @Injectable()

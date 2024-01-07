@@ -11,6 +11,7 @@ import { KendoDatePickerDirective } from './components/navigation.directive';
 import { IConfig } from './models/config.model';
 import { Providers } from './providers';
 import { DateTimeNumberService } from './services/date-time-number.service';
+import { JalaliCldrIntlService } from './services/jalali-cldr-intl.service';
 import './utils/string-prototypes';
 
 dayjs.extend(jalaliday);
@@ -509,7 +510,6 @@ setData({
   ],
   providers: [
     ...Providers,
-    DateTimeNumberService,
     { provide: 'CONFIGS', useValue: {} }
   ],
   exports: [
@@ -528,7 +528,7 @@ export class KendoJalaliDateInputsModule {
     return {
       ngModule: KendoJalaliDateInputsModule,
       providers: [
-        { provide: 'CONFIGS', useValue: { ...configs } }
+        { provide: 'DATE_INPUT_CONFIGS', useValue: { ...configs } }
       ]
     };
   }
@@ -537,7 +537,9 @@ export class KendoJalaliDateInputsModule {
     return {
       ngModule: KendoJalaliDateInputsModule,
       providers: [
-        { provide: 'CONFIGS', useValue: { ...configs } }
+        DateTimeNumberService,
+        JalaliCldrIntlService,
+        { provide: 'DATE_INPUT_CONFIGS', useValue: { ...configs } }
       ]
     };
   }

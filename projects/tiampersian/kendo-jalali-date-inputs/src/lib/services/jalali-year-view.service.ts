@@ -2,8 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import dayjs from 'dayjs';
 import { JalaliCldrIntlService } from './jalali-cldr-intl.service';
-import { EMPTY_SELECTIONRANGE, getToday, isInSelectionRange, range } from './kendo-util-overrides';
-import { addMonths } from '@progress/kendo-date-math';
+import { EMPTY_SELECTIONRANGE, addMonths, firstMonthOfYear, getToday, isInSelectionRange, lastMonthOfYear, range } from './kendo-util-overrides';
 import { YearViewService, EMPTY_DATA, CELLS_LENGTH, ROWS_LENGTH } from './kendo-services/year-view.services';
 
 
@@ -17,12 +16,9 @@ export class JalaliYearViewService extends YearViewService {
 
   abbrMonthNames2() {
     if (this.intl.isJalali) {
-      return Array.from(Array(12).keys()).map((x, i) => {
-        return this.intl.getDayJsValue('' + i, 'M').format('MMMM');
-      });
+      return this.intl.jalaliMonths;
     }
-
-    return this.intl.getDayJsValue().localeData().monthsShort();
+    return this.intl.gregorianMonths;
   }
 
   override data(options) {
@@ -30,20 +26,19 @@ export class JalaliYearViewService extends YearViewService {
     if (!viewDate) {
       return EMPTY_DATA;
     }
-
     const months = this.abbrMonthNames2();
     const isSelectedDateInRange = dayjs(selectedDate).isBetween(min, max);
     //firstMonthOfYear
-    const firstDate = this.intl.getDayJsValue(viewDate).startOf('year').add(this.intl.getDayJsValue(viewDate).date() - 1, 'day').toDate();
-    const lastDate = this.intl.getDayJsValue(viewDate).endOf('year').add(-1, 'month').add(this.intl.getDayJsValue(viewDate).date(), 'day').toDate();
+    const firstDate = firstMonthOfYear(viewDate, this.intl.localeIdByDatePickerType);
+    const lastDate = lastMonthOfYear(viewDate, this.intl.localeIdByDatePickerType);
     const currentYear = this.intl.getDayJsValue(firstDate).year()
     const cells = range(0, CELLS_LENGTH);
     const today = getToday();
 
     const xxx = range(0, ROWS_LENGTH).map(rowOffset => {
-      const baseDate = addMonths(firstDate, rowOffset * CELLS_LENGTH);
+      const baseDate = addMonths(firstDate, rowOffset * CELLS_LENGTH, this.intl.localeIdByDatePickerType);
       return cells.map(cellOffset => {
-        const cellDate = this['normalize'](addMonths(baseDate, cellOffset), min, max);
+        const cellDate = this['normalize'](addMonths(baseDate, cellOffset, this.intl.localeIdByDatePickerType), min, max);
         const changedYear = currentYear < this.intl.getDayJsValue(cellDate).year()
         if (!dayjs(cellDate).isBetween(min, max)) {
           return null;
@@ -56,7 +51,7 @@ export class JalaliYearViewService extends YearViewService {
         const isInMiddle = !isRangeStart && !isRangeEnd;
         const isRangeMid = isInMiddle && isInSelectionRange(cellDate, selectionRange);
         return {
-          formattedValue: months[cellDate.getMonth()],
+          formattedValue: months[this.intl.getDayJsValue(cellDate).month()],
           id: `${cellUID}${cellDate.getTime()}`,
           isFocused: this.isEqual(cellDate, focusedDate),
           isSelected: isActiveView && isSelectedDateInRange && this.isEqual(cellDate, selectedDate),

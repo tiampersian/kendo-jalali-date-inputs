@@ -2,7 +2,6 @@ import { Injector, createComponent } from '@angular/core';
 import { KendoJalaliHeaderTitleTemplateComponent } from './components/kendo-jalali-header-title-template/kendo-jalali-header-title-template.component';
 
 
-
 export function HeaderTitleTemplateFactory(
   injector: Injector
 ): any {

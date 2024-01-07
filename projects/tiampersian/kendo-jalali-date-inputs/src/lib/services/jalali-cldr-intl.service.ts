@@ -5,7 +5,9 @@ import { Subject } from 'rxjs';
 import { DatePickerType } from '../models/date-picker-type';
 import { DateTimeNumberService } from './date-time-number.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class JalaliCldrIntlService extends CldrIntlService {
   isJalali: boolean;
   isGregorian: boolean;
@@ -20,6 +22,9 @@ export class JalaliCldrIntlService extends CldrIntlService {
   static staticDefaultTitleTemplate: any;
   $calendarType = new Subject();
   isFirst = true;
+  jalaliMonths: string[];
+  gregorianMonths: string[];
+
 
   constructor(
     @Inject(LOCALE_ID) private originalLocaleId: string,
@@ -27,6 +32,16 @@ export class JalaliCldrIntlService extends CldrIntlService {
   ) {
     super(originalLocaleId);
     this.changeType();
+
+    this.prepareMonthData();
+  }
+
+  private prepareMonthData() {
+    this.jalaliMonths = Array.from(Array(12).keys()).map((x, i) => {
+      return this.getDayJsValue('' + (i + 1)).format('MMMM');
+    });
+    this.jalaliMonths.splice(this.jalaliMonths.length, 0, ...this.jalaliMonths.splice(0, 3));
+    this.gregorianMonths = this.getDayJsValue().localeData().monthsShort();
   }
 
   firstDay(localeId?: string): number {
@@ -65,6 +80,7 @@ export class JalaliCldrIntlService extends CldrIntlService {
     super.localeId = value;
     this.momentNumberService.setLocaleId(value);
     this.notify();
+    this.prepareMonthData();
   }
 
   toggleType(): void {
