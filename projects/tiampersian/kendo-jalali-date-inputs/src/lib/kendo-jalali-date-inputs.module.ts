@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { Inject, Injector, ModuleWithProviders, NgModule } from '@angular/core';
 import '@angular/localize/init';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { IntlModule, setData } from '@progress/kendo-angular-intl';
@@ -519,10 +519,21 @@ setData({
 })
 export class KendoJalaliDateInputsModule {
   constructor(
+    injector: Injector,
+    @Inject('HeaderTitleTemplate') headerTitleTemplate,
   ) {
   }
 
   static forRoot(configs?: IConfig): ModuleWithProviders<KendoJalaliDateInputsModule> {
+    return {
+      ngModule: KendoJalaliDateInputsModule,
+      providers: [
+        { provide: 'CONFIGS', useValue: { ...configs } }
+      ]
+    };
+  }
+
+  static forChild(configs?: IConfig): ModuleWithProviders<KendoJalaliDateInputsModule> {
     return {
       ngModule: KendoJalaliDateInputsModule,
       providers: [

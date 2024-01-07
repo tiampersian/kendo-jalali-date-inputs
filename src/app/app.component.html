@@ -427,7 +427,8 @@
          style="min-height: 450px;display: flex;">
       <div class="col-xs-12 col-md-6 example-col">
         <p>DateInput</p>
-        <kendo-dateinput [(value)]="value" [format]="'yyyy/MMM/dd'"></kendo-dateinput>
+        <kendo-dateinput [(value)]="value"
+                         [format]="'yyyy/MMM/dd'"></kendo-dateinput>
         <p>(use <code>←</code> and <code>→</code> to navigate, <code>↑</code> and <code>↓</code> to update)</p>
 
         <p>DatePicker</p>
@@ -441,15 +442,26 @@
       </div>
       <div class="col-xs-12 col-md-6 example-col">
         <p>DateTimePicker</p>
-        <kendo-datetimepicker [(value)]="value"  [format]="'yyyy/MMM/dd hh:mm'">
+        <kendo-datetimepicker [(value)]="value"
+                              [format]="'yyyy/MMM/dd hh:mm'">
         </kendo-datetimepicker>
         <p>(use Alt+↓ to open the popup, Alt+<code>←</code> and Alt+<code>→</code> to switch between the tabs when open)
         </p>
         <br>
         <br>
         <p>Calendar</p>
-        <kendo-calendar 
-                        [(value)]="value"></kendo-calendar>
+        <kendo-calendar [(value)]="value"></kendo-calendar>
+      </div>
+    </div>
+    <div class="row example-wrapper">
+      <div class="col-12 example-col">
+        <p>Range</p>
+        <kendo-daterange>
+          <kendo-dateinput kendoDateRangeStartInput
+                                [(value)]="range.start" />
+          <kendo-dateinput kendoDateRangeEndInput
+                                [(value)]="range.end" />
+        </kendo-daterange>
       </div>
     </div>
     <div class="row example-wrapper">

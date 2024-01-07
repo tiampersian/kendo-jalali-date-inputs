@@ -19,6 +19,10 @@ export class AppComponent {
   calendarTypes = Object.values(DatePickerType);
   calendarType = '';
   currentLocaleId = '';
+  range = {
+    start: null,
+    end: null
+  }
   constructor(
     @Inject(IntlService) private localeService: JalaliCldrIntlService,
     private cdr: ChangeDetectorRef

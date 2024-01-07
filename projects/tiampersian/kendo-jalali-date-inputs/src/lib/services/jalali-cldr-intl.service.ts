@@ -17,7 +17,7 @@ export class JalaliCldrIntlService extends CldrIntlService {
   get calendarType(): any {
     return this.localeIdByDatePickerType === 'fa' ? 'jalali' : 'gregory';
   }
-  defaultTitleTemplate: any;
+  static staticDefaultTitleTemplate: any;
   $calendarType = new Subject();
   isFirst = true;
 
@@ -34,11 +34,12 @@ export class JalaliCldrIntlService extends CldrIntlService {
   }
 
   setTitleTemplate(template): void {
-    this.defaultTitleTemplate = template;
+    JalaliCldrIntlService.staticDefaultTitleTemplate = template;
   }
-  changeType(value?: DatePickerType): void {
 
+  changeType(value?: DatePickerType): void {
     this.datePickerType = this.getType(value);
+    
     if (this.datePickerType === DatePickerType.jalali) {
       this.isJalali = true;
       this.isGregorian = false;
@@ -96,7 +97,7 @@ export class JalaliCldrIntlService extends CldrIntlService {
       try {
         return super.formatNumber(value, format, localeId).toPerNumber();
       } catch (error) {
-        
+
       }
     }
     return super.formatNumber(value, format, localeId);

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Inject, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { AfterViewInit, Component, Inject, TemplateRef, ViewChild, ChangeDetectorRef, SkipSelf, Host } from '@angular/core';
 import '@angular/localize';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { JalaliCldrIntlService } from '../../services/jalali-cldr-intl.service';
@@ -26,7 +26,7 @@ export class KendoJalaliHeaderTitleTemplateComponent implements AfterViewInit {
   };
 
   constructor(
-    @Inject(IntlService) private localeService: JalaliCldrIntlService,
+     private localeService: JalaliCldrIntlService,
   ) {
     this.calendarType = this.localeService.datePickerType;
   }
@@ -36,6 +36,7 @@ export class KendoJalaliHeaderTitleTemplateComponent implements AfterViewInit {
   }
 
   toggleCalendarType(event: Event): void {
+    console.log('toggleCalendarType', event)
     this.localeService.toggleType();
     this.calendarType = this.localeService.datePickerType;
     event.stopImmediatePropagation();

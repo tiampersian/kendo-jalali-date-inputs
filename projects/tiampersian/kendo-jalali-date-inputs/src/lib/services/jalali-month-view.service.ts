@@ -89,7 +89,6 @@ export class JalaliMonthViewService extends MonthViewService {
     const isSelectedDateInRange = dayjs(selectedDate).isBetween(min, max);
     const date = dayOfWeek(firstMonthDate, this.intl.firstDay(), backward);
     const cells = range(0, CELLS_LENGTH);
-    console.log('console', this.intl.firstDay())
     const today = getToday();
     return range(0, ROWS_LENGTH).map(rowOffset => {
       const baseDate = addDays(date, rowOffset * CELLS_LENGTH);

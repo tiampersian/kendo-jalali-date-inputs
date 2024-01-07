@@ -1,12 +1,14 @@
-import { Injector, ComponentFactoryResolver } from '@angular/core';
+import { Injector, createComponent } from '@angular/core';
 import { KendoJalaliHeaderTitleTemplateComponent } from './components/kendo-jalali-header-title-template/kendo-jalali-header-title-template.component';
 
 
 
 export function HeaderTitleTemplateFactory(
-  injector: Injector, resolver: ComponentFactoryResolver
+  injector: Injector
 ): any {
-  const temp = resolver.resolveComponentFactory(KendoJalaliHeaderTitleTemplateComponent as any).create(injector);
-  temp.changeDetectorRef.detectChanges();
-  return (temp.instance as KendoJalaliHeaderTitleTemplateComponent);
+  const componentRef = createComponent(KendoJalaliHeaderTitleTemplateComponent, {
+    elementInjector: injector, 
+  } as any);
+  componentRef.changeDetectorRef.detectChanges();
+  return (componentRef.instance as KendoJalaliHeaderTitleTemplateComponent);
 }

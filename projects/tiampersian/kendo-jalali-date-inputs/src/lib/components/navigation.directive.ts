@@ -21,7 +21,6 @@ export class KendoDatePickerDirective {
   constructor(
     @Inject(IntlService) @Self() intl: JalaliCldrIntlService,
     @Inject(IntlService) @SkipSelf() hostIntlService: JalaliCldrIntlService,
-    @Inject('HeaderTitleTemplate') headerTitleTemplate,
     private cdr: ChangeDetectorRef
   ) {
     hostIntlService.changes.pipe(debounceTime(30)).subscribe(x => {
