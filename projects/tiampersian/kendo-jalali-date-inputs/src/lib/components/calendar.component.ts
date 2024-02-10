@@ -1,9 +1,9 @@
-import { debounceTime } from 'rxjs/operators';
-import { JalaliCldrIntlService } from '../services/jalali-cldr-intl.service';
 import { TemplateRef } from '@angular/core';
 import { CalendarComponent, MultiViewCalendarComponent } from '@progress/kendo-angular-dateinputs';
+import { debounceTime } from 'rxjs/operators';
 import { services } from '../providers';
-import { IntlService } from '@progress/kendo-angular-intl';
+import { JalaliCldrIntlService } from '../services/jalali-cldr-intl.service';
+import { dateInRange, firstDayOfMonth, getDayJsValue } from '../services/kendo-util-overrides';
 
 let headerTitleTemplate: TemplateRef<any>;
 Object.defineProperty(CalendarComponent.prototype, 'headerTitleTemplate', {
@@ -81,3 +81,12 @@ MultiViewCalendarComponent.prototype.ngOnInit = function (): void {
     this.cdr.detectChanges();
   });
 };
+
+CalendarComponent.prototype.handleNavigation = function (candidate: Date) {
+  if (this.disabled) {
+    return;
+  }
+  const focusTarget = candidate ? firstDayOfMonth(candidate, this.bus.service(0).intl.localeIdByDatePickerType) : this.focusedDate;
+  this.focusedDate = dateInRange(focusTarget, this.min, this.max);
+  this.detectChanges();
+}

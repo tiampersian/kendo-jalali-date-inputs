@@ -111,12 +111,18 @@ export class JalaliCldrIntlService extends CldrIntlService {
     localeId = localeId || this.localeId;
     if (this.isJalali && (localeId === 'fa' || localeId === 'ar')) {
       try {
-        return super.formatNumber(value, format, localeId).toPerNumber();
+        return super.formatNumber(+value, format, localeId).toPerNumber();
       } catch (error) {
 
       }
     }
-    return super.formatNumber(value, format, localeId);
+    
+    try {
+      return super.formatNumber(+value, format, localeId);
+    } catch (error) {
+    }
+
+    return '';
   }
 
   getDayJsValue(value?: Date | string, localeId?: string): Dayjs {

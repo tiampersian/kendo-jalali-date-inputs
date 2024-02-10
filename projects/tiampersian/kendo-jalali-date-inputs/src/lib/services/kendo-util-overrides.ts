@@ -69,7 +69,7 @@ export const addDecades = (dt, value, localeId?) => {
 const getCalendarType = (localeId: string) => {
   return (localeId === 'fa' || localeId === 'fa-IR') ? 'jalali' : 'gregory';
 }
-const getDayJsValue = (dt: any, localeId: string) => {
+export const getDayJsValue = (dt: any, localeId: string) => {
   return dayjs(dt).calendar(getCalendarType(localeId))
 }
 
@@ -81,6 +81,18 @@ export const lastDecadeOfCentury = (dt, localeId?) => {
   return getDayJsValue(dt, localeId).add((-(getYear(dt, localeId) % 100)) + 90, 'year').toDate();
 
 }
+export const dateInRange = (candidate, min, max) => {
+  if (!candidate) {
+      return candidate;
+  }
+  if (min && candidate < min) {
+      return new Date(min);
+  }
+  if (max && candidate > max) {
+      return new Date(max);
+  }
+  return candidate;
+};
 
 export const shiftWeekNames = (names, offset) => (names.slice(offset).concat(names.slice(0, offset)));
 
