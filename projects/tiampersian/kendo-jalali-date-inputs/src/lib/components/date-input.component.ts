@@ -43,6 +43,13 @@ DateInputComponent.prototype['updateElementValue'] = function (isActive: boolean
     this.selectNearestSegment(start);
   }
 };
+const getKendoDate = DateInputComponent.prototype['getKendoDate'];
+DateInputComponent.prototype['getKendoDate'] = function (value: Date) {
+  if (!value || Number.isNaN(value?.getDate()))
+    value = null;
+
+  return getKendoDate.call(this, value);
+}
 const oldHandleInput = DateInputComponent.prototype['handleInput'];
 DateInputComponent.prototype['handleInput'] = function () {
   const intl = (this.intl as JalaliCldrIntlService);

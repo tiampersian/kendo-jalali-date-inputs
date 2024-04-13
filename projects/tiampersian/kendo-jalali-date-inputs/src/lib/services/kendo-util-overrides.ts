@@ -41,6 +41,9 @@ export const lastDayOfMonth = (dt, localeId?) => {
   return getDayJsValue(dt, localeId).endOf('month').toDate();
 }
 
+export const endOfDay = (dt, localeId?) => {
+  return getDayJsValue(dt, localeId).endOf('day').toDate();// .add(getDayJsValue(dt, localeId).date() - 1, 'day')
+}
 export const startOfDay = (dt, localeId?) => {
   return getDayJsValue(dt, localeId).startOf('day').toDate();// .add(getDayJsValue(dt, localeId).date() - 1, 'day')
 }

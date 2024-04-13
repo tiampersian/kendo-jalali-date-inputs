@@ -6,7 +6,7 @@ import { JalaliCldrIntlService } from '../services/jalali-cldr-intl.service';
 import { debounceTime } from 'rxjs/operators';
 
 // tslint:disable-next-line:no-string-literal
-NavigationComponent.prototype['intlChange'] = function(): void {
+NavigationComponent.prototype['intlChange'] = function (): void {
   this.cdr.markForCheck();
 };
 
@@ -23,7 +23,10 @@ export class KendoDatePickerDirective {
     @Inject(IntlService) @SkipSelf() hostIntlService: JalaliCldrIntlService,
     private cdr: ChangeDetectorRef
   ) {
+    let prevLocaleId = hostIntlService.datePickerType;
     hostIntlService.changes.pipe(debounceTime(30)).subscribe(x => {
+      if (hostIntlService.datePickerType === prevLocaleId) return;
+      prevLocaleId = hostIntlService.datePickerType;
       intl.changeLocaleId(hostIntlService.localeId);
       intl.changeType(hostIntlService.datePickerType);
       this.cdr.detectChanges();
