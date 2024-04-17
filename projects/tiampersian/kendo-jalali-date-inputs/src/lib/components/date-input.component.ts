@@ -13,7 +13,7 @@ const existInputs = {
 // tslint:disable-next-line:no-string-literal
 const old = DateInputComponent.prototype['updateElementValue'];
 DateInputComponent.prototype['updateElementValue'] = function (isActive: boolean): void {
-  if (window['useOld']) {
+  if (typeof window !== 'undefined' && window['useOld']) {
     old.call(this, isActive);
     return;
   }
