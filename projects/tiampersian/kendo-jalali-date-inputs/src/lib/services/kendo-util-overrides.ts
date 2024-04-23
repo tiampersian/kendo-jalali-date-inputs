@@ -80,19 +80,23 @@ export const firstDecadeOfCentury = (dt, localeId?) => {
   return getDayJsValue(dt, localeId).add((-(getYear(dt, localeId) % 100)), 'year').toDate();
 }
 
+export const durationInMonths = (min, max, localeId?) => {
+  return getDayJsValue(max, localeId).endOf('month').diff(
+    getDayJsValue(min, localeId).startOf('month'), 'month'
+  );
+}
 export const lastDecadeOfCentury = (dt, localeId?) => {
   return getDayJsValue(dt, localeId).add((-(getYear(dt, localeId) % 100)) + 90, 'year').toDate();
-
 }
 export const dateInRange = (candidate, min, max) => {
   if (!candidate) {
-      return candidate;
+    return candidate;
   }
   if (min && candidate < min) {
-      return new Date(min);
+    return new Date(min);
   }
   if (max && candidate > max) {
-      return new Date(max);
+    return new Date(max);
   }
   return candidate;
 };

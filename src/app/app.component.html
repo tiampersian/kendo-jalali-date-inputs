@@ -418,6 +418,7 @@
   <div style="flex:1;">
     <br />
     <p><strong>Final Value</strong>: {{value}}</p>
+    <p><strong>Final Value</strong>: {{getJalaliValue()}}</p>
   </div>
   <div class="card-container"
        [dir]="(currentLocaleId=='fa-IR'||currentLocaleId=='fa')?'rtl':'ltr'"
@@ -432,7 +433,7 @@
         <p>(use <code>←</code> and <code>→</code> to navigate, <code>↑</code> and <code>↓</code> to update)</p>
 
         <p>DatePicker</p>
-        <kendo-datepicker [(value)]="value"></kendo-datepicker>
+        <kendo-datepicker  [min]="max" [(value)]="value"></kendo-datepicker>
         <p>(use <code>Alt</code>+<code>↓</code> to open the Calendar)</p>
 
         <p>TimePicker</p>
@@ -450,7 +451,7 @@
         <br>
         <br>
         <p>Calendar</p>
-        <kendo-calendar [(value)]="value"></kendo-calendar>
+        <kendo-calendar [max]="max" [(value)]="value"></kendo-calendar>
       </div>
     </div>
     <div class="row example-wrapper">

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import dayjs from 'dayjs';
-import { firstDayOfMonth, getToday, isInSelectionRange, range, lastDayOfMonth, addMonths, startOfDay, addDays, addWeeks, EMPTY_SELECTIONRANGE, endOfDay } from './kendo-util-overrides';
+import { firstDayOfMonth, getToday, isInSelectionRange, range, lastDayOfMonth, addMonths, startOfDay, addDays, addWeeks, EMPTY_SELECTIONRANGE, endOfDay, durationInMonths } from './kendo-util-overrides';
 import { JalaliCldrIntlService } from './jalali-cldr-intl.service';
 import { MonthViewService, CELLS_LENGTH, EMPTY_DATA, ROWS_LENGTH } from './kendo-services/month-view.service';
 
@@ -54,16 +54,13 @@ export class JalaliMonthViewService extends MonthViewService {
   }
 
   skip(value, min) {
-    const diff = this.intl.getDayJsValue(value).endOf('month').diff(
-      this.intl.getDayJsValue(min).startOf('month'), 'month'
-    );
-    return diff;
+    return durationInMonths(min, value, this.intl.localeIdByDatePickerType);
   }
   rowLength(options = {}) {
     return CELLS_LENGTH + (options['prependCell'] ? 1 : 0);
   }
   total(min, max) {
-    return dayjs(max).diff(min, 'month') + 1;
+    return durationInMonths(min, max, this.intl.localeIdByDatePickerType) + 1;
   }
   beginningOfPeriod(date) {
     if (!date) {
@@ -82,7 +79,7 @@ export class JalaliMonthViewService extends MonthViewService {
     const dateValue = this.intl.getDayJsValue(viewDate).toDate();
     const lastMonthDate = lastDayOfMonth(dateValue, this.intl.localeIdByDatePickerType);
     const lastMonthDay = startOfDay(lastMonthDate, this.intl.localeIdByDatePickerType);
-    const firstMonthDate = firstDayOfMonth(viewDate);
+    const firstMonthDate = firstDayOfMonth(viewDate, this.intl.localeIdByDatePickerType);
     const firstMonthDay = startOfDay(firstMonthDate, this.intl.localeIdByDatePickerType);
     const backward = -1;
     const date = addWeeks(firstMonthDate, this.intl.firstDay(), backward, this.intl.localeIdByDatePickerType);
@@ -94,7 +91,9 @@ export class JalaliMonthViewService extends MonthViewService {
         const cellDate = this.normalize(addDays(baseDate, cellOffset), min, max);
         const cellDay = startOfDay(cellDate, this.intl.localeIdByDatePickerType);
         const otherMonth = cellDay < firstMonthDay || cellDay > lastMonthDay;
-        const outOfRange = (!min ? false : startOfDay(cellDate, this.intl.localeIdByDatePickerType) < min) || (!max ? false : endOfDay(cellDate, this.intl.localeIdByDatePickerType) > max);
+
+        const endDay = endOfDay(cellDate, this.intl.localeIdByDatePickerType);
+        const outOfRange = (!min ? false : startOfDay(cellDate, this.intl.localeIdByDatePickerType) < min) || (!max ? false : endDay > max);
         if (outOfRange) {
           return null;
         }
