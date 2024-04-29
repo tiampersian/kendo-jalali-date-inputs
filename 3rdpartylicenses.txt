@@ -77,9 +77,6 @@ All available Kendo UI commercial licenses may be obtained at http://www.telerik
 *Copyright © 2022 Progress Software Corporation and/or one of its subsidiaries or affiliates. All rights reserved.*
 
 
-@progress/kendo-inputs-common
-SEE LICENSE IN LICENSE.md
-
 @progress/kendo-intl
 Apache-2.0
 This project has been released under the [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html), the text of which is included below. This license applies ONLY to the source of this repository and does not extend to any other Kendo UI distribution or variant, or any other third-party libraries used in a repository.
