@@ -138,6 +138,8 @@ function dateFormatString(date, format): { format: string, symbol: string } {
     }
   }
   console.log('test\r\nxxx');
+
+  
   return { format: parts.join(""), symbol: partSymbols.join("") };
 }
 
