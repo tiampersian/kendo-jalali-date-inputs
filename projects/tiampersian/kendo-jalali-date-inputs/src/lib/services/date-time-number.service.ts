@@ -1,17 +1,15 @@
-import { Inject, Injectable, LOCALE_ID, Optional } from '@angular/core';
+import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 import dayjs from 'dayjs';
 import { IConfig } from '../models/config.model';
 
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class DateTimeNumberService {
   usePersianNumber: boolean;
 
   constructor(
     @Inject(LOCALE_ID) localeId: string,
-    @Optional() @Inject('DATE_INPUT_CONFIGS') private configs: IConfig
+    @Inject('CONFIGS') private configs: IConfig
   ) {
     this.setLocaleId(localeId);
     this.init();

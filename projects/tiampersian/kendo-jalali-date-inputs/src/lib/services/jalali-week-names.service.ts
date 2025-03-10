@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
+import { WeekDaysFormat, WeekNamesService } from "@progress/kendo-angular-dateinputs";
 import { IntlService } from "@progress/kendo-angular-intl";
-import { WeekNamesService } from './kendo-services/week-names.service';
 
 
 @Injectable()
@@ -9,8 +9,7 @@ export class JalaliWeekNamesService extends WeekNamesService {
     super(intl);
   }
 
-
-  getWeekNames(includeWeekNumber?: boolean): string[] {
-    return super.getWeekNames(includeWeekNumber);
+  getWeekNames(includeWeekNumber: boolean, nameType: WeekDaysFormat | 'wide'): string[] {
+    return super.getWeekNames(includeWeekNumber, nameType);
   }
 }

@@ -41,38 +41,10 @@ export const lastDayOfMonth = (dt, localeId?) => {
   return getDayJsValue(dt, localeId).endOf('month').toDate();
 }
 
-export const endOfDay = (dt, localeId?) => {
-  return getDayJsValue(dt, localeId).endOf('day').toDate();// .add(getDayJsValue(dt, localeId).date() - 1, 'day')
-}
-export const startOfDay = (dt, localeId?) => {
-  return getDayJsValue(dt, localeId).startOf('day').toDate();// .add(getDayJsValue(dt, localeId).date() - 1, 'day')
-}
-export const firstMonthOfYear = (dt, localeId?) => {
-  return getDayJsValue(dt, localeId).startOf('year').toDate();// .add(getDayJsValue(dt, localeId).date() - 1, 'day')
-}
-export const lastMonthOfYear = (dt, localeId?) => {
-  return getDayJsValue(dt, localeId).endOf('year').toDate();// .add(-1, 'day').add(getDayJsValue(dt, localeId).date(), 'day')
-}
-export const addDays = (dt, value, localeId?) => {
-  return getDayJsValue(dt, localeId).add(value, 'days').toDate();
-}
-export const addWeeks = (dt, value, direction, localeId?) => {
-  return getDayJsValue(dt, localeId).add(value * direction, 'days').toDate();
-}
-export const addMonths = (dt, value, localeId?) => {
-  return getDayJsValue(dt, localeId).add(value, 'month').toDate();
-}
-export const addYears = (dt, value, localeId?) => {
-  return getDayJsValue(dt, localeId).add(value, 'year').toDate();
-}
-export const addDecades = (dt, value, localeId?) => {
-  return getDayJsValue(dt, localeId).add(value * 100, 'year').toDate();
-}
-
 const getCalendarType = (localeId: string) => {
   return (localeId === 'fa' || localeId === 'fa-IR') ? 'jalali' : 'gregory';
 }
-export const getDayJsValue = (dt: any, localeId: string) => {
+const getDayJsValue = (dt: any, localeId: string) => {
   return dayjs(dt).calendar(getCalendarType(localeId))
 }
 
@@ -80,26 +52,10 @@ export const firstDecadeOfCentury = (dt, localeId?) => {
   return getDayJsValue(dt, localeId).add((-(getYear(dt, localeId) % 100)), 'year').toDate();
 }
 
-export const durationInMonths = (min, max, localeId?) => {
-  return getDayJsValue(max, localeId).endOf('month').diff(
-    getDayJsValue(min, localeId).startOf('month'), 'month'
-  );
-}
 export const lastDecadeOfCentury = (dt, localeId?) => {
   return getDayJsValue(dt, localeId).add((-(getYear(dt, localeId) % 100)) + 90, 'year').toDate();
+
 }
-export const dateInRange = (candidate, min, max) => {
-  if (!candidate) {
-    return candidate;
-  }
-  if (min && candidate < min) {
-    return new Date(min);
-  }
-  if (max && candidate > max) {
-    return new Date(max);
-  }
-  return candidate;
-};
 
 export const shiftWeekNames = (names, offset) => (names.slice(offset).concat(names.slice(0, offset)));
 

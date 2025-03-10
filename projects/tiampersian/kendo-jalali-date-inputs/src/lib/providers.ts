@@ -1,23 +1,22 @@
-import { Injector } from '@angular/core';
-import { IntlService } from '@progress/kendo-angular-intl';
+import { ComponentFactoryResolver, Injector } from '@angular/core';
+import { CldrIntlService, IntlService } from '@progress/kendo-angular-intl';
 import { HeaderTitleTemplateFactory } from './HeaderTitleTemplateFactory';
 import { JalaliCenturyViewService } from './services/jalali-century-view.service';
-import { JalaliCldrIntlService } from './services/jalali-cldr-intl.service';
 import { JalaliDecadeViewService } from './services/jalali-decade-view.service';
+import { JalaliCldrIntlService } from './services/jalali-cldr-intl.service';
 import { JalaliMonthViewService } from './services/jalali-month-view.service';
 import { JalaliWeekNamesService } from './services/jalali-week-names.service';
 import { JalaliYearViewService } from './services/jalali-year-view.service';
 
 export const Providers = [
-  // DateRangeService,
   JalaliCenturyViewService,
   JalaliDecadeViewService,
   JalaliYearViewService,
   JalaliMonthViewService,
   JalaliWeekNamesService,
-  // JalaliCldrIntlService,
-  { provide: IntlService, useExisting: JalaliCldrIntlService },
-  { provide: 'HeaderTitleTemplate', useFactory: HeaderTitleTemplateFactory, deps: [Injector] },
+  { provide: IntlService, useClass: JalaliCldrIntlService },
+  // { provide: CldrIntlService, useClass: JalaliCldrIntlService },
+  { provide: 'HeaderTitleTemplate', useFactory: HeaderTitleTemplateFactory, deps: [Injector, ComponentFactoryResolver] },
 ];
 var CalendarViewEnum;
 (function (CalendarViewEnum) {

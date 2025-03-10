@@ -1,6 +1,5 @@
-import { Inject, Injector, ModuleWithProviders, NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import '@angular/localize/init';
-import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { IntlModule, setData } from '@progress/kendo-angular-intl';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
@@ -11,8 +10,9 @@ import { KendoDatePickerDirective } from './components/navigation.directive';
 import { IConfig } from './models/config.model';
 import { Providers } from './providers';
 import { DateTimeNumberService } from './services/date-time-number.service';
-import { JalaliCldrIntlService } from './services/jalali-cldr-intl.service';
 import './utils/string-prototypes';
+import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
+import { IconsModule, IconWrapperComponent } from '@progress/kendo-angular-icons';
 
 dayjs.extend(jalaliday);
 dayjs.extend(isBetween);
@@ -38,11 +38,11 @@ setData({
       M: "d LLLL",
       y: "MMM y",
       Y: "MMMM y",
-      F: "EEEE d MMMM y H:mm:ss",
-      g: "y/M/d H:mm",
-      G: "y/M/d H:mm:ss",
-      t: "H:mm",
-      T: "H:mm:ss",
+      F: "EEEE d MMMM y h:mm:ss a",
+      g: "y/M/d h:mm a",
+      G: "y/M/d h:mm:ss a",
+      t: "h:mm a",
+      T: "h:mm:ss a",
       s: "yyyy'-'MM'-'dd'T'HH':'mm':'ss",
       u: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'"
     },
@@ -506,10 +506,12 @@ setData({
   ],
   imports: [
     IntlModule,
-    DateInputsModule
+    DateInputsModule,
+    IconWrapperComponent
   ],
   providers: [
     ...Providers,
+    DateTimeNumberService,
     { provide: 'CONFIGS', useValue: {} }
   ],
   exports: [
@@ -519,8 +521,6 @@ setData({
 })
 export class KendoJalaliDateInputsModule {
   constructor(
-    injector: Injector,
-    @Inject('HeaderTitleTemplate') headerTitleTemplate,
   ) {
   }
 
@@ -528,18 +528,7 @@ export class KendoJalaliDateInputsModule {
     return {
       ngModule: KendoJalaliDateInputsModule,
       providers: [
-        { provide: 'DATE_INPUT_CONFIGS', useValue: { ...configs } }
-      ]
-    };
-  }
-
-  static forChild(configs?: IConfig): ModuleWithProviders<KendoJalaliDateInputsModule> {
-    return {
-      ngModule: KendoJalaliDateInputsModule,
-      providers: [
-        DateTimeNumberService,
-        JalaliCldrIntlService,
-        { provide: 'DATE_INPUT_CONFIGS', useValue: { ...configs } }
+        { provide: 'CONFIGS', useValue: { ...configs } }
       ]
     };
   }

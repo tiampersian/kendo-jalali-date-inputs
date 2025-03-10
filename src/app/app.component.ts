@@ -1,37 +1,23 @@
 import { RTL } from '@progress/kendo-angular-l10n';
 import { ChangeDetectorRef, Component, Inject, LOCALE_ID, Injector } from '@angular/core';
-import { IntlService } from '@progress/kendo-angular-intl';
 import { DatePickerType, JalaliCldrIntlService } from '@tiampersian/kendo-jalali-date-inputs';
-import dayjs from 'dayjs';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers: [
-  ],
-
+  providers: [],
+  standalone: false
 })
 export class AppComponent {
   title = 'kendo-jalali-date-inputs';
-  __todayDate = new Date();
-  max = new Date(
-    this.__todayDate.getFullYear(),
-    this.__todayDate.getMonth(),
-    this.__todayDate.getDate(),
-    23, 59, 59, 999
-  );
-
-  public value: Date = null;
+  public value: Date = new Date();
   rerender = true;
   locales = ['fa-IR', 'fa', 'en-US', 'en'];
   calendarTypes = Object.values(DatePickerType);
   calendarType = '';
   currentLocaleId = '';
-  range = {
-    start: null,
-    end: null
-  }
   constructor(
     @Inject(IntlService) private localeService: JalaliCldrIntlService,
     private cdr: ChangeDetectorRef
@@ -63,12 +49,6 @@ export class AppComponent {
 
   changeValue($event: any): void {
     this.value = $event;
-  }
-
-  getJalaliValue() {
-    if (!this.value) return null;
-
-    return dayjs(this.value).calendar('jalali').locale(this.currentLocaleId).format('ddd DD MMMM YYYY hh:mm:ss')
   }
 }
 

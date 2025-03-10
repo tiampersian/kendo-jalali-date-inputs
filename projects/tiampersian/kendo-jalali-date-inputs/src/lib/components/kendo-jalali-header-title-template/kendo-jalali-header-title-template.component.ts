@@ -1,21 +1,22 @@
-import { AfterViewInit, Component, Inject, TemplateRef, ViewChild, ChangeDetectorRef, SkipSelf, Host } from '@angular/core';
+import { AfterViewInit, Component, Inject, TemplateRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import '@angular/localize';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { JalaliCldrIntlService } from '../../services/jalali-cldr-intl.service';
 import { DatePickerType } from '../../models/date-picker-type';
-
+import { arrowsSwapIcon } from "@progress/kendo-svg-icons";
 @Component({
   template: `
   <ng-template #template kendoCalendarHeaderTitleTemplate let-title>
-    <span class="header-title k-button k-button k-rounded-lg k-button-sm k-button-link-base k-button-link">{{title}}</span>
+    <span >{{title}}</span>
     <button i18n-title="@@changeCalendarType" title="Change Calendar Type" class="header-calendar-type k-button k-rounded-lg k-button-sm k-button-link-base k-button-link" (click)="toggleCalendarType($event)">
       {{calendarTypes[calendarType]}}
-      <i class="k-icon k-i-arrows-swap {{calendarType!=='jalali'&&'k-flip-h'}}" ></i>
+      <strong class="k-color-primary">{{calendarTypesSymbol[calendarType]}}</strong>
+      <kendo-icon-wrapper name="arrows-swap" [svgIcon]="xIcon" />
     </button>
   </ng-template>`,
   styleUrls: ['./kendo-jalali-header-title-template.component.scss'],
-  providers: [
-  ]
+  providers: [],
+  standalone: false
 })
 export class KendoJalaliHeaderTitleTemplateComponent implements AfterViewInit {
   @ViewChild('template', { read: TemplateRef }) templateRef = TemplateRef;
@@ -24,9 +25,14 @@ export class KendoJalaliHeaderTitleTemplateComponent implements AfterViewInit {
     [DatePickerType.gregory]: $localize`:@@jalali:Jalali`,
     [DatePickerType.jalali]: $localize`:@@gregorian:Gregorian`,
   };
+  calendarTypesSymbol = {
+    [DatePickerType.gregory]: '☼',
+    [DatePickerType.jalali]: '†',
+  };
+  xIcon = arrowsSwapIcon;
 
   constructor(
-     private localeService: JalaliCldrIntlService,
+    @Inject(IntlService) private localeService: JalaliCldrIntlService,
   ) {
     this.calendarType = this.localeService.datePickerType;
   }

@@ -1,8 +1,10 @@
 import { Inject, Injectable } from '@angular/core';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { addDecades } from '@progress/kendo-date-math';
 import { JalaliCldrIntlService } from './jalali-cldr-intl.service';
-import { addDecades, firstDecadeOfCentury, firstYearOfDecade, getToday, isInRange, isInSelectionRange, lastDecadeOfCentury, range } from './kendo-util-overrides';
-import { CenturyViewService, EMPTY_DATA, CELLS_LENGTH, ROWS_LENGTH } from './kendo-services/century-view.service';
+import { firstDecadeOfCentury, firstYearOfDecade, getToday, isInRange, isInSelectionRange, lastDecadeOfCentury, range } from './kendo-util-overrides';
+import { CenturyViewService } from '@progress/kendo-angular-dateinputs';
+import { CELLS_LENGTH, EMPTY_DATA, ROWS_LENGTH } from './kendo-services/decade-view.service';
 
 @Injectable()
 export class JalaliCenturyViewService extends CenturyViewService {

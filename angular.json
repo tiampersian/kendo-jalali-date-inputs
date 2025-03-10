@@ -82,18 +82,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "tiampersian:build",
+            "buildTarget": "tiampersian:build",
             "disableHostCheck": true
           },
           "configurations": {
             "production": {
-              "browserTarget": "tiampersian:build:production"
+              "buildTarget": "tiampersian:build:production"
             },
             "development": {
-              "browserTarget": "tiampersian:build:development"
+              "buildTarget": "tiampersian:build:development"
             },
             "fa": {
-              "browserTarget": "tiampersian:build:fa"
+              "buildTarget": "tiampersian:build:fa"
             }
           },
           "defaultConfiguration": "development"
@@ -101,7 +101,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "tiampersian:build"
+            "buildTarget": "tiampersian:build"
           }
         },
         "test": {

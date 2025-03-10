@@ -38,8 +38,11 @@
     .header-calendar-type {
       text-align: center;
       text-transform: capitalize;
-      width: 50%;
+      // width: 50%;
       padding: 0;
+      margin-inline-start: 10px;
+      border: 1px solid var(--kendo-color-base-subtle);
+      vertical-align: baseline;
 
       .k-icon {
         font-size: 14px;
@@ -48,7 +51,7 @@
     }
 
     .header-title {
-      width: 50%;
+      // width: 50%;
       text-align: left;
       padding: 0;
       cursor: pointer;

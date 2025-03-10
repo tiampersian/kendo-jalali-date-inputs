@@ -5,9 +5,7 @@ import { Subject } from 'rxjs';
 import { DatePickerType } from '../models/date-picker-type';
 import { DateTimeNumberService } from './date-time-number.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class JalaliCldrIntlService extends CldrIntlService {
   isJalali: boolean;
   isGregorian: boolean;
@@ -19,12 +17,9 @@ export class JalaliCldrIntlService extends CldrIntlService {
   get calendarType(): any {
     return this.localeIdByDatePickerType === 'fa' ? 'jalali' : 'gregory';
   }
-  static staticDefaultTitleTemplate: any;
+  defaultTitleTemplate: any;
   $calendarType = new Subject();
   isFirst = true;
-  jalaliMonths: string[];
-  gregorianMonths: string[];
-
 
   constructor(
     @Inject(LOCALE_ID) private originalLocaleId: string,
@@ -32,16 +27,6 @@ export class JalaliCldrIntlService extends CldrIntlService {
   ) {
     super(originalLocaleId);
     this.changeType();
-
-    this.prepareMonthData();
-  }
-
-  private prepareMonthData() {
-    this.jalaliMonths = Array.from(Array(12).keys()).map((x, i) => {
-      return this.getDayJsValue('' + (i + 1)).format('MMMM');
-    });
-    this.jalaliMonths.splice(this.jalaliMonths.length, 0, ...this.jalaliMonths.splice(0, 3));
-    this.gregorianMonths = this.getDayJsValue().localeData().monthsShort();
   }
 
   firstDay(localeId?: string): number {
@@ -49,12 +34,11 @@ export class JalaliCldrIntlService extends CldrIntlService {
   }
 
   setTitleTemplate(template): void {
-    JalaliCldrIntlService.staticDefaultTitleTemplate = template;
+    this.defaultTitleTemplate = template;
   }
-
   changeType(value?: DatePickerType): void {
+
     this.datePickerType = this.getType(value);
-    
     if (this.datePickerType === DatePickerType.jalali) {
       this.isJalali = true;
       this.isGregorian = false;
@@ -80,7 +64,6 @@ export class JalaliCldrIntlService extends CldrIntlService {
     super.localeId = value;
     this.momentNumberService.setLocaleId(value);
     this.notify();
-    this.prepareMonthData();
   }
 
   toggleType(): void {
@@ -109,20 +92,10 @@ export class JalaliCldrIntlService extends CldrIntlService {
 
   formatNumber(value: number, format: string | NumberFormatOptions, localeId?: string): string {
     localeId = localeId || this.localeId;
-    if (this.isJalali && (localeId === 'fa' || localeId === 'ar')) {
-      try {
-        return super.formatNumber(+value, format, localeId).toPerNumber();
-      } catch (error) {
-
-      }
+    if (localeId === 'fa' || localeId === 'ar') {
+      return super.formatNumber(value, format, localeId).toPerNumber();
     }
-    
-    try {
-      return super.formatNumber(+value, format, localeId);
-    } catch (error) {
-    }
-
-    return '';
+    return super.formatNumber(value, format, localeId);
   }
 
   getDayJsValue(value?: Date | string, localeId?: string): Dayjs {

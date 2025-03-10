@@ -1,165 +1,411 @@
 import { DateInputComponent } from '@progress/kendo-angular-dateinputs';
-import dayjs from 'dayjs';
-import { Dayjs } from 'dayjs';
-import { JalaliCldrIntlService } from '../services/jalali-cldr-intl.service';
+import { isEqual } from '@progress/kendo-date-math';
+import { Constants } from '@progress/kendo-dateinputs-common/dist/es2015/common/constants';
+import { Mask } from '@progress/kendo-dateinputs-common/dist/es2015/common/mask';
+import { DateInputInteractionMode } from '@progress/kendo-dateinputs-common/dist/es2015/dateinput/interaction-mode';
+import { DateInput } from '@progress/kendo-dateinputs-common/dist/es2015/dateinput/dateinput';
+import { DateObject } from '@progress/kendo-dateinputs-common/dist/es2015/common/dateobject';
+import { padZero } from '@progress/kendo-dateinputs-common/dist/es2015/dateinput/utils';
+import { Key } from '@progress/kendo-dateinputs-common/dist/es2015/common/key';
+import { KeyCode } from '@progress/kendo-dateinputs-common/dist/es2015/common/keycode';
+import { parseToInt } from '@progress/kendo-dateinputs-common/dist/es2015/common/utils';
+import { approximateStringMatching } from '@progress/kendo-dateinputs-common/dist/es2015/dateinput/utils';
 import { isPresent } from '../services/kendo-util-overrides';
+import { JalaliCldrIntlService } from '../services/jalali-cldr-intl.service';
+import dayjs from 'dayjs';
 
+const MONTH_PART_WITH_WORDS_THRESHOLD = 2;
+const JS_MONTH_OFFSET = 1;
 
-const existInputs = {
-  'm': false,
-  'd': false,
-  'y': false
-};
-// tslint:disable-next-line:no-string-literal
-const old = DateInputComponent.prototype['updateElementValue'];
-DateInputComponent.prototype['updateElementValue'] = function (isActive: boolean): void {
-  if (typeof window !== 'undefined' && window['useOld']) {
-    old.call(this, isActive);
-    return;
+DateInput.prototype.onElementInput = onElementInput;
+DateInput.prototype.refreshElementValue = refreshElementValue
+DateObject.prototype.dateFormatString = dateFormatString;
+DateObject.prototype.getTextAndFormat = getTextAndFormat;
+
+const oldInitKendoDate = DateInputComponent.prototype['initKendoDate'];
+DateInputComponent.prototype['initKendoDate'] = function () {
+  const kendoDate = oldInitKendoDate.call(this);
+  if (this.value) {
+    setTimeout(() => {
+      this.kendoDate?.refreshElementValue();
+    });
   }
-  const start = this.caret()[0]; //XXX: get caret position before input is updated
-  const format = this.isActive ? this.inputFormat : this.displayFormat;
-  const localeId = (this.intl as JalaliCldrIntlService).localeIdByDatePickerType;
-  const showPlaceholder = !this.isActive && isPresent(this.placeholder) && !this.kendoDate.hasValue();
-  const input = this.inputElement;
-  const texts = this.kendoDate.getTextAndFormat(format);
-  // this.currentValue = !showPlaceholder ? this.intl.formatDate(this.kendoDate.value, format) : '';
-  this.currentValue = !showPlaceholder ? texts[0] : '';
 
-  const temp = getDateFormatString.call(this, format, localeId);
-  this.currentFormat = temp.symbol;
-  this.outputFormat = temp.format;
-
-  if (this.kendoDate.hasValue()) {
-    setInputValue.call(this, localeId);
-  } else {
-    this.renderer.setProperty(input, 'value', this.currentValue);
-    this.currentFormat = texts[1];
-  }
-  if (input.placeholder !== '' + this.placeholder) {
-    this.renderer.setProperty(input, "placeholder", this.placeholder);
-  }
-  if (isActive) {
-    this.selectNearestSegment(start);
-  }
-};
-const getKendoDate = DateInputComponent.prototype['getKendoDate'];
-DateInputComponent.prototype['getKendoDate'] = function (value: Date) {
-  if (!value || Number.isNaN(value?.getDate()))
-    value = null;
-
-  return getKendoDate.call(this, value);
+  return kendoDate;
 }
-const oldHandleInput = DateInputComponent.prototype['handleInput'];
-DateInputComponent.prototype['handleInput'] = function () {
-  const intl = (this.intl as JalaliCldrIntlService);
 
-  if (window['useOld']) {
-    oldHandleInput.call(this);
+function onElementInput(e) {
+  this.triggerInput({ event: e });
+  const oldElementValue = this.elementValue;
+  if (!this.element || !this.dateObject) {
     return;
   }
-  const me: DateInputComponent = this;
-
-  if (me.disabled || me.readonly) {
+  const switchedPartOnPreviousKeyAction = this.switchedPartOnPreviousKeyAction;
+  if (this.isPasteInProgress) {
+    if (this.options.allowCaretMode) {
+      // pasting should leave the input with caret
+      // thus allow direct input instead of selection mode
+      this.resetSegmentValue = false;
+    }
+    this.updateOnPaste(e);
+    this.isPasteInProgress = false;
     return;
   }
-  if (this.paste) {
-    this.updateOnPaste();
-    this.paste = false;
+  const keyDownEvent = this.keyDownEvent || {};
+  const isBackspaceKey = keyDownEvent.keyCode === KeyCode.BACKSPACE || keyDownEvent.key === Key.BACKSPACE;
+  const isDeleteKey = keyDownEvent.keyCode === KeyCode.DELETE || keyDownEvent.key === Key.DELETE;
+  const originalInteractionMode = this.interactionMode;
+  if (this.options.allowCaretMode &&
+    originalInteractionMode !== DateInputInteractionMode.Caret &&
+    !isDeleteKey && !isBackspaceKey) {
+    this.resetSegmentValue = true;
+  }
+  if (this.options.allowCaretMode) {
+    this.interactionMode = DateInputInteractionMode.Caret;
+  }
+  else {
+    this.interactionMode = DateInputInteractionMode.Selection;
+  }
+  const hasCaret = this.isInCaretMode();
+  if (hasCaret && this.keyDownEvent.key === Key.SPACE) {
+    // do not allow custom "holes" in the date segments
+    this.restorePreviousInputEventState();
     return;
   }
-  let diff = [];
-
-  let prevValue = this.currentValue;
-  if (intl.isJalali) {
-    // TODO Check me
-    prevValue = this.value ? this.intl.getDayJsValue(this.value).format(dateFormatString.call(this, this.value, this.format, 'fa').format.toMomentDateTimeFormat()).toEnNumber() : this.currentValue;
-    // prevValue = this.value ? getValue.call(this, this.value).format(this.format.toMomentDateTimeFormat()).toEnNumber() : this.currentValue;
+  const oldExistingDateValue = this.dateObject && this.dateObject.getValue();
+  const oldDateValue = this.dateObject ? this.dateObject.value : null;
+  const { text: currentText, format: currentFormat } = this.dateObject.getTextAndFormat();
+  this.currentFormat = currentFormat;
+  let oldText = "";
+  if (hasCaret) {
+    if (isBackspaceKey || isDeleteKey) {
+      oldText = this.previousElementValue;
+    }
+    else if (originalInteractionMode === DateInputInteractionMode.Caret) {
+      oldText = this.previousElementValue;
+    }
+    else {
+      oldText = currentText;
+    }
   }
+  else {
+    oldText = currentText;
+  }
+  const newText = this.elementValue;
+  const diff = approximateStringMatching({
+    oldText: oldText,
+    newText: newText,
+    formatPattern: this.currentFormat,
+    selectionStart: this.selection.start,
+    isInCaretMode: hasCaret,
+    keyEvent: this.keyDownEvent
+  });
+  prepareDiffInJalaliMode.call(this, this.intl.service, diff);
 
-  diff = approximateStringMatching(prevValue, this.currentFormat, this.inputValue.toEnNumber(), this.caret()[0]);
-  prepareDiffInJalaliMode.call(this, intl, diff);
-  const navigationOnly = (diff.length === 1 && diff[0][1] === "_");
+  console.log('diff', diff);
+  if (diff && diff.length && diff[0] && diff[0][1] !== Constants.formatSeparator) {
+    this.switchedPartOnPreviousKeyAction = false;
+  }
+  if (hasCaret && (!diff || diff.length === 0)) {
+    this.restorePreviousInputEventState();
+    return;
+  }
+  else if (hasCaret && diff.length === 1) {
+    if (!diff[0] || !diff[0][0]) {
+      this.restorePreviousInputEventState();
+      return;
+    }
+    else if (hasCaret && diff[0] &&
+      (diff[0][0] === Constants.formatSeparator || diff[0][1] === Constants.formatSeparator)) {
+      this.restorePreviousInputEventState();
+      return;
+    }
+  }
+  const navigationOnly = (diff.length === 1 && diff[0][1] === Constants.formatSeparator);
+  const parsePartsResults = [];
   let switchPart = false;
+  let error = null;
   if (!navigationOnly) {
-    let parsedPart;
-
     for (let i = 0; i < diff.length; i++) {
-      if (diff[i][2] === undefined) {
-        parsedPart = this.kendoDate.parsePart(diff[i][0], diff[i][1], this.resetSegmentValue);
+      const parsePartResult = this.dateObject.parsePart({
+        symbol: diff[i][0],
+        currentChar: diff[i][1],
+        resetSegmentValue: this.resetSegmentValue,
+        cycleSegmentValue: !this.isInCaretMode(),
+        rawTextValue: this.element.value,
+        isDeleting: isBackspaceKey || isDeleteKey,
+        originalFormat: this.currentFormat
+      });
+      parsePartsResults.push(parsePartResult);
+      if (!parsePartResult.value) {
+        error = { type: "parse" };
       }
-      switchPart = diff[i][2] !== undefined ? diff[i][2] : parsedPart.switchToNext;
-      if (diff[i][3]) {
-        this.kendoDate.value = diff[i][3];
-      }
-      if (diff[i][4]) {
-        this.kendoDate[diff[i][4]] = false;
-      }
+      switchPart = parsePartResult.switchToNext;
     }
-    const candidate = this.kendoDate.getDateObject();
-    if (this.value && candidate && !this.formatSections.date) {
-      this.kendoDate = this.getKendoDate(setTime(this.value, candidate));
-    }
+  }
+  if (!this.options.autoSwitchParts) {
+    switchPart = false;
   }
   this.resetSegmentValue = false;
-  this.putDateInRange();
-  this.updateElementValue(this.isActive);
+  const hasFixedFormat = this.options.format === this.currentFormat ||
+    // all not fixed formats are 1 symbol, e.g. "d"
+    (isPresent(this.options.format) && this.options.format.length > 1);
+  const lastParseResult = parsePartsResults[parsePartsResults.length - 1];
+  const lastParseResultHasNoValue = lastParseResult && !isPresent(lastParseResult.value);
+  const parsingFailedOnDelete = (hasCaret && (isBackspaceKey || isDeleteKey) && lastParseResultHasNoValue);
+  const resetPart = lastParseResult ? lastParseResult.resetPart : false;
+  const newExistingDateValue = this.dateObject.getValue();
+  const hasExistingDateValueChanged = !isEqual(oldExistingDateValue, newExistingDateValue);
+  const newDateValue = this.dateObject.value;
+  let symbolForSelection;
+  const currentSelection = this.selection;
+  if (hasCaret) {
+    const diffChar = diff && diff.length > 0 ? diff[0][0] : null;
+    const hasLeadingZero = this.dateObject.getLeadingZero()[diffChar];
+    if (diff.length && diff[0][0] !== Constants.formatSeparator) {
+      if (switchPart) {
+        this.forceUpdateWithSelection();
+        this.switchDateSegment(1);
+      }
+      else if (resetPart) {
+        symbolForSelection = this.currentFormat[currentSelection.start];
+        if (symbolForSelection) {
+          this.forceUpdate();
+          this.setSelection(this.selectionBySymbol(symbolForSelection));
+        }
+        else {
+          this.restorePreviousInputEventState();
+        }
+      }
+      else if (parsingFailedOnDelete) {
+        this.forceUpdate();
+        if (diff.length && diff[0][0] !== Constants.formatSeparator) {
+          this.setSelection(this.selectionBySymbol(diff[0][0]));
+        }
+      }
+      else if (lastParseResultHasNoValue) {
+        if (e.data === "0" && hasLeadingZero) {
+          // do not reset element value on a leading zero
+          // wait for consecutive input to determine the value
+        }
+        else if (isPresent(oldExistingDateValue) && !isPresent(newExistingDateValue)) {
+          this.restorePreviousInputEventState();
+        }
+        else if (!isPresent(oldExistingDateValue) && isPresent(newExistingDateValue)) {
+          this.forceUpdateWithSelection();
+        }
+        else if (isPresent(oldExistingDateValue) && isPresent(newExistingDateValue)) {
+          if (hasExistingDateValueChanged) {
+            this.forceUpdateWithSelection();
+          }
+          else {
+            this.restorePreviousInputEventState();
+          }
+        }
+        else if (!isPresent(oldExistingDateValue) && !isPresent(newExistingDateValue)) {
+          this.forceUpdateWithSelection();
+        }
+        else if (oldDateValue !== newDateValue) {
+          // this can happen on auto correct when no valid value is parsed
+        }
+        else {
+          this.restorePreviousInputEventState();
+        }
+      }
+      else if (!lastParseResultHasNoValue) {
+        // the user types a valid but incomplete date (e.g. year "123" with format "yyyy")
+        // let them continue typing, but refresh for not fixed formats
+        if (!hasFixedFormat) {
+          this.forceUpdateWithSelection();
+        }
+      }
+    }
+    else {
+      if (!this.options.autoSwitchParts && diff[0][1] === Constants.formatSeparator) {
+        // do not change the selection when a separator is pressed
+        // this should happen only if autoSwitchKeys contains the separator explicitly
+      }
+      else {
+        this.setSelection(this.selectionBySymbol(diff[0][0]));
+      }
+    }
+  }
+  else if (!hasCaret) {
+    this.forceUpdate();
+    if (diff.length && diff[0][0] !== Constants.formatSeparator) {
+      this.setSelection(this.selectionBySymbol(diff[0][0]));
+    }
+    if (this.options.autoSwitchParts) {
+      if (navigationOnly) {
+        this.resetSegmentValue = true;
+        if (!switchedPartOnPreviousKeyAction) {
+          this.switchDateSegment(1);
+        }
+        this.switchedPartOnPreviousKeyAction = true;
+      }
+      else if (switchPart) {
+        this.switchDateSegment(1);
+        this.switchedPartOnPreviousKeyAction = true;
+      }
+    }
+    else {
+      if (lastParseResult && lastParseResult.switchToNext) {
+        // the value is complete and should be switched, but the "autoSwitchParts" option prevents this
+        // ensure that the segment value can be reset on next input
+        this.resetSegmentValue = true;
+      }
+      else if (navigationOnly) {
+        this.resetSegmentValue = true;
+        if (!switchedPartOnPreviousKeyAction) {
+          this.switchDateSegment(1);
+        }
+        this.switchedPartOnPreviousKeyAction = true;
+      }
+    }
+    if (isBackspaceKey && this.options.selectPreviousSegmentOnBackspace) {
+      // kendo angular have this UX
+      this.switchDateSegment(-1);
+    }
+  }
+  this.tryTriggerValueChange({
+    oldValue: oldExistingDateValue,
+    event: e
+  });
+  this.triggerInputEnd({ event: e, error: error, oldElementValue: oldElementValue, newElementValue: this.elementValue });
+  if (hasCaret) {
+    // a format like "F" can dynamically change the resolved format pattern based on the value, e.g.
+    // "Tuesday, February 1, 2022 3:04:05 AM" becomes
+    // "Wednesday, February 2, 2022 3:04:05 AM" giving a diff of 2 ("Tuesday".length - "Wednesday".length)
+    this.setTextAndFormat();
+  }
+}
 
-  this.triggerChange();
-  this.updateIncompleteValidationStatus();
-  if (diff.length && diff[0][0] !== "_") {
-    this.selectDateSegment(diff[0][0]);
+function refreshElementValue() {
+  const element = this.element;
+  const format = this.isActive ? this.inputFormat : this.displayFormat;
+  if (this.dateObject.getTextAndFormat !== getTextAndFormat) {
+    debugger
+    // this.dateObject.dateFormatString = dateFormatString;
+    // this.dateObject.getTextAndFormat = getTextAndFormat;
   }
-  if (switchPart || navigationOnly) {
-    this.switchDateSegment(1);
+  const { text: currentText, format: currentFormat } = this.dateObject.getTextAndFormat(format);
+  this.currentFormat = currentFormat;
+  this.currentText = currentText;
+  const hasPlaceholder = this.options.hasPlaceholder || isPresent(this.options.placeholder);
+  const showPlaceholder = !this.isActive &&
+    hasPlaceholder &&
+    !this.dateObject.hasValue();
+  if (hasPlaceholder && isPresent(this.options.placeholder)) {
+    element.placeholder = this.options.placeholder;
   }
-  if (this.backspace) {
-    this.switchDateSegment(-1);
-  }
-  this.backspace = false;
-  if (intl.isLocaleIran) {
-    me.inputElement.value = (me.inputElement.value as string).toPerNumber();
-  }
+  const newElementValue = showPlaceholder ? "" : this.currentText;
+  this.previousElementValue = this.elementValue;
+  this.setElementValue(newElementValue);
 };
 
-function dateFormatString(date, format): { format: string, symbol: string } {
-  const dateFormatParts = this.kendoDate.intl.splitDateFormat(format);
-  const parts = [];
-  const partMap = [];
-  const partSymbols = [];
-  for (let i = 0; i < dateFormatParts.length; i++) {
-    let partLength = this.intl.getDayJsValue(date)?.format(dateFormatParts[i].pattern?.toMomentDateTimeFormat()).length || 0;
-    // let partLength = dayjs(date)?.format(dateFormatParts[i].pattern?.toMomentDateTimeFormat()).length || 0;
+function getTextAndFormat(customFormat = "") {
+  let format = customFormat || this.format;
+  let text = this.intl.service.getDayJsValue(this.value)?.format(mapKendoFormatToDayJs(format as string, this.intl.service));
+
+  const mask = this.dateFormatString(this.value, format);
+  if (!this.autoCorrectParts && this._partiallyInvalidDate.startDate) {
+    let partiallyInvalidText = "";
+    const formattedDate = this.intl.formatDate(this.value, format, this.localeId);
+    const formattedDates = this.getFormattedInvalidDates(format);
+    for (let i = 0; i < formattedDate.length; i++) {
+      const symbol = mask.symbols[i];
+      if (mask.partMap[i].type === "literal") {
+        partiallyInvalidText += text[i];
+      }
+      else if (this.getInvalidDatePartValue(symbol)) {
+        const partsForSegment = this.getPartsForSegment(mask, i);
+        if (symbol === "M") {
+          const datePartText = (parseToInt(this.getInvalidDatePartValue(symbol)) + JS_MONTH_OFFSET).toString();
+          if (partsForSegment.length > MONTH_PART_WITH_WORDS_THRESHOLD) {
+            partiallyInvalidText += formattedDates[symbol][i];
+          }
+          else {
+            if (this.getInvalidDatePartValue(symbol)) {
+              const formattedDatePart = padZero(partsForSegment.length - datePartText.length) + datePartText;
+              partiallyInvalidText += formattedDatePart;
+              // add -1 as the first character in the segment is at index i
+              i += partsForSegment.length - 1;
+            }
+            else {
+              partiallyInvalidText += formattedDates[symbol][i];
+            }
+          }
+        }
+        else {
+          if (this.getInvalidDatePartValue(symbol)) {
+            const datePartText = this.getInvalidDatePartValue(symbol).toString();
+            const formattedDatePart = padZero(partsForSegment.length - datePartText.length) + datePartText;
+            partiallyInvalidText += formattedDatePart;
+            // add -1 as the first character in the segment is at index i
+            i += partsForSegment.length - 1;
+          }
+          else {
+            partiallyInvalidText += formattedDates[symbol][i];
+          }
+        }
+      }
+      else {
+        partiallyInvalidText += text[i];
+      }
+    }
+    text = partiallyInvalidText;
+  }
+  const result = this.merge(text, mask);
+  return result;
+}
+
+function dateFormatString(date, format) {
+  var dateFormatParts = this.intl.splitDateFormat(format, this.intl.service.localeIdByDatePickerType);
+  var parts = [];
+  var partMap = [];
+  for (var i = 0; i < dateFormatParts.length; i++) {
+    let partLength = this.intl.service.getDayJsValue(date)?.format(dateFormatParts[i].pattern?.toMomentDateTimeFormat()).length || 0;
     while (partLength > 0) {
-      parts.push(this.kendoDate.symbols[dateFormatParts[i].pattern[0]] || dateFormatParts[i].pattern[0] || "_");
-      partSymbols.push(this.kendoDate.symbols[dateFormatParts[i].pattern[0]] || "_");
+      parts.push(this.symbols[dateFormatParts[i].pattern[0]] || Constants.formatSeparator);
       partMap.push(dateFormatParts[i]);
       partLength--;
     }
   }
-  return { format: parts.join(""), symbol: partSymbols.join("") };
-}
-
-const oldHandleBlur = DateInputComponent.prototype['handleBlur'];
-DateInputComponent.prototype['handleBlur'] = function (event) {
-  resetExistingInputs();
-  oldHandleBlur.call(this, event);
+  var returnValue = new Mask();
+  returnValue.symbols = parts.join('');
+  returnValue.partMap = partMap;
+  return returnValue;
 };
 
+function mapKendoFormatToDayJs(format: string, i18n: JalaliCldrIntlService) {
+  if (format === 'd')
+    format = i18n.isJalali ? 'y_M_d' : 'M_d_y';
+  else if (format === 'g')
+    format = i18n.isJalali ? 'y_M_d h_mm_aa' : 'M_d_y h_mm_aa';
+  else if (format === 't')
+    format = 'h:mm A';
+
+  return mapFormatToDayJs(format);
+}
+
+function mapFormatToDayJs(value: string) {
+  return value.replace('h_mm_aa', 'h:mm A').replaceAll('_', '/').replaceAll('y', 'YYYY').replaceAll('d', 'D').replaceAll('aa', 'a');
+}
 function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
   if (intl.localeIdByDatePickerType !== 'fa') {
     return;
   }
-  if (!this.inputValue || !this.kendoDate.hasValue()) {
-    this.kendoDate.date = false;
-    this.kendoDate.year = false;
-    this.kendoDate.month = false;
-    this.kendoDate = this.getKendoDate((MIN_JALALI_DATE.clone().toDate()));
+  debugger
+  if (!this.elementValue || !this.dateObject.hasValue()) {
+    this.dateObject.date = false;
+    this.dateObject.year = false;
+    this.dateObject.month = false;
+    this.dateObject = this.getDateObject((MIN_JALALI_DATE.clone().toDate()));
   }
-  if (!this.inputValue) {
+  if (!this.elementValue) {
     return;
   }
-  const dt = this.intl.getDayJsValue(this.kendoDate.value, 'fa');
+  const dt = intl.getDayJsValue(this.dateObject.value, 'fa');
   if (!dt) {
     return;
   }
@@ -173,10 +419,10 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
     d[2] = false;
     if ((d[0] as string).toLocaleLowerCase() === 'm') {
 
-      this.kendoDate.month = d[1] != '';
+      this.dateObject.month = d[1] != '';
       if (d[1] === '') {
         existInputs.m = false;
-        this.kendoDate = this.getKendoDate(dt.month((+d[1])).toDate());
+        this.dateObject = this.getDateObject(dt.month((+d[1])).toDate());
         return;
       }
       let month = d[1];
@@ -189,14 +435,14 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
         existInputs.m = true;
         if (month === '0') {
           existInputs.m = false;
-          this.kendoDate.month = false;
-          // this.kendoDate.value = dt.set('date', 1).toDate();
+          this.dateObject.month = false;
+          // this.dateObject.value = dt.set('date', 1).toDate();
           d[1] = '0'
           return;
         }
       }
 
-      this.kendoDate.value = (dt.set('month', month - 1).toDate());
+      this.dateObject.value = (dt.set('month', month - 1).toDate());
       d[1] = '' + (dt.locale('en').month() + 1);
 
       return;
@@ -204,10 +450,10 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
     if ((d[0] as string).toLocaleLowerCase() === 'd') {
       if (d[1] === '') {
         existInputs.d = false;
-        this.kendoDate = this.getKendoDate(dt.date((+d[1])).toDate());
+        this.dateObject = this.getDateObject(dt.date((+d[1])).toDate());
         return;
       }
-      this.kendoDate.date = true;;
+      this.dateObject.date = true;;
       let day = d[1];
       if (existInputs.d) {
         d[2] = true;
@@ -218,13 +464,13 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
         existInputs.d = true;
         if (day === '0') {
           existInputs.d = false;
-          this.kendoDate.date = false;
-          // this.kendoDate.value = dt.set('date', 1).toDate();
+          this.dateObject.date = false;
+          // this.dateObject.value = dt.set('date', 1).toDate();
           d[1] = '0'
           return;
         }
       }
-      this.kendoDate.value = (dt.set('date', +day).toDate());
+      this.dateObject.value = (dt.set('date', +day).toDate());
       d[1] = '' + (dt.locale('en').date());
       return;
     }
@@ -234,29 +480,28 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
   });
 }
 const MIN_JALALI_DATE = dayjs('0000-01-01', 'YYYY/MM/DD', 'fa');
-
 function prepareYearValue(diff: any[], dt) {
   diff[2] = false
-  this.kendoDate.year = false;;
+  this.dateObject.year = false;;
   const year = diff[1];
   if (year === '') {
     existInputs.y = false;
-    this.kendoDate = this.getKendoDate(dt.year((+year)).toDate());
+    this.dateObject = this.getDateObject(dt.year((+year)).toDate());
     return '';
   }
-  this.kendoDate.year = true;
+  this.dateObject.year = true;
   // if (!existInputs.y && year === '0') {
   //   existInputs.y = false;
-  //   this.kendoDate.year = false;
+  //   this.dateObject.year = false;
   //   return;
   // }
   if (!existInputs.y || dt.format('y').length > 3) {
     existInputs.y = true;
-    this.kendoDate = this.getKendoDate(dt.year((+year)).toDate());
+    this.dateObject = this.getDateObject(dt.year((+year)).toDate());
     return year === '' ? '' : dt.format('y');
   }
 
-  this.kendoDate.value = dt.year(+(dt.year() + year)).toDate();
+  this.dateObject.value = dt.year(+(dt.year() + year)).toDate();
 
   if (dt.format('y').length > 3) {
     resetExistingInputs();
@@ -264,111 +509,14 @@ function prepareYearValue(diff: any[], dt) {
   }
   return dt.format('y');
 }
-
-export function getDateFormatString(format: string, localeId: string, value?: Date): string {
-  const dt = this.intl.getDayJsValue(value || this.kendoDate.value, localeId)?.toDate();
-  return dateFormatString.call(this, dt, format, localeId) || '';
-};
-
-export const approximateStringMatching = (oldTextOrigin, oldFormat, newTextOrigin, caret) => {
-  // Remove the right part of the cursor.
-  //oldFormat = oldFormat.substring(0, caret + oldText.length - newText.length);
-  const oldIndex = caret + oldTextOrigin.length - newTextOrigin.length;
-  const oldTextSeparator = oldTextOrigin[oldIndex];
-  const oldText = oldTextOrigin.substring(0, caret + oldTextOrigin.length - newTextOrigin.length);
-  const newText = newTextOrigin.substring(0, caret);
-  const diff = [];
-  // Handle typing a single character over the same selection.
-  if (oldText === newText && caret > 0) {
-    diff.push([oldFormat[caret - 1], newText[caret - 1]]);
-    return diff;
-  }
-  if (oldText.indexOf(newText) === 0 && (newText.length === 0 || oldFormat[newText.length - 1] !== oldFormat[newText.length])) {
-    // Handle Delete/Backspace.
-    let deletedSymbol = "";
-    //XXX:
-    // Whole text is replaced with a same char
-    // Nasty patch required to keep the selection in the first segment
-    if (newText.length === 1) {
-      diff.push([oldFormat[0], newText[0]]);
-    }
-    for (let i = newText.length; i < oldText.length; i++) {
-      if (oldFormat[i] !== deletedSymbol && oldFormat[i] !== "_") {
-        deletedSymbol = oldFormat[i];
-        diff.push([deletedSymbol, ""]);
-      }
-    }
-    return diff;
-  }
-  // Handle inserting text (the new text is longer than the previous one).
-  // Handle typing over a literal as well.
-  if (newText.indexOf(oldText) === 0 || oldFormat[caret - 1] === "_") {
-    let symbol = oldFormat[0];
-    for (let i = Math.max(0, oldText.length - 1); i < oldFormat.length; i++) {
-      if (oldFormat[i] !== "_") {
-        symbol = oldFormat[i];
-        break;
-      }
-    }
-    return [[symbol, newText[caret - 1]]];
-  }
-  // Handle entering a space or a separator, for navigation to the next item.
-  if (newText[newText.length - 1] === " " || (newText[newText.length - 1] === oldTextSeparator && oldFormat[oldIndex] === '_')) {
-    return [[oldFormat[caret - 1], "_"]];
-  }
-  // Handle typing over a correctly selected part.
-  return [[oldFormat[caret - 1], newText[caret - 1]]];
-};
-
-export const setTime = (origin, candidate) => {
-  const date = new Date(origin);
-  date.setHours(candidate.getHours(), candidate.getMinutes(), candidate.getSeconds(), candidate.getMilliseconds());
-  return date;
-};
-
-
-function setInputValue(localeId: string) {
-  const value: Date = this.kendoDate.value;
-  let format = this.format;
-  if (['d', 't', 'g'].some(x => x == format)) {
-    format = (this.outputFormat || this.currentFormat).toMomentDateTimeFormat();
-  }
-  if (!this.kendoDate.year) {
-    format = format.replace(/y/gi, '0');
-  }
-  if (!this.kendoDate.date) {
-    format = format.replace(/d/gi, '0');
-  }
-  if (!this.kendoDate.month) {
-    format = format.replace(/m/gi, '0');
-  }
-
-  const result = this.intl.getDayJsValue(value, localeId);
-  if (this.intl.isLocaleIran) {
-    this.renderer.setProperty(this.inputElement, 'value', result.format(format.toMomentDateTimeFormat()));
-    return;
-  }
-  this.renderer.setProperty(this.inputElement, 'value', result.format(format.toMomentDateTimeFormat()));
-}
-
-
 function resetExistingInputs() {
   existInputs.m = false;
   existInputs.d = false;
   existInputs.y = false;
 }
-
-function debuggerCounter(counter): any {
-  if (typeof window === undefined) {
-    return;
-  }
-  if (typeof window['counter'] === undefined) {
-    window['counter'] = 0;
-  }
-  const result = window['counter'] === counter;
-  window['counter']++;
-  if (result) {
-    window['counter'] = 0;
-  }
-  return result;
-}
+const existInputs = {
+  'm': false,
+  'd': false,
+  'y': false
+};
+export default {};
