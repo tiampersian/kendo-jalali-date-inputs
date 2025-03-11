@@ -93,8 +93,8 @@ function onElementInput(e) {
   }
   const newText = this.elementValue;
   const diff = approximateStringMatching({
-    oldText: oldText,
-    newText: newText,
+    oldText: oldText.toEnNumber(),
+    newText: newText.toEnNumber(),
     formatPattern: this.currentFormat,
     selectionStart: this.selection.start,
     isInCaretMode: hasCaret,
@@ -127,7 +127,7 @@ function onElementInput(e) {
   let error = null;
   if (!navigationOnly) {
     for (let i = 0; i < diff.length; i++) {
-      const parsePartResult = this.dateObject.parsePart({
+      const parsePartResult = this.intl.service.isGregorian ? this.dateObject.parsePart({
         symbol: diff[i][0],
         currentChar: diff[i][1],
         resetSegmentValue: this.resetSegmentValue,
@@ -135,7 +135,7 @@ function onElementInput(e) {
         rawTextValue: this.element.value,
         isDeleting: isBackspaceKey || isDeleteKey,
         originalFormat: this.currentFormat
-      });
+      }) : parsePart.call(this, diff);
       parsePartsResults.push(parsePartResult);
       if (!parsePartResult.value) {
         error = { type: "parse" };
@@ -305,7 +305,7 @@ function refreshElementValue() {
 
 function getTextAndFormat(customFormat = "") {
   let format = customFormat || this.format;
-  let text = this.intl.service.getDayJsValue(this.value)?.format(mapKendoFormatToDayJs(format as string, this.intl.service));
+  let text = this.intl.service.getDayJsValue(this.value)?.format(mapKendoFormatToDayJs(format as string, this.intl.service, this.value)).replace('undefined', '');
 
   const mask = this.dateFormatString(this.value, format);
   if (!this.autoCorrectParts && this._partiallyInvalidDate.startDate) {
@@ -377,7 +377,7 @@ function dateFormatString(date, format) {
   return returnValue;
 };
 
-function mapKendoFormatToDayJs(format: string, i18n: JalaliCldrIntlService) {
+function mapKendoFormatToDayJs(format: string, i18n: JalaliCldrIntlService, dt: Date) {
   if (format === 'd')
     format = i18n.isJalali ? 'y_M_d' : 'M_d_y';
   else if (format === 'g')
@@ -385,17 +385,16 @@ function mapKendoFormatToDayJs(format: string, i18n: JalaliCldrIntlService) {
   else if (format === 't')
     format = 'h:mm A';
 
-  return mapFormatToDayJs(format);
+  return mapFormatToDayJs(format, dt);
 }
 
-function mapFormatToDayJs(value: string) {
-  return value.replace('h_mm_aa', 'h:mm A').replaceAll('_', '/').replaceAll('y', 'YYYY').replaceAll('d', 'D').replaceAll('aa', 'a');
+function mapFormatToDayJs(value: string, dt: Date) {
+  return value.replace('h_mm_aa', 'h:mm A').replaceAll('_', '/').replaceAll('y', dt.getFullYear() < 623 ? '0' : 'YYYY').replaceAll('d', 'D').replaceAll('aa', 'a');
+
 }
 function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
-  if (intl.localeIdByDatePickerType !== 'fa') {
-    return;
-  }
-  debugger
+  if (!intl.isJalali) { return; }
+
   if (!this.elementValue || !this.dateObject.hasValue()) {
     this.dateObject.date = false;
     this.dateObject.year = false;
@@ -417,26 +416,27 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
     }
 
     d[2] = false;
-    if ((d[0] as string).toLocaleLowerCase() === 'm') {
+    debugger
+    if (d[0] === 'M') {
 
       this.dateObject.month = d[1] != '';
       if (d[1] === '') {
-        existInputs.m = false;
+        existInputs.M = false;
         this.dateObject = this.getDateObject(dt.month((+d[1])).toDate());
         return;
       }
       let month = d[1];
-      if (existInputs.m) {
+      if (existInputs.M) {
         d[2] = true;
         month = +(dt.month() + 1) + d[1];
         resetExistingInputs();
       } else {
         d[2] = +month > 1;
-        existInputs.m = true;
+        existInputs.M = true;
         if (month === '0') {
-          existInputs.m = false;
+          existInputs.M = false;
           this.dateObject.month = false;
-          // this.dateObject.value = dt.set('date', 1).toDate();
+          this.dateObject.value = dt.month(0).toDate();
           d[1] = '0'
           return;
         }
@@ -447,13 +447,13 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
 
       return;
     }
-    if ((d[0] as string).toLocaleLowerCase() === 'd') {
+    else if (d[0].toLocaleLowerCase() === 'd') {
       if (d[1] === '') {
         existInputs.d = false;
         this.dateObject = this.getDateObject(dt.date((+d[1])).toDate());
         return;
       }
-      this.dateObject.date = true;;
+      this.dateObject.date = true;
       let day = d[1];
       if (existInputs.d) {
         d[2] = true;
@@ -465,7 +465,7 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
         if (day === '0') {
           existInputs.d = false;
           this.dateObject.date = false;
-          // this.dateObject.value = dt.set('date', 1).toDate();
+          this.dateObject.value = dt.day(1).toDate();
           d[1] = '0'
           return;
         }
@@ -474,49 +474,192 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
       d[1] = '' + (dt.locale('en').date());
       return;
     }
-    if (d[0].toLocaleLowerCase() === 'y') {
+    else if (d[0].toLocaleLowerCase() === 'y') {
       d[1] = prepareYearValue.call(this, d, dt);
+    }
+    else if (d[0].toLocaleLowerCase() === 'h') {
+      d[1] = prepareHourValue.call(this, d, dt);
+    }
+    else if (d[0].toLocaleLowerCase() === 'm') {
+      d[1] = prepareMinuteValue.call(this, d, dt);
+    }
+    else if (d[0].toLocaleLowerCase() === 's') {
+      d[1] = prepareSecondValue.call(this, d, dt);
     }
   });
 }
 const MIN_JALALI_DATE = dayjs('0000-01-01', 'YYYY/MM/DD', 'fa');
-function prepareYearValue(diff: any[], dt) {
+function prepareSecondValue(diff: any[], dt: dayjs.Dayjs) {
   diff[2] = false
-  this.dateObject.year = false;;
+  this.dateObject.seconds = false;
+  const seconds = diff[1];
+  const format = diff[0];
+  if (seconds === '') {
+    existInputs.s = false;
+    this.dateObject = this.getDateObject(dt.second((+seconds)).toDate());
+    return '';
+  }
+  this.dateObject.seconds = true;
+  // if (!existInputs.y && year === '0') {
+  //   existInputs.y = false;
+  //   this.dateObject.year = false;
+  //   return;
+  // }
+  if (!existInputs.s || dt.format(format).length > 1) {
+    existInputs.s = true;
+    this.dateObject = this.getDateObject(dt.second((+seconds)).toDate());
+    return seconds === '' ? '' : dt.format(format);
+  }
+
+  this.dateObject.value = dt.second(+(dt.second() + seconds)).toDate();
+
+  if (dt.format(format).length > 1) {
+    resetExistingInputs();
+    diff[2] = true;
+  }
+  return dt.format(format);
+}
+function prepareMinuteValue(diff: any[], dt: dayjs.Dayjs) {
+  diff[2] = false
+  this.dateObject.hours = false;
+  const minutes = diff[1];
+  const format = diff[0];
+  if (minutes === '') {
+    existInputs.m = false;
+    this.dateObject = this.getDateObject(dt.minute((+minutes)).toDate());
+    return '';
+  }
+  this.dateObject.hours = true;
+  // if (!existInputs.y && year === '0') {
+  //   existInputs.y = false;
+  //   this.dateObject.year = false;
+  //   return;
+  // }
+  if (!existInputs.m || dt.format(format).length > 1) {
+    existInputs.m = true;
+    this.dateObject = this.getDateObject(dt.minute((+minutes)).toDate());
+    return minutes === '' ? '' : dt.format(format);
+  }
+
+  this.dateObject.value = dt.minute(+(dt.minute() + minutes)).toDate();
+
+  if (dt.format(format).length > 1) {
+    resetExistingInputs();
+    diff[2] = true;
+  }
+  return dt.format(format);
+}
+function prepareHourValue(diff: any[], dt: dayjs.Dayjs) {
+  diff[2] = false
+  this.dateObject.hours = false;
+  const hours = diff[1];
+  const format = diff[0];
+  if (hours === '') {
+    existInputs.h = false;
+    this.dateObject = this.getDateObject(dt.hour((+hours)).toDate());
+    return '';
+  }
+  this.dateObject.hours = true;
+  // if (!existInputs.y && year === '0') {
+  //   existInputs.y = false;
+  //   this.dateObject.year = false;
+  //   return;
+  // }
+  if (!existInputs.h || dt.format(format).length > 1) {
+    existInputs.h = true;
+    this.dateObject = this.getDateObject(dt.hour((+hours)).toDate());
+    return hours === '' ? '' : dt.format(format);
+  }
+
+  this.dateObject.value = dt.hour(+(dt.hour() + hours)).toDate();
+
+  if (dt.format(format).length > 1) {
+    resetExistingInputs();
+    diff[2] = true;
+  }
+  return dt.format(format);
+}
+function prepareYearValue(diff: any[], dt: dayjs.Dayjs) {
+  diff[2] = false
+  this.dateObject.year = false;
   const year = diff[1];
   if (year === '') {
     existInputs.y = false;
     this.dateObject = this.getDateObject(dt.year((+year)).toDate());
     return '';
   }
+
   this.dateObject.year = true;
   // if (!existInputs.y && year === '0') {
   //   existInputs.y = false;
   //   this.dateObject.year = false;
-  //   return;
+  //   return '0';
   // }
-  if (!existInputs.y || dt.format('y').length > 3) {
+
+  if (!existInputs.y || ('' + dt.year()).length > 3) {
     existInputs.y = true;
-    this.dateObject = this.getDateObject(dt.year((+year)).toDate());
-    return year === '' ? '' : dt.format('y');
+    this.dateObject = this.getDateObject(dt.year((+year) || 1).toDate());
+    return year === '' ? '0' : year === '0' ? '0' : '' + dt.year();
   }
 
   this.dateObject.value = dt.year(+(dt.year() + year)).toDate();
 
-  if (dt.format('y').length > 3) {
+  if (('' + dt.year()).length > 3) {
     resetExistingInputs();
     diff[2] = true;
   }
-  return dt.format('y');
+
+  return '' + dt.year();
 }
 function resetExistingInputs() {
-  existInputs.m = false;
+  existInputs.M = false;
   existInputs.d = false;
   existInputs.y = false;
+  existInputs.h = false;
+  existInputs.m = false;
+  existInputs.s = false;
+  existInputs.a = false;
 }
 const existInputs = {
-  'm': false,
-  'd': false,
-  'y': false
+  M: false,
+  d: false,
+  y: false,
+  h: false,
+  m: false,
+  s: false,
+  a: false
 };
+
+function parsePart(diff) {
+  const value = this.dateObject.value;
+  const dt = this.intl.service.getDayJsValue(this.dateObject.value) as dayjs.Dayjs;
+  let switchToNext = false;
+  const target = diff[0][0].toLocaleLowerCase();
+  if (diff[0][0] === 'M') {
+    switchToNext = dt.month() > 0;
+  } else if (target === 'd') {
+    switchToNext = dt.date() > 3;
+  } else if (target === 'y') {
+    switchToNext = dt.year() > 1000;
+  } else if (target === 'a') {
+    switchToNext = true;
+  } else if (diff[0][0] === 'h') {
+    switchToNext = dt.hour() > 1;
+  } else if (diff[0][0] === 'H') {
+    switchToNext = dt.hour() > 5;
+  } else if (diff[0][0] === 'm') {
+    switchToNext = dt.minute() > 5;
+  } else if (diff[0][0] === 's') {
+    switchToNext = dt.second() > 5;
+  }
+  console.log('existInputs', switchToNext, existInputs, diff[0])
+
+  return {
+    hasInvalidDatePart: false,
+    resetPart: true,
+    switchToNext,
+    value
+  };
+}
+
 export default {};

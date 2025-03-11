@@ -501,10 +501,10 @@ setData({
 
 @NgModule({
   declarations: [
-    KendoJalaliHeaderTitleTemplateComponent,
     KendoDatePickerDirective,
   ],
   imports: [
+    KendoJalaliHeaderTitleTemplateComponent,
     IntlModule,
     DateInputsModule,
     IconWrapperComponent

@@ -10,7 +10,7 @@ import { CELLS_LENGTH, EMPTY_DATA, ROWS_LENGTH } from './kendo-services/decade-v
 export class JalaliCenturyViewService extends CenturyViewService {
 
   constructor(
-    @Inject(IntlService) private intl: JalaliCldrIntlService
+    @Inject(IntlService) private _intlService: JalaliCldrIntlService
   ) {
     super();
   }
@@ -20,12 +20,12 @@ export class JalaliCenturyViewService extends CenturyViewService {
       return '';
     }
 
-    const temp = this.intl.getDayJsValue(lastDecadeOfCentury(current, this.intl.localeIdByDatePickerType)).format('YYYY');
-    return `${this.intl.getDayJsValue(firstDecadeOfCentury(current, this.intl.localeIdByDatePickerType)).format('YYYY')} - ${temp}`;
+    const temp = this._intlService.getDayJsValue(lastDecadeOfCentury(current, this._intlService.localeIdByDatePickerType)).format('YYYY');
+    return `${this._intlService.getDayJsValue(firstDecadeOfCentury(current, this._intlService.localeIdByDatePickerType)).format('YYYY')} - ${temp}`;
   }
 
   navigationTitle(value) {
-    return `${this.intl.getDayJsValue(firstDecadeOfCentury(value, this.intl.localeIdByDatePickerType)).format('YYYY')}`;
+    return `${this._intlService.getDayJsValue(firstDecadeOfCentury(value, this._intlService.localeIdByDatePickerType)).format('YYYY')}`;
   }
 
 
@@ -35,8 +35,8 @@ export class JalaliCenturyViewService extends CenturyViewService {
       return EMPTY_DATA;
     }
     const cells = range(0, CELLS_LENGTH);
-    const firstDate = firstDecadeOfCentury(viewDate, this.intl.localeIdByDatePickerType);
-    const lastDate = lastDecadeOfCentury(viewDate, this.intl.localeIdByDatePickerType);
+    const firstDate = firstDecadeOfCentury(viewDate, this._intlService.localeIdByDatePickerType);
+    const lastDate = lastDecadeOfCentury(viewDate, this._intlService.localeIdByDatePickerType);
     const isSelectedDateInRange = isInRange(selectedDate, min, max);
     const today = getToday();
     const data = range(0, ROWS_LENGTH).map(rowOffset => {
@@ -50,7 +50,7 @@ export class JalaliCenturyViewService extends CenturyViewService {
         const isRangeEnd = this.isEqual(cellDate, selectionRange.end);
         const isInMiddle = !isRangeStart && !isRangeEnd;
         const isRangeMid = isInMiddle && isInSelectionRange(cellDate, selectionRange);
-        const title = this.intl.getDayJsValue(cellDate).format('YYYY');
+        const title = this._intlService.getDayJsValue(cellDate).format('YYYY');
 
         return {
           formattedValue: title,
@@ -74,9 +74,9 @@ export class JalaliCenturyViewService extends CenturyViewService {
   }
 
   isInRange(candidate, min, max) {
-    const year = firstYearOfDecade(candidate, this.intl.localeIdByDatePickerType).getFullYear();
-    const aboveMin = !min || firstYearOfDecade(min, this.intl.localeIdByDatePickerType).getFullYear() <= year;
-    const belowMax = !max || year <= firstYearOfDecade(max, this.intl.localeIdByDatePickerType).getFullYear();
+    const year = firstYearOfDecade(candidate, this._intlService.localeIdByDatePickerType).getFullYear();
+    const aboveMin = !min || firstYearOfDecade(min, this._intlService.localeIdByDatePickerType).getFullYear() <= year;
+    const belowMax = !max || year <= firstYearOfDecade(max, this._intlService.localeIdByDatePickerType).getFullYear();
     return aboveMin && belowMax;
   }
 }

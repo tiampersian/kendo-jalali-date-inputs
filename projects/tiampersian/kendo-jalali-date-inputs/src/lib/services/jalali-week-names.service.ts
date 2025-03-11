@@ -5,8 +5,8 @@ import { IntlService } from "@progress/kendo-angular-intl";
 
 @Injectable()
 export class JalaliWeekNamesService extends WeekNamesService {
-  constructor(intl: IntlService) {
-    super(intl);
+  constructor(protected _intlService: IntlService) {
+    super(_intlService);
   }
 
   getWeekNames(includeWeekNumber: boolean, nameType: WeekDaysFormat | 'wide'): string[] {

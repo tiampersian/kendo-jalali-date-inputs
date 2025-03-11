@@ -11,7 +11,7 @@ NavigationComponent.prototype['intlChange'] = function (): void {
 };
 
 @Directive({
-  selector: 'kendo-datepicker,kendo-datetimepicker,kendo-calendar,kendo-timepicker,kendo-multiviewcalendar,kendo-dateinput', 
+  selector: 'kendo-datepicker,kendo-datetimepicker,kendo-calendar,kendo-timepicker,kendo-multiviewcalendar,kendo-dateinput',
   providers: [
     ...Providers
   ],
@@ -41,29 +41,47 @@ export class KendoDatePickerDirective {
     if (!this.hostComponent) {
       debugger
     }
-    this.setBusService();
-    this.setHeaderTitleTemplate();
-    this.initCalendar();
-    this.initDateInput();
-    this.initDatePicker();
+    this.init();
   }
 
-  private initDatePicker() {
-    if (this.hostComponent.wrapper?.nativeElement.tagName !== 'KENDO-DATEPICKER') return;
+  init(hostComponent = this.hostComponent) {
+    this.setBusService(hostComponent);
+    this.setHeaderTitleTemplate(hostComponent);
+    this.initCalendar(hostComponent);
+    this.initDateInput(hostComponent);
+    this.initDatePicker(hostComponent);
+  }
+
+  private initDatePicker(hostComponent = this.hostComponent) {
+    if (hostComponent.wrapper?.nativeElement.tagName !== 'KENDO-DATEPICKER') return;
+
+    hostComponent.open.subscribe(x => {
+      setTimeout(() => {
+        this.init(hostComponent.calendar);
+        this.populateCalendar(hostComponent.calendar);
+        const intl: JalaliCldrIntlService = hostComponent.calendar.bus.service(hostComponent.calendar.activeViewEnum)._intlService;
+        intl.$calendarType.pipe(debounceTime(10)).subscribe(x => {
+          hostComponent.calendar.onResize();
+        });
+        hostComponent.calendar.onResize();
+        if (hostComponent?.calendar?.monthView)
+          hostComponent.calendar.monthView.headerComponent.title = hostComponent.calendar.monthView.headerComponent.getTitle()
+      });
+    })
+  }
+
+  private initDateInput(hostComponent = this.hostComponent) {
+    if (hostComponent.wrapper?.nativeElement.tagName !== 'KENDO-DATEINPUT') return;
 
   }
 
-  private initDateInput() {
-    if (this.hostComponent.wrapper?.nativeElement.tagName !== 'KENDO-DATEINPUT') return;
-
+  private initCalendar(hostComponent = this.hostComponent) {
+    if ((this.viewContainerRef.element.nativeElement as HTMLElement).tagName !== 'kendo-calendar') return;
+    this.populateCalendar(hostComponent);
   }
-
-  private initCalendar() {
-    if ((this.viewContainerRef.element.nativeElement as HTMLElement).tagName !== 'kendo-calendar') {
-      return;
-    }
-    const oldNgOnInit = this.hostComponent.ngOnInit;
-    this.hostComponent.ngOnInit = function (): void {
+  private populateCalendar(hostComponent: any) {
+    const oldNgOnInit = hostComponent.ngOnInit;
+    hostComponent.ngOnInit = function (): void {
       oldNgOnInit.call(this);
       const intl: JalaliCldrIntlService = this.bus.service(this.activeViewEnum)._intlService;
       intl.$calendarType.pipe(debounceTime(10)).subscribe(x => {
@@ -72,22 +90,22 @@ export class KendoDatePickerDirective {
     };
   }
 
-  private setHeaderTitleTemplate() {
-    if (!Object.hasOwn(this.hostComponent, 'headerTitleTemplate')) {
+  private setHeaderTitleTemplate(hostComponent = this.hostComponent) {
+    if (!Object.hasOwn(hostComponent, 'headerTitleTemplate')) {
       return;
     }
-    if (this.hostComponent.headerTitleTemplate) return;
-    
-    setTimeout(()=>{
-      this.hostComponent.headerTitleTemplate = this.headerTitleTemplate;
-      this.hostComponent.cdr.detectChanges();
-    })
+    if (hostComponent.headerTitleTemplate) return;
+
+    setTimeout(() => {
+      hostComponent.headerTitleTemplate = this.headerTitleTemplate;
+      hostComponent.cdr.detectChanges();
+    });
   }
 
-  private setBusService() {
-    if (!this.hostComponent.bus) { return; }
+  private setBusService(hostComponent = this.hostComponent) {
+    if (!hostComponent.bus) { return; }
 
-    this.hostComponent.bus.service = (view) => {
+    hostComponent.bus.service = (view) => {
       return this.viewContainerRef.injector.get<any>(services[view]) as any;
     }
   }

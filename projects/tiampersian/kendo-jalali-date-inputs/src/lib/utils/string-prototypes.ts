@@ -1,3 +1,7 @@
+import dayjs from "dayjs";
+import updateLocale from 'dayjs/plugin/updateLocale';
+dayjs.extend(updateLocale);
+
 declare global {
   interface String {
     toPerNumber(): string;
@@ -49,3 +53,13 @@ export const perToEnNumberMap = {
   '٩': '9',
   '٠': '0'
 };
+
+const meridiem = (hour: number) => {
+  return hour > 12 ? 'ب.ظ' : 'ق.ظ'
+}
+dayjs.updateLocale('fa', {
+  meridiem
+});
+dayjs.updateLocale('fa-IR', {
+  meridiem
+});
