@@ -28,7 +28,7 @@ jobs:
         node-version: [22.12.x]
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v1
         with:
           node-version: 22.12.0
@@ -64,7 +64,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: Use Node.js 22.12.0
         uses: actions/setup-node@v1
         with:
@@ -91,7 +91,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: Use Node.js 22.12.0
         uses: actions/setup-node@v1
         with:
