@@ -1,19 +1,15 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import '@angular/localize/init';
-import { IntlModule, setData } from '@progress/kendo-angular-intl';
+import { setData } from '@progress/kendo-angular-intl';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import localeData from 'dayjs/plugin/localeData';
 import jalaliday from 'jalaliday';
-import { KendoJalaliHeaderTitleTemplateComponent } from './components/kendo-jalali-header-title-template/kendo-jalali-header-title-template.component';
 import { KendoDatePickerDirective } from './components/navigation.directive';
 import { IConfig } from './models/config.model';
 import { Providers } from './providers';
 import { DateTimeNumberService } from './services/date-time-number.service';
 import './utils/string-prototypes';
-import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
-import { IconsModule, IconWrapperComponent } from '@progress/kendo-angular-icons';
-
 dayjs.extend(jalaliday);
 dayjs.extend(isBetween);
 dayjs.extend(localeData);
@@ -500,14 +496,8 @@ setData({
 });
 
 @NgModule({
-  declarations: [
-    KendoDatePickerDirective,
-  ],
   imports: [
-    KendoJalaliHeaderTitleTemplateComponent,
-    IntlModule,
-    DateInputsModule,
-    IconWrapperComponent
+    KendoDatePickerDirective,
   ],
   providers: [
     ...Providers,
@@ -515,7 +505,6 @@ setData({
     { provide: 'CONFIGS', useValue: {} }
   ],
   exports: [
-    DateInputsModule,
     KendoDatePickerDirective,
   ]
 })

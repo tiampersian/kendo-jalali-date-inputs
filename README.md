@@ -19,13 +19,14 @@ This is a configurable jalali (persian, khorshidi, shamsi, jalali) date-picker f
 2. import the `KendoJalaliDateInputsModule` module in typescript (.ts) or es6 files like below:  
  `import { KendoJalaliDateInputsModule } from '@tiampersian/kendo-jalali-date-inputs';`  
 
- 3. Add `KendoJalaliDateInputsModule` to your module imports:  
+ 3. Add "KendoJalaliDateInputsModule" next to the DateInputsModule (or date input components for example ) to your module import:
 ```ts
  @NgModule({
    ...
    imports: [
      ...
-     KendoJalaliDateInputsModule
+     KendoJalaliDateInputsModule,
+     DateInputsModule//or add usage components => DatePickerComponent || CalendarComponent || DateInputComponent || TimePickerComponent || DateTimePickerComponent || MultiViewCalendarComponent
    ]
  })
 ```

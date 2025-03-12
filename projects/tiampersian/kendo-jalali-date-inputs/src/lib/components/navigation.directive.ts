@@ -14,8 +14,7 @@ NavigationComponent.prototype['intlChange'] = function (): void {
   selector: 'kendo-datepicker,kendo-datetimepicker,kendo-calendar,kendo-timepicker,kendo-multiviewcalendar,kendo-dateinput',
   providers: [
     ...Providers
-  ],
-  standalone: false
+  ]
 })
 export class KendoDatePickerDirective {
   hostComponent: any;
