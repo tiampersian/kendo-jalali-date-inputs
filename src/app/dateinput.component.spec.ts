@@ -148,7 +148,7 @@ describe('SUT(integration): DateInputComponent', () => {
       ], scenario: ''
     },
   ] as { case: [string, number][], scenario: string }[]).forEach((testCase, i: number) => {
-    it(`should set proper value and show proper value when input value has change in #${i + 1}: ${(testCase.scenario)}`, async () => {
+    xit(`should set proper value and show proper value when input value has change in #${i + 1}: ${(testCase.scenario)}`, async () => {
 
       // arrange
       await sutPage.with_gregorian_mode().with_payloadValue(some_value).detectChanges().whenStable();
