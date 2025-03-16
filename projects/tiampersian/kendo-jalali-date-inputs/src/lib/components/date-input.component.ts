@@ -16,6 +16,7 @@ import dayjs from 'dayjs';
 
 const MONTH_PART_WITH_WORDS_THRESHOLD = 2;
 const JS_MONTH_OFFSET = 1;
+const MIN_JALALI_DATE = dayjs('0000-01-01', 'YYYY/MM/DD', 'fa');
 
 DateInput.prototype.onElementInput = onElementInput;
 DateInput.prototype.refreshElementValue = refreshElementValue
@@ -100,9 +101,11 @@ function onElementInput(e) {
     isInCaretMode: hasCaret,
     keyEvent: this.keyDownEvent
   });
+  console.log('before diff', diff[0]);
   prepareDiffInJalaliMode.call(this, this.intl.service, diff);
 
-  console.log('diff', diff);
+  console.log('diff', diff[0]);
+  console.log('leadingZero', this.dateObject.leadingZero);
   if (diff && diff.length && diff[0] && diff[0][1] !== Constants.formatSeparator) {
     this.switchedPartOnPreviousKeyAction = false;
   }
@@ -184,7 +187,7 @@ function onElementInput(e) {
         }
       }
       else if (lastParseResultHasNoValue) {
-        if (e.data === "0" && hasLeadingZero) {
+        if (e.data === '0' && hasLeadingZero) {
           // do not reset element value on a leading zero
           // wait for consecutive input to determine the value
         }
@@ -212,7 +215,7 @@ function onElementInput(e) {
           this.restorePreviousInputEventState();
         }
       }
-      else if (!lastParseResultHasNoValue) {
+      else {
         // the user types a valid but incomplete date (e.g. year "123" with format "yyyy")
         // let them continue typing, but refresh for not fixed formats
         if (!hasFixedFormat) {
@@ -283,11 +286,6 @@ function onElementInput(e) {
 function refreshElementValue() {
   const element = this.element;
   const format = this.isActive ? this.inputFormat : this.displayFormat;
-  if (this.dateObject.getTextAndFormat !== getTextAndFormat) {
-    debugger
-    // this.dateObject.dateFormatString = dateFormatString;
-    // this.dateObject.getTextAndFormat = getTextAndFormat;
-  }
   const { text: currentText, format: currentFormat } = this.dateObject.getTextAndFormat(format);
   this.currentFormat = currentFormat;
   this.currentText = currentText;
@@ -308,37 +306,27 @@ function getTextAndFormat(customFormat = "") {
   let text = this.intl.service.getDayJsValue(this.value)?.format(mapKendoFormatToDayJs(format as string, this.intl.service, this.value)).replace('undefined', '');
 
   const mask = this.dateFormatString(this.value, format);
-  if (!this.autoCorrectParts && this._partiallyInvalidDate.startDate) {
-    let partiallyInvalidText = "";
-    const formattedDate = this.intl.formatDate(this.value, format, this.localeId);
-    const formattedDates = this.getFormattedInvalidDates(format);
-    for (let i = 0; i < formattedDate.length; i++) {
-      const symbol = mask.symbols[i];
-      if (mask.partMap[i].type === "literal") {
-        partiallyInvalidText += text[i];
-      }
-      else if (this.getInvalidDatePartValue(symbol)) {
-        const partsForSegment = this.getPartsForSegment(mask, i);
-        if (symbol === "M") {
-          const datePartText = (parseToInt(this.getInvalidDatePartValue(symbol)) + JS_MONTH_OFFSET).toString();
-          if (partsForSegment.length > MONTH_PART_WITH_WORDS_THRESHOLD) {
-            partiallyInvalidText += formattedDates[symbol][i];
-          }
-          else {
-            if (this.getInvalidDatePartValue(symbol)) {
-              const formattedDatePart = padZero(partsForSegment.length - datePartText.length) + datePartText;
-              partiallyInvalidText += formattedDatePart;
-              // add -1 as the first character in the segment is at index i
-              i += partsForSegment.length - 1;
-            }
-            else {
-              partiallyInvalidText += formattedDates[symbol][i];
-            }
-          }
+  if (this.autoCorrectParts || !this._partiallyInvalidDate.startDate) {
+    return this.merge(text, mask);
+  }
+
+  let partiallyInvalidText = "";
+  const formattedDate = this.intl.formatDate(this.value, format, this.localeId);
+  const formattedDates = this.getFormattedInvalidDates(format);
+  for (let i = 0; i < formattedDate.length; i++) {
+    const symbol = mask.symbols[i];
+    if (mask.partMap[i].type === "literal") {
+      partiallyInvalidText += text[i];
+    }
+    else if (this.getInvalidDatePartValue(symbol)) {
+      const partsForSegment = this.getPartsForSegment(mask, i);
+      if (symbol === "M") {
+        const datePartText = (parseToInt(this.getInvalidDatePartValue(symbol)) + JS_MONTH_OFFSET).toString();
+        if (partsForSegment.length > MONTH_PART_WITH_WORDS_THRESHOLD) {
+          partiallyInvalidText += formattedDates[symbol][i];
         }
         else {
           if (this.getInvalidDatePartValue(symbol)) {
-            const datePartText = this.getInvalidDatePartValue(symbol).toString();
             const formattedDatePart = padZero(partsForSegment.length - datePartText.length) + datePartText;
             partiallyInvalidText += formattedDatePart;
             // add -1 as the first character in the segment is at index i
@@ -350,11 +338,23 @@ function getTextAndFormat(customFormat = "") {
         }
       }
       else {
-        partiallyInvalidText += text[i];
+        if (this.getInvalidDatePartValue(symbol)) {
+          const datePartText = this.getInvalidDatePartValue(symbol).toString();
+          const formattedDatePart = padZero(partsForSegment.length - datePartText.length) + datePartText;
+          partiallyInvalidText += formattedDatePart;
+          // add -1 as the first character in the segment is at index i
+          i += partsForSegment.length - 1;
+        }
+        else {
+          partiallyInvalidText += formattedDates[symbol][i];
+        }
       }
     }
-    text = partiallyInvalidText;
+    else {
+      partiallyInvalidText += text[i];
+    }
   }
+  text = partiallyInvalidText;
   const result = this.merge(text, mask);
   return result;
 }
@@ -378,14 +378,14 @@ function dateFormatString(date, format) {
 };
 
 function mapKendoFormatToDayJs(format: string, i18n: JalaliCldrIntlService, dt: Date) {
-  if (format === 'd')
-    format = i18n.isJalali ? 'y_M_d' : 'M_d_y';
-  else if (format === 'g')
-    format = i18n.isJalali ? 'y_M_d h_mm_aa' : 'M_d_y h_mm_aa';
-  else if (format === 't')
-    format = 'h:mm A';
+  // if (format === 'd')
+  //   format = i18n.isJalali ? 'y_M_d' : 'M_d_y';
+  // else if (format === 'g')
+  //   format = i18n.isJalali ? 'y_M_d h_mm_aa' : 'M_d_y h_mm_aa';
+  // else if (format === 't')
+  //   format = 'h:mm A';
 
-  return mapFormatToDayJs(format, dt);
+  return convertKendoToDayjsFormat(format); // (mapFormatToDayJs(format, dt));
 }
 
 function mapFormatToDayJs(value: string, dt: Date) {
@@ -401,22 +401,16 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
     this.dateObject.month = false;
     this.dateObject = this.getDateObject((MIN_JALALI_DATE.clone().toDate()));
   }
-  if (!this.elementValue) {
-    return;
-  }
+  if (!this.elementValue) return;
+
   const dt = intl.getDayJsValue(this.dateObject.value, 'fa');
-  if (!dt) {
-    return;
-  }
+  if (!dt) return;
+
   // if (debuggerCounter(3)) { }
 
   diff.forEach((d): void => {
-    if (!d[0]) {
-      return;
-    }
+    if (!d[0]) return;
 
-    d[2] = false;
-    debugger
     if (d[0] === 'M') {
 
       this.dateObject.month = d[1] != '';
@@ -427,17 +421,16 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
       }
       let month = d[1];
       if (existInputs.M) {
-        d[2] = true;
         month = +(dt.month() + 1) + d[1];
         resetExistingInputs();
       } else {
-        d[2] = +month > 1;
         existInputs.M = true;
         if (month === '0') {
           existInputs.M = false;
           this.dateObject.month = false;
           this.dateObject.value = dt.month(0).toDate();
-          d[1] = '0'
+          this.dateObject.leadingZero = { [d[0]]: 1 };
+
           return;
         }
       }
@@ -456,17 +449,15 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
       this.dateObject.date = true;
       let day = d[1];
       if (existInputs.d) {
-        d[2] = true;
         day = +(dt.date()) + d[1];
         resetExistingInputs();
       } else {
-        d[2] = +day > 3;
         existInputs.d = true;
         if (day === '0') {
           existInputs.d = false;
           this.dateObject.date = false;
+          this.dateObject.leadingZero = { d: 1 };
           this.dateObject.value = dt.day(1).toDate();
-          d[1] = '0'
           return;
         }
       }
@@ -488,7 +479,6 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
     }
   });
 }
-const MIN_JALALI_DATE = dayjs('0000-01-01', 'YYYY/MM/DD', 'fa');
 function prepareSecondValue(diff: any[], dt: dayjs.Dayjs) {
   diff[2] = false
   this.dateObject.seconds = false;
@@ -634,6 +624,13 @@ function parsePart(diff) {
   const value = this.dateObject.value;
   const dt = this.intl.service.getDayJsValue(this.dateObject.value) as dayjs.Dayjs;
   let switchToNext = false;
+  if (!diff[0]?.[0]) return {
+    hasInvalidDatePart: false,
+    resetPart: false,
+    switchToNext: false,
+    value
+  };
+
   const target = diff[0][0].toLocaleLowerCase();
   if (diff[0][0] === 'M') {
     switchToNext = dt.month() > 0;
@@ -652,7 +649,6 @@ function parsePart(diff) {
   } else if (diff[0][0] === 's') {
     switchToNext = dt.second() > 5;
   }
-  console.log('existInputs', switchToNext, existInputs, diff[0])
 
   return {
     hasInvalidDatePart: false,
@@ -660,6 +656,50 @@ function parsePart(diff) {
     switchToNext,
     value
   };
+}
+
+function convertKendoToDayjsFormat(kendoFormat) {
+
+  const aliasFormats = {
+    d: "y/M/d",
+    D: "EEEE d MMMM y",
+    m: "d LLL",
+    M: "d LLLL",
+    y: "MMM y",
+    Y: "MMMM y",
+    F: "EEEE d MMMM y h:mm:ss a",
+    g: "y/M/d h:mm a",
+    G: "y/M/d h:mm:ss a",
+    t: "h:mm a",
+    T: "h:mm:ss a",
+    s: "yyyy'-'MM'-'dd'T'HH':'mm':'ss",
+    u: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'"
+  }
+
+  const kendoToDayjsMap = {
+    'yyyy': 'YYYY',
+    'yy': 'YY',
+    'y': 'YYYY',
+    'yyy': 'YYY',
+    'dd': 'DD',
+    'd': 'D',
+    'tt': 'A',
+    'fff': 'SSS' // اگر نیاز به پشتیبانی از میلیثانیه دارید,
+
+  };
+
+  const regexPattern = Object.keys(kendoToDayjsMap)
+    .sort((a, b) => b.length - a.length)
+    .map(escapeRegExp)
+    .join('|');
+
+  const regex = new RegExp(regexPattern, 'g');
+
+  return (aliasFormats[kendoFormat] || kendoFormat).replace(regex, match => kendoToDayjsMap[match]);
+}
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 export default {};

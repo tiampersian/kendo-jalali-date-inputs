@@ -427,7 +427,7 @@
          style="min-height: 450px;display: flex;">
       <div class="col-xs-12 col-md-6 example-col">
         <p>DateInput</p>
-        <kendo-dateinput [(value)]="value" />
+        <kendo-dateinput [(value)]="value" [format]="'yyyy/MM/dd'" />
         <p>(use <code>←</code> and <code>→</code> to navigate, <code>↑</code> and <code>↓</code> to update)</p>
 
         <p>DatePicker</p>
@@ -435,7 +435,7 @@
         <p>(use <code>Alt</code>+<code>↓</code> to open the Calendar)</p>
 
         <p>TimePicker</p>
-        <kendo-timepicker [(value)]="value" />
+        <!-- <kendo-timepicker [(value)]="value" /> -->
         <p>(use Alt+↓ to open the time list, Tab to move to the next time section in the popup, ↑ to increment and ↓ to
           decrement the value)</p>
       </div>
@@ -447,13 +447,13 @@
         <br>
         <br>
         <p>Calendar</p>
-        <kendo-calendar [(value)]="value" />
+        <!-- <kendo-calendar [(value)]="value" /> -->
       </div>
     </div>
     <div class="row example-wrapper">
       <div class="col-12 example-col">
         <p>MultiViewCalendar</p>
-        <kendo-multiviewcalendar [(value)]="value"></kendo-multiviewcalendar>
+        <!-- <kendo-multiviewcalendar [(value)]="value"></kendo-multiviewcalendar> -->
       </div>
     </div>
 

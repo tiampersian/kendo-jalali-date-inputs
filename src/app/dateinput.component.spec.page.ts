@@ -1,6 +1,6 @@
 import { interval, Subject } from 'rxjs';
 import { DatePickerType } from 'projects/tiampersian/kendo-jalali-date-inputs/src/lib/models/date-picker-type';
-import { DateInputComponent } from '@progress/kendo-angular-dateinputs';
+import { DateInputComponent, DateInputsModule, DatePickerComponent } from '@progress/kendo-angular-dateinputs';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -35,6 +35,7 @@ export class DateInputComponentPage {
       imports: [
         NoopAnimationsModule,
         BrowserModule,
+        DateInputsModule,
         KendoJalaliDateInputsModule
       ],
       providers: [
@@ -60,19 +61,23 @@ export class DateInputComponentPage {
   }
 
   with_selection(start, end) {
+    this.inputElement.focus();
     this.inputElement.setSelectionRange(start, end);
     return this;
   }
 
-  with_send_inputValue(items: [string, number][]) {
+  with_send_inputValue(items: [string, number, number?][]) {
     console.log(this.inputElement.selectionStart);
     console.log(this.component.format);
 
     items.forEach((item, index) => {
       this.inputElement.value = item[0];
       console.log(this.inputElement.value);
-      this.with_selection(item[1], item[1]);
-      (this.component as any).handleInput();
+      this.with_selection(item[1] - 1, item[2]);
+      const e = new InputEvent('input', {});
+      // (e as any).target = this.inputElement;
+      // (e as any).srcElement = this.inputElement;
+      this.component['kendoDate'].onElementInput(e);
       console.log(this.inputElement.value);
     });
     console.log(this.inputElement.selectionStart);

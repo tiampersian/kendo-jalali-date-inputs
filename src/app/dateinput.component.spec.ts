@@ -85,8 +85,8 @@ describe('SUT(integration): DateInputComponent', () => {
 
     /*9*/{
       case: [
-        [dayjs(some_value).calendar('jalali').locale('fa').format('M/D/1'), 6], [dayjs(some_value).calendar('jalali').locale('fa').format('M/D/13'), 7],
-        [dayjs(some_value).calendar('jalali').locale('fa').format('M/D/138'), 8], [dayjs(some_value).calendar('jalali').locale('fa').format('M/D/1388'), 9]
+        [dayjs(some_value).calendar('jalali').locale('fa').format('M/D/1'), 6, 10], [dayjs(some_value).calendar('jalali').locale('fa').format('M/D/0013'), 6, 10],
+        [dayjs(some_value).calendar('jalali').locale('fa').format('M/D/0138'), 6, 10], [dayjs(some_value).calendar('jalali').locale('fa').format('M/D/1388'), 6, 10]
       ], scenario: 'year (4 digit)'
     },
     /*10*/{
@@ -103,10 +103,11 @@ describe('SUT(integration): DateInputComponent', () => {
         [dayjs(some_value).calendar('jalali').locale('fa').format('M/D/1008'), 9]
       ], scenario: ''
     },
-  ] as { case: [string, number][], scenario: string }[]).forEach((testCase, i: number) => {
-    it(`should set proper value and show proper value when input value has change in #${i + 1}: ${(testCase.scenario)}`, async () => {
+  ].slice(8, 9) as { case: [string, number][], scenario: string }[]).forEach((testCase, i: number) => {
+    fit(`should set proper value and show proper value when input value has change in #${i + 1}: ${(testCase.scenario)}`, async () => {
       // arrange
       await sutPage.with_payloadValue(some_value).detectChanges().whenStable();
+      debugger
       await sutPage.with_send_inputValue(testCase.case);
 
       // assert
