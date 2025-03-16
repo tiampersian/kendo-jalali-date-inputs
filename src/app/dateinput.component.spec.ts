@@ -1,10 +1,9 @@
-import { fakeAsync } from '@angular/core/testing';
 import { DatePickerType } from '@tiampersian/kendo-jalali-date-inputs';
 import dayjs from 'dayjs';
-import { DateInputComponentPage } from './dateinput.component.spec.page';
+import 'dayjs/locale/fa';
 import isBetween from 'dayjs/plugin/isBetween';
 import localeData from 'dayjs/plugin/localeData';
-import 'dayjs/locale/fa';
+import { DateInputComponentPage } from './dateinput.component.spec.page';
 dayjs.extend(isBetween);
 dayjs.extend(localeData);
 
@@ -17,11 +16,6 @@ describe('SUT(integration): DateInputComponent', () => {
   beforeEach(async () => {
     sutPage = await new DateInputComponentPage().init();
   });
-
-  afterEach(() => {
-    sutPage.fixture.destroy();
-    sutPage.fixture.destroy();
-  })
 
   it(`should create properly`, () => {
     // assert
