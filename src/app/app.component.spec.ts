@@ -13,7 +13,6 @@ function keyPress(key) {
     "key": key
   });
 }
-
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -57,14 +56,14 @@ describe('AppComponent', () => {
     { input: '2018-10-11T07:00:00.000Z' },
     { input: '2020-11-01T07:00:00.000Z' },
     { input: '2020-11-01T07:59:59.000Z' }
-  ].slice(0, 1);
+  ];
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
 
-  (testCases.slice(0, 1)).forEach(item => {
+  (testCases).forEach(item => {
     it(`should have as proper value date input in jalali mode with ${item.input} value`, async () => {
       // arrange
       const fixture = TestBed.createComponent(AppComponent);

@@ -73,13 +73,18 @@ export class DateInputComponentPage {
     items.forEach((item, index) => {
       this.inputElement.value = item[0];
       console.log(this.inputElement.value);
-      this.with_selection(item[1] - 1, item[2]);
-      const e = new InputEvent('input', {});
-      // (e as any).target = this.inputElement;
-      // (e as any).srcElement = this.inputElement;
-      this.component['kendoDate'].onElementInput(e);
+      this.with_selection(item[1], item[1]);
+      var keyEvent = new KeyboardEvent('keydown');
+      this.inputElement.dispatchEvent(keyEvent);
+      var event = new InputEvent('input', { inputType: 'insertText' });
+      // this.inputElement.dispatchEvent(event);
+      console.log(this.inputElement.value);
+      this.component['kendoDate'].onElementInput(event);
+
       console.log(this.inputElement.value);
     });
+
+
     console.log(this.inputElement.selectionStart);
     this.component.blur();
 

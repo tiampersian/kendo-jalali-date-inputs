@@ -101,7 +101,7 @@ function onElementInput(e) {
     isInCaretMode: hasCaret,
     keyEvent: this.keyDownEvent
   });
-  console.log('before diff', diff[0]);
+  console.log('before diff', diff[0], (this.intl.service as JalaliCldrIntlService).calendarType);
   prepareDiffInJalaliMode.call(this, this.intl.service, diff);
 
   console.log('diff', diff[0]);
@@ -298,6 +298,7 @@ function refreshElementValue() {
   }
   const newElementValue = showPlaceholder ? "" : this.currentText;
   this.previousElementValue = this.elementValue;
+  console.log('newElementValue', newElementValue);
   this.setElementValue(newElementValue);
 };
 
