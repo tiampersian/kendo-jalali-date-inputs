@@ -4,6 +4,7 @@ import { setData } from '@progress/kendo-angular-intl';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import localeData from 'dayjs/plugin/localeData';
+import updateLocale from 'dayjs/plugin/updateLocale';
 import jalaliday from 'jalaliday';
 import { KendoDatePickerDirective } from './components/navigation.directive';
 import { IConfig } from './models/config.model';
@@ -13,6 +14,18 @@ import './utils/string-prototypes';
 dayjs.extend(jalaliday);
 dayjs.extend(isBetween);
 dayjs.extend(localeData);
+dayjs.extend(updateLocale);
+
+const meridiem = (hour: number) => {
+  return hour > 12 ? 'ب.ظ' : 'ق.ظ'
+}
+dayjs.updateLocale('fa', {
+  meridiem
+});
+dayjs.updateLocale('fa-IR', {
+  meridiem
+});
+
 if (typeof window !== 'undefined') {
   window['dayjs'] = dayjs;
 }
@@ -34,11 +47,11 @@ setData({
       M: "d LLLL",
       y: "MMM y",
       Y: "MMMM y",
-      F: "EEEE d MMMM y h:mm:ss a",
-      g: "y/M/d h:mm a",
-      G: "y/M/d h:mm:ss a",
-      t: "h:mm a",
-      T: "h:mm:ss a",
+      F: "a h:mm:ss EEEE d MMMM y",
+      g: "a h:mm y/M/d",
+      G: "a h:mm:ss y/M/d",
+      t: "a h:mm",
+      T: "a h:mm:ss",
       s: "yyyy'-'MM'-'dd'T'HH':'mm':'ss",
       u: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'"
     },

@@ -1,18 +1,18 @@
 import { DateInputComponent } from '@progress/kendo-angular-dateinputs';
+import { localeData } from '@progress/kendo-angular-intl';
 import { isEqual } from '@progress/kendo-date-math';
 import { Constants } from '@progress/kendo-dateinputs-common/dist/es2015/common/constants';
-import { Mask } from '@progress/kendo-dateinputs-common/dist/es2015/common/mask';
-import { DateInputInteractionMode } from '@progress/kendo-dateinputs-common/dist/es2015/dateinput/interaction-mode';
-import { DateInput } from '@progress/kendo-dateinputs-common/dist/es2015/dateinput/dateinput';
 import { DateObject } from '@progress/kendo-dateinputs-common/dist/es2015/common/dateobject';
-import { padZero } from '@progress/kendo-dateinputs-common/dist/es2015/dateinput/utils';
 import { Key } from '@progress/kendo-dateinputs-common/dist/es2015/common/key';
 import { KeyCode } from '@progress/kendo-dateinputs-common/dist/es2015/common/keycode';
+import { Mask } from '@progress/kendo-dateinputs-common/dist/es2015/common/mask';
 import { parseToInt } from '@progress/kendo-dateinputs-common/dist/es2015/common/utils';
-import { approximateStringMatching } from '@progress/kendo-dateinputs-common/dist/es2015/dateinput/utils';
-import { isPresent } from '../services/kendo-util-overrides';
-import { JalaliCldrIntlService } from '../services/jalali-cldr-intl.service';
+import { DateInput } from '@progress/kendo-dateinputs-common/dist/es2015/dateinput/dateinput';
+import { DateInputInteractionMode } from '@progress/kendo-dateinputs-common/dist/es2015/dateinput/interaction-mode';
+import { approximateStringMatching, padZero } from '@progress/kendo-dateinputs-common/dist/es2015/dateinput/utils';
 import dayjs from 'dayjs';
+import { JalaliCldrIntlService } from '../services/jalali-cldr-intl.service';
+import { isPresent } from '../services/kendo-util-overrides';
 
 const MONTH_PART_WITH_WORDS_THRESHOLD = 2;
 const JS_MONTH_OFFSET = 1;
@@ -25,6 +25,7 @@ DateObject.prototype.getTextAndFormat = getTextAndFormat;
 
 const oldInitKendoDate = DateInputComponent.prototype['initKendoDate'];
 DateInputComponent.prototype['initKendoDate'] = function () {
+
   const kendoDate = oldInitKendoDate.call(this);
   if (this.value) {
     setTimeout(() => {
@@ -304,7 +305,7 @@ function refreshElementValue() {
 
 function getTextAndFormat(customFormat = "") {
   let format = customFormat || this.format;
-  let text = this.intl.service.getDayJsValue(this.value)?.format(mapKendoFormatToDayJs(format as string, this.intl.service, this.value)).replace('undefined', '');
+  let text = (this.intl.service as JalaliCldrIntlService).getDayJsValue(this.value)?.locale(this.intl.localeId)?.format(mapKendoFormatToDayJs(format as string, this.intl.service, this.value)).replace('undefined', '');
 
   const mask = this.dateFormatString(this.value, format);
   if (this.autoCorrectParts || !this._partiallyInvalidDate.startDate) {
@@ -312,7 +313,7 @@ function getTextAndFormat(customFormat = "") {
   }
 
   let partiallyInvalidText = "";
-  const formattedDate = this.intl.formatDate(this.value, format, this.localeId);
+  const formattedDate = this.intl.formatDate(this.value, format, this.intl.localeId);
   const formattedDates = this.getFormattedInvalidDates(format);
   for (let i = 0; i < formattedDate.length; i++) {
     const symbol = mask.symbols[i];
@@ -365,7 +366,7 @@ function dateFormatString(date, format) {
   var parts = [];
   var partMap = [];
   for (var i = 0; i < dateFormatParts.length; i++) {
-    let partLength = this.intl.service.getDayJsValue(date)?.format(dateFormatParts[i].pattern?.toMomentDateTimeFormat()).length || 0;
+    let partLength = this.intl.service.getDayJsValue(date)?.format(dateFormatParts[i].pattern.toMomentDateTimeFormat()).length || 0;
     while (partLength > 0) {
       parts.push(this.symbols[dateFormatParts[i].pattern[0]] || Constants.formatSeparator);
       partMap.push(dateFormatParts[i]);
@@ -386,7 +387,7 @@ function mapKendoFormatToDayJs(format: string, i18n: JalaliCldrIntlService, dt: 
   // else if (format === 't')
   //   format = 'h:mm A';
 
-  return convertKendoToDayjsFormat(format); // (mapFormatToDayJs(format, dt));
+  return convertKendoToDayjsFormat(format, i18n.localeId); // (mapFormatToDayJs(format, dt));
 }
 
 function mapFormatToDayJs(value: string, dt: Date) {
@@ -659,24 +660,8 @@ function parsePart(diff) {
   };
 }
 
-function convertKendoToDayjsFormat(kendoFormat) {
-
-  const aliasFormats = {
-    d: "y/M/d",
-    D: "EEEE d MMMM y",
-    m: "d LLL",
-    M: "d LLLL",
-    y: "MMM y",
-    Y: "MMMM y",
-    F: "EEEE d MMMM y h:mm:ss a",
-    g: "y/M/d h:mm a",
-    G: "y/M/d h:mm:ss a",
-    t: "h:mm a",
-    T: "h:mm:ss a",
-    s: "yyyy'-'MM'-'dd'T'HH':'mm':'ss",
-    u: "yyyy'-'MM'-'dd HH':'mm':'ss'Z'"
-  }
-
+function convertKendoToDayjsFormat(kendoFormat, localeId) {
+  const aliasFormats = localeData(localeId).calendar.patterns;
   const kendoToDayjsMap = {
     'yyyy': 'YYYY',
     'yy': 'YY',
@@ -686,7 +671,6 @@ function convertKendoToDayjsFormat(kendoFormat) {
     'd': 'D',
     'tt': 'A',
     'fff': 'SSS' // اگر نیاز به پشتیبانی از میلیثانیه دارید,
-
   };
 
   const regexPattern = Object.keys(kendoToDayjsMap)

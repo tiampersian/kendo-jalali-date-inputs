@@ -25,9 +25,9 @@ export class JalaliMonthViewService extends MonthViewService {
   }
 
   abbrMonthNames2() {
-    if (this.intl.isJalali) {
-      return dayjs()['$locale']().jmonths;
-    }
+    if (this.intl.isJalali) 
+      return dayjs().locale(this.intl['locale'])['$locale']().jmonths;
+    
     return this.intl.getDayJsValue().localeData().monthsShort();
   }
 
