@@ -41,8 +41,7 @@ jobs:
             ${{ runner.OS }}-npm-cache-
       - name: npm install and npm run build
         run: |
-          npm install
-          npm install capture-website
+          npm install --optional
           npm run setversion 19.0.${{ github.run_number }}
           npm run test:ci
           npm run build:ci
@@ -144,8 +143,7 @@ jobs:
             ${{ runner.OS }}-npm-cache-
       - name: npm install and npm run build
         run: |
-          npm install
-          npm install capture-website
+          npm install --optional
           node update-screenshot.js
       - name: Update resources
         uses: test-room-7/action-update-file@v1
