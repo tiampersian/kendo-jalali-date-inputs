@@ -17,6 +17,8 @@ puppeteer
       width: 1280,
       height: 2000,
     },
+    headless: 'new',
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
   })
   .then(async (browser) => {
     const page = await browser.newPage();
