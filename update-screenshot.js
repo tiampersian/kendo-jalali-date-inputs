@@ -15,7 +15,7 @@ puppeteer
   .launch({
     defaultViewport: {
       width: 1280,
-      height: 2000,
+      height: 1200,
     },
     headless: 'new',
     args: ['--no-sandbox', '--disable-setuid-sandbox']
