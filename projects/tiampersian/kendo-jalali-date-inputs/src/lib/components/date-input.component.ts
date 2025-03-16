@@ -305,7 +305,7 @@ function refreshElementValue() {
 
 function getTextAndFormat(customFormat = "") {
   let format = customFormat || this.format;
-  let text = (this.intl.service as JalaliCldrIntlService).getDayJsValue(this.value)?.locale(this.intl.localeId)?.format(mapKendoFormatToDayJs(format as string, this.intl.service, this.value)).replace('undefined', '');
+  let text = (this.intl.service as JalaliCldrIntlService).getDayJsValue(this.value)?.locale(this.intl.localeId)?.format(mapKendoFormatToDayJs(format as string, this.intl.service, this.value));
 
   const mask = this.dateFormatString(this.value, format);
   if (this.autoCorrectParts || !this._partiallyInvalidDate.startDate) {
