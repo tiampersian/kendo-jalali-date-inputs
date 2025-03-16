@@ -76,7 +76,7 @@ export class DateInputComponentPage {
       console.log(this.inputElement.value);
     });
     console.log(this.inputElement.selectionStart);
-    this.component.handleBlur(null);
+    this.component.blur();
 
     return this.detectChanges().whenStable();
   }
