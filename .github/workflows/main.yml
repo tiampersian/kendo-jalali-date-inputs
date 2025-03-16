@@ -148,7 +148,7 @@ jobs:
           npm install capture-website
           node update-screenshot.js
       - name: Update resources
-        uses: test-room-7/action-update-file@v4
+        uses: test-room-7/action-update-file@v1
         with:
             file-path: src/assets/screenshot.png
             commit-msg: Update resources
