@@ -42,7 +42,7 @@ jobs:
       - name: npm install and npm run build
         run: |
           npm install --optional
-          npm run setversion 19.0.${{ github.run_number }}
+          npm run setversion 19.1.${{ github.run_number }}
           npm run test:ci
           npm run build:ci
           npm run build:app:ci
