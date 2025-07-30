@@ -1,4 +1,4 @@
-import { LOCALE_ID } from '@angular/core';
+import { input, LOCALE_ID } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule, By } from '@angular/platform-browser';
@@ -80,6 +80,30 @@ describe('AppComponent', () => {
       // expected
       expect(fixture.componentInstance.calendarType).toBe(DatePickerType.jalali);
       expect(input.value).toBe(moment(item.input).calendar('jalali').locale('fa').format('YYYY/M/D'));
+    });
+  });
+  ([
+    {
+      input: '2025-07-26T00:00:00.000Z', expected: '١٤٠٤/٥/٤'
+    }
+  ]).forEach(item => {
+
+    it(`should have as proper value date input in jalali mode with ${item.input} value`, async () => {
+      // arrange
+      const fixture = TestBed.createComponent(AppComponent);
+      fixture.componentInstance.value = new Date(item.input);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      fixture.detectChanges();
+      const dataPicker = fixture.debugElement.query(By.css('kendo-datepicker'));
+      const input = (dataPicker.nativeElement as HTMLElement).querySelector('input');
+
+      // action
+      fixture.detectChanges();
+
+      // expected
+      expect(fixture.componentInstance.calendarType).toBe(DatePickerType.jalali);
+      expect(input.value).toBe(item.expected);
     });
   });
 

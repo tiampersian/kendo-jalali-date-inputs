@@ -27,6 +27,7 @@ export class KendoDatePickerDirective {
     private viewContainerRef: ViewContainerRef,
   ) {
     this.setHostComponent();
+
     hostIntlService.changes.pipe(debounceTime(30)).subscribe(x => {
       intl.changeLocaleId(hostIntlService.localeId);
       intl.changeType(hostIntlService.datePickerType);
@@ -44,11 +45,12 @@ export class KendoDatePickerDirective {
   }
 
   init(hostComponent = this.hostComponent) {
-    this.setBusService(hostComponent);
+    // debugger
     this.setHeaderTitleTemplate(hostComponent);
-    this.initCalendar(hostComponent);
-    this.initDateInput(hostComponent);
-    this.initDatePicker(hostComponent);
+    // this.setBusService(hostComponent);
+    // this.initCalendar(hostComponent);
+    // this.initDateInput(hostComponent);
+    // this.initDatePicker(hostComponent);
   }
 
   private initDatePicker(hostComponent = this.hostComponent) {

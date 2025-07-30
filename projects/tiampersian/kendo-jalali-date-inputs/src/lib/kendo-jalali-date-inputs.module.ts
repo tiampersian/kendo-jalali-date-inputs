@@ -5,16 +5,22 @@ import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import localeData from 'dayjs/plugin/localeData';
 import updateLocale from 'dayjs/plugin/updateLocale';
-import jalaliday from 'jalaliday';
+import jalaliday from 'jalali-plugin-dayjs';
 import { KendoDatePickerDirective } from './components/navigation.directive';
 import { IConfig } from './models/config.model';
 import { Providers } from './providers';
 import { DateTimeNumberService } from './services/date-time-number.service';
 import './utils/string-prototypes';
-dayjs.extend(jalaliday);
+import { MonthViewService } from '@progress/kendo-angular-dateinputs';
+import { JalaliMonthViewService } from './services/jalali-month-view.service';
+import { JalaliWeekNamesService } from './services/jalali-week-names.service';
+import { JalaliYearViewService } from './services/jalali-year-view.service';
+import { JalaliDecadeViewService } from './services/jalali-decade-view.service';
+import { JalaliCenturyViewService } from './services/jalali-century-view.service';
 dayjs.extend(isBetween);
 dayjs.extend(localeData);
 dayjs.extend(updateLocale);
+dayjs.extend(jalaliday);
 
 const meridiem = (hour: number) => {
   return hour > 12 ? 'ب.ظ' : 'ق.ظ'
@@ -513,8 +519,13 @@ setData({
     KendoDatePickerDirective,
   ],
   providers: [
-    ...Providers,
+    JalaliCenturyViewService,
+    JalaliDecadeViewService,
+    JalaliYearViewService,
+    JalaliMonthViewService,
+    JalaliWeekNamesService,
     DateTimeNumberService,
+    ...Providers,
     { provide: 'CONFIGS', useValue: {} }
   ],
   exports: [

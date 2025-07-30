@@ -20,13 +20,24 @@ export class JalaliCldrIntlService extends CldrIntlService {
   defaultTitleTemplate: any;
   $calendarType = new Subject();
   isFirst = true;
+  jalaliMonths: string[];
+  gregorianMonths: string[];
 
   constructor(
     @Inject(LOCALE_ID) private originalLocaleId: string,
-    private momentNumberService: DateTimeNumberService
+    private dateTimeNumberService: DateTimeNumberService
   ) {
     super(originalLocaleId);
     this.changeType();
+    this.prepareMonthData();
+  }
+
+  private prepareMonthData() {
+    this.jalaliMonths = Array.from(Array(12).keys()).map((x, i) => {
+      return this.getDayJsValue('' + (i + 1)).format('MMMM');
+    });
+    this.jalaliMonths.splice(this.jalaliMonths.length, 0, ...this.jalaliMonths.splice(0, 3));
+    this.gregorianMonths = this.getDayJsValue().localeData().monthsShort();
   }
 
   firstDay(localeId?: string): number {
@@ -62,7 +73,8 @@ export class JalaliCldrIntlService extends CldrIntlService {
 
   changeLocaleId(value): void {
     super.localeId = value;
-    this.momentNumberService.setLocaleId(value);
+    this.dateTimeNumberService.setLocaleId(value);
+    this.prepareMonthData();
     this.notify();
   }
 

@@ -41,6 +41,10 @@ export const lastDayOfMonth = (dt, localeId?) => {
   return getDayJsValue(dt, localeId).endOf('month').toDate();
 }
 
+export const addMonths = (dt, value, localeId?) => {
+  return getDayJsValue(dt, localeId).add(value, 'month').toDate();
+}
+
 const getCalendarType = (localeId: string) => {
   return (localeId === 'fa' || localeId === 'fa-IR') ? 'jalali' : 'gregory';
 }

@@ -20,7 +20,7 @@
     "date time",
     "date picker",
     "date picker",
-    "calendare",
+    "calendar",
     "date input",
     "dateInput",
     "jalali date input",
@@ -49,7 +49,7 @@
     "@progress/kendo-angular-l10n": "18.1.1",
     "@progress/kendo-angular-popup": "18.1.1",
     "dayjs": "1.11.13",
-    "jalaliday":"2.3.0",
+    "jalali-plugin-dayjs":"1.1.4",
     "tslib": "2.8.1"
   },
   "scripts": {

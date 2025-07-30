@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { addDays, addMonths, dayOfWeek, getDate } from '@progress/kendo-date-math';
+import { addDays, dayOfWeek, getDate } from '@progress/kendo-date-math';
 import dayjs from 'dayjs';
-import { firstDayOfMonth, getToday, isInSelectionRange, range, lastDayOfMonth } from './kendo-util-overrides';
+import { firstDayOfMonth, getToday, isInSelectionRange, range, lastDayOfMonth, addMonths } from './kendo-util-overrides';
 import { JalaliCldrIntlService } from './jalali-cldr-intl.service';
 import { CELLS_LENGTH, EMPTY_DATA, ROWS_LENGTH } from './kendo-services/month-view.service';
 import { MonthViewService } from '@progress/kendo-angular-dateinputs';
@@ -25,10 +25,10 @@ export class JalaliMonthViewService extends MonthViewService {
   }
 
   abbrMonthNames2() {
-    if (this.intl.isJalali) 
-      return dayjs().locale(this.intl['locale'])['$locale']().jmonths;
-    
-    return this.intl.getDayJsValue().localeData().monthsShort();
+    if (this.intl.isJalali) {
+      return this.intl.jalaliMonths;
+    }
+    return this.intl.gregorianMonths;
   }
 
   navigationTitle(value) {
@@ -45,7 +45,7 @@ export class JalaliMonthViewService extends MonthViewService {
 
   isRangeStart(value) {
     if (!value) { return false; }
-    return this.intl.getDayJsValue(value).month() === 0;
+    return !this.intl.getDayJsValue(value).month();
   }
 
   title(current) {
@@ -71,7 +71,7 @@ export class JalaliMonthViewService extends MonthViewService {
     return this.intl.getDayJsValue(date).startOf('month').toDate();
   }
   datesList(start, count) {
-    return range(0, count).map(i => addMonths(start, i));
+    return range(0, count).map(i => addMonths(start, i, this.intl.localeIdByDatePickerType));
   }
   data(options) {
     const { cellUID, focusedDate, isActiveView, max, min, selectedDate, selectionRange = [], viewDate, isDateDisabled = () => false } = options;
