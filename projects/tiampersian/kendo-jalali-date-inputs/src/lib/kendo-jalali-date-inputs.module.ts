@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import localeData from 'dayjs/plugin/localeData';
 import updateLocale from 'dayjs/plugin/updateLocale';
-import jalaliday from 'jalali-plugin-dayjs';
+import jalaliday from 'jalaliday';
 import { KendoDatePickerDirective } from './components/navigation.directive';
 import { IConfig } from './models/config.model';
 import { Providers } from './providers';
