@@ -12,15 +12,14 @@ String.prototype.toPerNumber = function () {
   });
 };
 String.prototype.toEnNumber = function () {
-  return this.replace(/[١٢٣٤٥٦٧٨٩٠]/g, (match) => {
-    return perToEnNumberMap[match] || match;
-  });
+  return this.replace(/[۰-۹]/g, d => d.charCodeAt(0) - 1776)
+    .replace(/[٠-٩]/g, d => d.charCodeAt(0) - 1632);
 };
 String.prototype.toMomentDateTimeFormat = function () {
   let x = this.replace(/d/g, 'D')
-  .replace(/aa/ig, (m) => m[0])
-  .replace(/_/g, '/')
-  .replace(/[y]{1,}/, 'YYYY');
+    .replace(/aa/ig, (m) => m[0])
+    .replace(/_/g, '/')
+    .replace(/[y]{1,}/, 'YYYY');
 
   return x;
 };
