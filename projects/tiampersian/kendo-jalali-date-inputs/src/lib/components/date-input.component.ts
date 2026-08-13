@@ -14,6 +14,15 @@ import dayjs from 'dayjs';
 import { JalaliCldrIntlService } from '../services/jalali-cldr-intl.service';
 import { isPresent } from '../services/kendo-util-overrides';
 
+const existInputs = {
+  M: false,
+  d: false,
+  y: false,
+  h: false,
+  m: false,
+  s: false,
+  a: false
+};
 const MONTH_PART_WITH_WORDS_THRESHOLD = 2;
 const JS_MONTH_OFFSET = 1;
 const MIN_JALALI_DATE = dayjs('0000-01-01', 'YYYY/MM/DD', 'fa');
@@ -299,13 +308,15 @@ function refreshElementValue() {
   }
   const newElementValue = showPlaceholder ? "" : this.currentText;
   this.previousElementValue = this.elementValue;
-  console.log('newElementValue', newElementValue);
+  // console.log('newElementValue', newElementValue);
   this.setElementValue(newElementValue);
 };
 
 function getTextAndFormat(customFormat = "") {
   let format = customFormat || this.format;
+
   let text = (this.intl.service as JalaliCldrIntlService).getDayJsValue(this.value)?.locale(this.intl.localeId)?.format(mapKendoFormatToDayJs(format as string, this.intl.service, this.value));
+  // console.log('format', format, 'text', text, this.value)
 
   const mask = this.dateFormatString(this.value, format);
   if (this.autoCorrectParts || !this._partiallyInvalidDate.startDate) {
@@ -414,7 +425,7 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
     if (!d[0]) return;
 
     if (d[0] === 'M') {
-
+      resetOtherInputs('M');
       this.dateObject.month = d[1] != '';
       if (d[1] === '') {
         existInputs.M = false;
@@ -442,16 +453,24 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
 
       return;
     }
-    else if (d[0].toLocaleLowerCase() === 'd') {
+
+    resetOtherInputs(d[0].toLocaleLowerCase());
+
+    if (d[0].toLocaleLowerCase() === 'd') {
       if (d[1] === '') {
         existInputs.d = false;
-        this.dateObject = this.getDateObject(dt.date((+d[1])).toDate());
+        this.dateObject = this.getDateObject(dt.date(+d[1]).toDate());
         return;
       }
       this.dateObject.date = true;
       let day = d[1];
       if (existInputs.d) {
         day = +(dt.date()) + d[1];
+        if (day.length > 2) {
+          day = d[1];
+        }
+        console.warn('-----------' + d[1], day)
+
         resetExistingInputs();
       } else {
         existInputs.d = true;
@@ -459,15 +478,18 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
           existInputs.d = false;
           this.dateObject.date = false;
           this.dateObject.leadingZero = { d: 1 };
-          this.dateObject.value = dt.day(1).toDate();
+          this.dateObject.value = dt.date(0).toDate();
           return;
         }
       }
-      this.dateObject.value = (dt.set('date', +day).toDate());
+      const _dt = dt.date((+day) - 1);
+      this.dateObject.value = (_dt.date() === +day ? _dt : dt.date(+day)).toDate();
+
       d[1] = '' + (dt.locale('en').date());
       return;
     }
-    else if (d[0].toLocaleLowerCase() === 'y') {
+
+    if (d[0].toLocaleLowerCase() === 'y') {
       d[1] = prepareYearValue.call(this, d, dt);
     }
     else if (d[0].toLocaleLowerCase() === 'h') {
@@ -603,24 +625,7 @@ function prepareYearValue(diff: any[], dt: dayjs.Dayjs) {
 
   return '' + dt.year();
 }
-function resetExistingInputs() {
-  existInputs.M = false;
-  existInputs.d = false;
-  existInputs.y = false;
-  existInputs.h = false;
-  existInputs.m = false;
-  existInputs.s = false;
-  existInputs.a = false;
-}
-const existInputs = {
-  M: false,
-  d: false,
-  y: false,
-  h: false,
-  m: false,
-  s: false,
-  a: false
-};
+
 
 function parsePart(diff) {
   const value = this.dateObject.value;
@@ -670,7 +675,7 @@ function convertKendoToDayjsFormat(kendoFormat, localeId) {
     'dd': 'DD',
     'd': 'D',
     'tt': 'A',
-    'fff': 'SSS' // اگر نیاز به پشتیبانی از میلیثانیه دارید,
+    'fff': 'SSS'
   };
 
   const regexPattern = Object.keys(kendoToDayjsMap)
@@ -685,6 +690,21 @@ function convertKendoToDayjsFormat(kendoFormat, localeId) {
 
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function resetExistingInputs() {
+  existInputs.M = false;
+  existInputs.d = false;
+  existInputs.y = false;
+  existInputs.h = false;
+  existInputs.m = false;
+  existInputs.s = false;
+  existInputs.a = false;
+}
+function resetOtherInputs(active: string) {
+  const value = existInputs[active];
+  resetExistingInputs();
+  existInputs[active] = value;
 }
 
 export default {};
