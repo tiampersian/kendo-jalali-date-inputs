@@ -45,7 +45,12 @@ DateInputComponent.prototype['initKendoDate'] = function () {
   return kendoDate;
 }
 
-function onElementInput(e) {
+function onElementInput(e:InputEvent) {
+  if (Number.isNaN(+e.data)) {
+    e.preventDefault();
+
+    return;
+  }
   this.triggerInput({ event: e });
   const oldElementValue = this.elementValue;
   if (!this.element || !this.dateObject) {
@@ -309,7 +314,7 @@ function refreshElementValue() {
   const newElementValue = showPlaceholder ? "" : this.currentText;
   this.previousElementValue = this.elementValue;
   // console.log('newElementValue', newElementValue);
-  this.setElementValue(newElementValue);
+  this.setElementValue(this.intl.service.isJalali ? newElementValue.toPerNumber() : newElementValue);
 };
 
 function getTextAndFormat(customFormat = "") {
@@ -401,10 +406,6 @@ function mapKendoFormatToDayJs(format: string, i18n: JalaliCldrIntlService, dt: 
   return convertKendoToDayjsFormat(format, i18n.localeId); // (mapFormatToDayJs(format, dt));
 }
 
-function mapFormatToDayJs(value: string, dt: Date) {
-  return value.replace('h_mm_aa', 'h:mm A').replaceAll('_', '/').replaceAll('y', dt.getFullYear() < 623 ? '0' : 'YYYY').replaceAll('d', 'D').replaceAll('aa', 'a');
-
-}
 function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
   if (!intl.isJalali) { return; }
 
@@ -441,8 +442,8 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
         if (month === '0') {
           existInputs.M = false;
           this.dateObject.month = false;
+          this.dateObject.leadingZero = { M: 1 };
           this.dateObject.value = dt.month(0).toDate();
-          this.dateObject.leadingZero = { [d[0]]: 1 };
 
           return;
         }
