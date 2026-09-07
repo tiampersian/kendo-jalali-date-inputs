@@ -1,41 +1,45 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "sourceMap": true,
-    "declaration": false,
-    "downlevelIteration": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "declaration": false,
+    "noImplicitAny": false,
     "importHelpers": true,
-    "esModuleInterop": true,
+    "strictNullChecks": false,
+    "noImplicitThis": false,
+    "strictPropertyInitialization": false,
     "target": "ES2022",
-    "module": "ES2022",
-    "lib": [
-      "ES2022",
-      "dom"
-    ],
-    "types": [
-      "node",
-      "jasmine"
-    ],
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+    "module": "preserve",
     "paths": {
       "@tiampersian/kendo-jalali-date-inputs": [
-        "projects/tiampersian/kendo-jalali-date-inputs/src/public-api.ts"
+        "./projects/tiampersian/kendo-jalali-date-inputs/src/public-api.ts"
       ]
     }
   },
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/tiampersian/kendo-jalali-date-inputs/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/tiampersian/kendo-jalali-date-inputs/tsconfig.spec.json"
+    }
+  ],
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
-    "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictInputAccessModifiers": true
   }
 }

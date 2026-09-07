@@ -1,5 +1,5 @@
 describe('asd', () => {
-    it('asddasd',()=>{
-        expect(true).toBeTrue();
-    })
-})
+  it('asddasd', () => {
+    expect(true).toBe(true);
+  });
+});

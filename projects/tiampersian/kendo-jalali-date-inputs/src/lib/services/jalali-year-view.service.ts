@@ -24,7 +24,7 @@ export class JalaliYearViewService extends YearViewService {
     return this.intl.getDayJsValue().localeData().monthsShort();
   }
 
-  override data(options) {
+  override data(options: any) {
     const { cellUID, focusedDate, isActiveView, max, min, selectedDate, selectionRange = EMPTY_SELECTIONRANGE, viewDate } = options;
     if (!viewDate) {
       return EMPTY_DATA;
@@ -35,7 +35,7 @@ export class JalaliYearViewService extends YearViewService {
     //firstMonthOfYear
     const firstDate = this.intl.getDayJsValue(viewDate).startOf('year').add(this.intl.getDayJsValue(viewDate).date() - 1, 'day').toDate();
     const lastDate = this.intl.getDayJsValue(viewDate).endOf('year').add(-1, 'month').add(this.intl.getDayJsValue(viewDate).date(), 'day').toDate();
-    const currentYear = this.intl.getDayJsValue(firstDate).year()
+    const currentYear = this.intl.getDayJsValue(firstDate).year();
     const cells = range(0, CELLS_LENGTH);
     const today = getToday();
 
@@ -43,7 +43,7 @@ export class JalaliYearViewService extends YearViewService {
       const baseDate = addMonths(firstDate, rowOffset * CELLS_LENGTH);
       return cells.map(cellOffset => {
         const cellDate = this['normalize'](addMonths(baseDate, cellOffset), min, max);
-        const changedYear = currentYear < this.intl.getDayJsValue(cellDate).year()
+        const changedYear = currentYear < this.intl.getDayJsValue(cellDate).year();
         if (!dayjs(cellDate).isBetween(min, max)) {
           return null;
         }
@@ -72,13 +72,13 @@ export class JalaliYearViewService extends YearViewService {
       });
     });
 
-    return xxx;
+    return xxx as any;
   }
   override title(current: any) {
-    return `${this.intl.getDayJsValue(current).format('YYYY')}`
+    return `${this.intl.getDayJsValue(current).format('YYYY')}`;
   }
   override navigationTitle(value: any) {
-    return `${this.intl.getDayJsValue(value).format('YYYY')}`
+    return `${this.intl.getDayJsValue(value).format('YYYY')}`;
 
   }
 }

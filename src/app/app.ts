@@ -1,29 +1,33 @@
-import { RTL } from '@progress/kendo-angular-l10n';
-import { ChangeDetectorRef, Component, Inject, LOCALE_ID, Injector } from '@angular/core';
-import { DatePickerType, JalaliCldrIntlService } from '@tiampersian/kendo-jalali-date-inputs';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { DatePickerType, JalaliCldrIntlService, KendoJalaliDateInputsModule } from '@tiampersian/kendo-jalali-date-inputs';
 
 @Component({
+  imports: [
+    KendoJalaliDateInputsModule,
+    DateInputsModule,
+    FormsModule,
+  ],
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  providers: [],
-  standalone: false
+  styleUrl: './app.css',
+  templateUrl: './app.html',
 })
-export class AppComponent {
+export class App {
   title = 'kendo-jalali-date-inputs';
   public value: Date = new Date();
-  rerender = true;
+  rerender = false;
   locales = ['fa-IR', 'fa', 'en-US', 'en'];
   calendarTypes = Object.values(DatePickerType);
   calendarType = '';
   currentLocaleId = '';
-  constructor(
-    @Inject(IntlService) private localeService: JalaliCldrIntlService,
-    private cdr: ChangeDetectorRef
-  ) {
-    this.calendarType = localeService.isJalali ? DatePickerType.jalali : DatePickerType.gregory;
-    this.currentLocaleId = localeService.localeId;
+  private localeService = inject(IntlService) as JalaliCldrIntlService;
+  private cdr = inject(ChangeDetectorRef);
+
+  constructor() {
+    this.calendarType = this.localeService.isJalali ? DatePickerType.jalali : DatePickerType.gregory;
+    this.currentLocaleId = this.localeService.localeId;
   }
 
   changeCalendarType(value: string): void {

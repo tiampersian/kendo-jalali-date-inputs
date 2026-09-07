@@ -12,8 +12,8 @@ String.prototype.toPerNumber = function () {
   });
 };
 String.prototype.toEnNumber = function () {
-  return this.replace(/[۰-۹]/g, d => d.charCodeAt(0) - 1776)
-    .replace(/[٠-٩]/g, d => d.charCodeAt(0) - 1632);
+  return this.replace(/[۰-۹]/g, d => String(d.charCodeAt(0) - 1776))
+    .replace(/[٠-٩]/g, d => String(d.charCodeAt(0) - 1632));
 };
 String.prototype.toMomentDateTimeFormat = function () {
   let x = this.replace(/d/g, 'D')

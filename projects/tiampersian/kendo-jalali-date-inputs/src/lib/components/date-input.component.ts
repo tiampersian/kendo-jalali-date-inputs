@@ -2,17 +2,17 @@ import { DateInputComponent } from '@progress/kendo-angular-dateinputs';
 import { localeData } from '@progress/kendo-angular-intl';
 import { isEqual } from '@progress/kendo-date-math';
 import { Constants } from '@progress/kendo-dateinputs-common/dist/es2015/common/constants';
-import { DateObject } from '@progress/kendo-dateinputs-common/dist/es2015/common/dateobject';
 import { Key } from '@progress/kendo-dateinputs-common/dist/es2015/common/key';
 import { KeyCode } from '@progress/kendo-dateinputs-common/dist/es2015/common/keycode';
 import { Mask } from '@progress/kendo-dateinputs-common/dist/es2015/common/mask';
 import { parseToInt } from '@progress/kendo-dateinputs-common/dist/es2015/common/utils';
-import { DateInput } from '@progress/kendo-dateinputs-common/dist/es2015/dateinput/dateinput';
+import { DateInput } from '@progress/kendo-dateinputs-common';
 import { DateInputInteractionMode } from '@progress/kendo-dateinputs-common/dist/es2015/dateinput/interaction-mode';
 import { approximateStringMatching, padZero } from '@progress/kendo-dateinputs-common/dist/es2015/dateinput/utils';
 import dayjs from 'dayjs';
 import { JalaliCldrIntlService } from '../services/jalali-cldr-intl.service';
 import { isPresent } from '../services/kendo-util-overrides';
+import { DateObject } from '@progress/kendo-dateinputs-common/dist/npm/common/dateobject';
 
 const existInputs = {
   M: false,
@@ -28,24 +28,25 @@ const JS_MONTH_OFFSET = 1;
 const MIN_JALALI_DATE = dayjs('0000-01-01', 'YYYY/MM/DD', 'fa');
 
 DateInput.prototype.onElementInput = onElementInput;
-DateInput.prototype.refreshElementValue = refreshElementValue
-DateObject.prototype.dateFormatString = dateFormatString;
-DateObject.prototype.getTextAndFormat = getTextAndFormat;
+DateInput.prototype.refreshElementValue = refreshElementValue;
+// DateObject.prototype.dateFormatString = dateFormatString;
+// DateObject.prototype.getTextAndFormat = getTextAndFormat;
 
 const oldInitKendoDate = DateInputComponent.prototype['initKendoDate'];
 DateInputComponent.prototype['initKendoDate'] = function () {
-
   const kendoDate = oldInitKendoDate.call(this);
   if (this.value) {
     setTimeout(() => {
+      this.kendoDateObject.constructor.prototype.dateFormatString = dateFormatString;
+      this.kendoDateObject.constructor.prototype.getTextAndFormat = getTextAndFormat;
       this.kendoDate?.refreshElementValue();
     });
   }
 
   return kendoDate;
-}
+};
 
-function onElementInput(e:InputEvent) {
+function onElementInput(e: InputEvent) {
   if (Number.isNaN(+e.data)) {
     e.preventDefault();
 
@@ -119,8 +120,8 @@ function onElementInput(e:InputEvent) {
   console.log('before diff', diff[0], (this.intl.service as JalaliCldrIntlService).calendarType);
   prepareDiffInJalaliMode.call(this, this.intl.service, diff);
 
-  console.log('diff', diff[0]);
   console.log('leadingZero', this.dateObject.leadingZero);
+  debugger;
   if (diff && diff.length && diff[0] && diff[0][1] !== Constants.formatSeparator) {
     this.switchedPartOnPreviousKeyAction = false;
   }
@@ -470,7 +471,7 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
         if (day.length > 2) {
           day = d[1];
         }
-        console.warn('-----------' + d[1], day)
+        console.warn('-----------' + d[1], day);
 
         resetExistingInputs();
       } else {
@@ -505,7 +506,7 @@ function prepareDiffInJalaliMode(intl: JalaliCldrIntlService, diff: any[]) {
   });
 }
 function prepareSecondValue(diff: any[], dt: dayjs.Dayjs) {
-  diff[2] = false
+  diff[2] = false;
   this.dateObject.seconds = false;
   const seconds = diff[1];
   const format = diff[0];
@@ -535,7 +536,7 @@ function prepareSecondValue(diff: any[], dt: dayjs.Dayjs) {
   return dt.format(format);
 }
 function prepareMinuteValue(diff: any[], dt: dayjs.Dayjs) {
-  diff[2] = false
+  diff[2] = false;
   this.dateObject.hours = false;
   const minutes = diff[1];
   const format = diff[0];
@@ -565,7 +566,7 @@ function prepareMinuteValue(diff: any[], dt: dayjs.Dayjs) {
   return dt.format(format);
 }
 function prepareHourValue(diff: any[], dt: dayjs.Dayjs) {
-  diff[2] = false
+  diff[2] = false;
   this.dateObject.hours = false;
   const hours = diff[1];
   const format = diff[0];
@@ -595,7 +596,7 @@ function prepareHourValue(diff: any[], dt: dayjs.Dayjs) {
   return dt.format(format);
 }
 function prepareYearValue(diff: any[], dt: dayjs.Dayjs) {
-  diff[2] = false
+  diff[2] = false;
   this.dateObject.year = false;
   const year = diff[1];
   if (year === '') {
@@ -628,7 +629,7 @@ function prepareYearValue(diff: any[], dt: dayjs.Dayjs) {
 }
 
 
-function parsePart(diff) {
+function parsePart(diff: any) {
   const value = this.dateObject.value;
   const dt = this.intl.service.getDayJsValue(this.dateObject.value) as dayjs.Dayjs;
   let switchToNext = false;

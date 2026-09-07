@@ -7,7 +7,7 @@ import { JalaliCldrIntlService } from '../services/jalali-cldr-intl.service';
 
 // tslint:disable-next-line:no-string-literal
 NavigationComponent.prototype['intlChange'] = function (): void {
-  this.cdr.markForCheck();
+  this['cdr'].markForCheck();
 };
 
 @Directive({
@@ -39,13 +39,12 @@ export class KendoDatePickerDirective {
   private setHostComponent() {
     this.hostComponent = this.viewContainerRef['_hostLView'].find(x => (x?.element || x?.wrapper)?.nativeElement === this.viewContainerRef.element.nativeElement);
     if (!this.hostComponent) {
-      debugger
+      debugger;
     }
     this.init();
   }
 
   init(hostComponent = this.hostComponent) {
-    // debugger
     this.setHeaderTitleTemplate(hostComponent);
     // this.setBusService(hostComponent);
     // this.initCalendar(hostComponent);
@@ -66,9 +65,9 @@ export class KendoDatePickerDirective {
         });
         hostComponent.calendar.onResize();
         if (hostComponent?.calendar?.monthView)
-          hostComponent.calendar.monthView.headerComponent.title = hostComponent.calendar.monthView.headerComponent.getTitle()
+          hostComponent.calendar.monthView.headerComponent.title = hostComponent.calendar.monthView.headerComponent.getTitle();
       });
-    })
+    });
   }
 
   private initDateInput(hostComponent = this.hostComponent) {
@@ -108,7 +107,7 @@ export class KendoDatePickerDirective {
 
     hostComponent.bus.service = (view) => {
       return this.viewContainerRef.injector.get<any>(services[view]) as any;
-    }
+    };
   }
 
 }

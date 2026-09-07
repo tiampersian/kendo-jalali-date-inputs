@@ -16,7 +16,7 @@ export class JalaliMonthViewService extends MonthViewService {
     super(intl);
   }
 
-  value(current) {
+  override value(current) {
     if (!current) {
       return '';
     }
@@ -31,7 +31,7 @@ export class JalaliMonthViewService extends MonthViewService {
     return this.intl.gregorianMonths;
   }
 
-  navigationTitle(value) {
+  override navigationTitle(value) {
     if (!value) {
       return '';
     }
@@ -43,37 +43,37 @@ export class JalaliMonthViewService extends MonthViewService {
     return this.abbrMonthNames2()[this.intl.getDayJsValue(value).month()];
   }
 
-  isRangeStart(value) {
+  override isRangeStart(value) {
     if (!value) { return false; }
     return !this.intl.getDayJsValue(value).month();
   }
 
-  title(current) {
+  override  title(current) {
     return `${this.abbrMonthNames2()[this.intl.getDayJsValue(current).month()]} ${this.intl.getDayJsValue(current).format('YYYY')}`;
   }
 
-  skip(value, min) {
+  override skip(value, min) {
     const diff = this.intl.getDayJsValue(value).endOf('month').diff(
       this.intl.getDayJsValue(min).startOf('month'), 'month'
     );
     return diff;
   }
-  rowLength(options = {}) {
+  override rowLength(options = {}) {
     return CELLS_LENGTH + (options['prependCell'] ? 1 : 0);
   }
-  total(min, max) {
+  override  total(min, max) {
     return dayjs(max).diff(min, 'month') + 1;
   }
-  beginningOfPeriod(date) {
+  override  beginningOfPeriod(date) {
     if (!date) {
       return date;
     }
     return this.intl.getDayJsValue(date).startOf('month').toDate();
   }
-  datesList(start, count) {
+  override datesList(start, count) {
     return range(0, count).map(i => addMonths(start, i, this.intl.localeIdByDatePickerType));
   }
-  data(options) {
+  override data(options) {
     const { cellUID, focusedDate, isActiveView, max, min, selectedDate, selectionRange = [], viewDate, isDateDisabled = () => false } = options;
     if (!viewDate) {
       return EMPTY_DATA;
@@ -121,7 +121,7 @@ export class JalaliMonthViewService extends MonthViewService {
           isOtherMonth: otherMonth
         };
       });
-    });
+    }) as any;
   }
 
 }

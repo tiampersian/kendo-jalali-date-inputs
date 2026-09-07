@@ -40,7 +40,7 @@ export class JalaliCldrIntlService extends CldrIntlService {
     this.gregorianMonths = this.getDayJsValue().localeData().monthsShort();
   }
 
-  firstDay(localeId?: string): number {
+  override firstDay(localeId?: string): number {
     return super.firstDay(this.localeIdByDatePickerType);
   }
 
@@ -48,8 +48,7 @@ export class JalaliCldrIntlService extends CldrIntlService {
     this.defaultTitleTemplate = template;
   }
   changeType(value?: DatePickerType): void {
-
-    this.datePickerType = this.getType(value);
+    this.datePickerType = this.getType(value!);
     if (this.datePickerType === DatePickerType.jalali) {
       this.isJalali = true;
       this.isGregorian = false;
@@ -92,7 +91,7 @@ export class JalaliCldrIntlService extends CldrIntlService {
     }
   }
 
-  private getType(value: DatePickerType): DatePickerType {
+  private getType(value?: DatePickerType): DatePickerType {
     if (value) { return value; }
 
     if (this.originalLocaleId === 'fa-IR' || this.originalLocaleId === 'fa') {
@@ -102,7 +101,7 @@ export class JalaliCldrIntlService extends CldrIntlService {
     return DatePickerType.gregory;
   }
 
-  formatNumber(value: number, format: string | NumberFormatOptions, localeId?: string): string {
+  override formatNumber(value: number, format: string | NumberFormatOptions, localeId?: string): string {
     localeId = localeId || this.localeId;
     if (localeId === 'fa' || localeId === 'ar') {
       return super.formatNumber(value, format, localeId).toPerNumber();

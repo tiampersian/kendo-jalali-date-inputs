@@ -2,7 +2,7 @@ import { getDate } from '@progress/kendo-date-math';
 import dayjs from 'dayjs';
 
 export const range = (start, end, step = 1) => {
-  const result = [];
+  const result: any[] = [];
   for (let i = start; i < end; i = i + step) {
     result.push(i);
   }
@@ -19,47 +19,47 @@ export const isInSelectionRange = (value, selectionRange) => {
     return false;
   }
   return start < value && value < end;
-}
+};
 
 export const isInRange = (dt, min, max) => {
   return dayjs(dt).isBetween(min, max);
-}
+};
 
 export const firstYearOfDecade = (dt, localeId?) => {
   return getDayJsValue(dt, localeId).add(-(getYear(dt, localeId) % 10), 'year').toDate();
-}
+};
 
 export const lastYearOfDecade = (dt, localeId?) => {
   return getDayJsValue(dt, localeId).add((9 - (getYear(dt, localeId) % 10)), 'year').toDate();
-}
+};
 
 export const firstDayOfMonth = (dt, localeId?) => {
   return getDayJsValue(dt, localeId).startOf('month').toDate();
-}
+};
 
 export const lastDayOfMonth = (dt, localeId?) => {
   return getDayJsValue(dt, localeId).endOf('month').toDate();
-}
+};
 
 export const addMonths = (dt, value, localeId?) => {
   return getDayJsValue(dt, localeId).add(value, 'month').toDate();
-}
+};
 
 const getCalendarType = (localeId: string) => {
   return (localeId === 'fa' || localeId === 'fa-IR') ? 'jalali' : 'gregory';
-}
+};
 const getDayJsValue = (dt: any, localeId: string) => {
-  return dayjs(dt).calendar(getCalendarType(localeId))
-}
+  return dayjs(dt).calendar(getCalendarType(localeId));
+};
 
 export const firstDecadeOfCentury = (dt, localeId?) => {
   return getDayJsValue(dt, localeId).add((-(getYear(dt, localeId) % 100)), 'year').toDate();
-}
+};
 
 export const lastDecadeOfCentury = (dt, localeId?) => {
   return getDayJsValue(dt, localeId).add((-(getYear(dt, localeId) % 100)) + 90, 'year').toDate();
 
-}
+};
 
 export const shiftWeekNames = (names, offset) => (names.slice(offset).concat(names.slice(0, offset)));
 

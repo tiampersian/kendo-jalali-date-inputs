@@ -397,9 +397,10 @@
       <p style="font-weight: bold;">calendar type</p>
       <br>
       <select (change)="changeCalendarType($event.target?.['value'])">
-        <option *ngFor="let item of calendarTypes"
-                [value]="item"
+        @for(item of calendarTypes;track item){
+        <option [value]="item"
                 [selected]="item===calendarType">{{item}}</option>
+        }
       </select>
 
     </div>
@@ -408,9 +409,10 @@
       <br>
 
       <select (change)="changeLocaleId($event.target?.['value'])">
-        <option *ngFor="let item of locales"
-                [value]="item"
+        @for( item of locales;track item){
+        <option [value]="item"
                 [selected]="item===currentLocaleId">{{item}}</option>
+        }
       </select>
 
     </div>
@@ -420,18 +422,18 @@
     <p><strong>Final Value</strong>: {{value}}</p>
   </div>
   <div class="card-container"
-       [dir]="(currentLocaleId=='fa-IR'||currentLocaleId=='fa')?'rtl':'ltr'"
-       *ngIf="rerender">
+       [dir]="(currentLocaleId=='fa-IR'||currentLocaleId=='fa')?'rtl':'ltr'">
     <div class="row example-wrapper"
-         *ngIf="1"
          style="min-height: 450px;display: flex;">
       <div class="col-xs-12 col-md-6 example-col">
         <p>DateInput</p>
-        <kendo-dateinput [(value)]="value" [format]="'M/d/yyyy'" />
+        <kendo-dateinput [(value)]="value"
+                         [format]="'M/d/yyyy'" />
         <p>(use <code>←</code> and <code>→</code> to navigate, <code>↑</code> and <code>↓</code> to update)</p>
 
         <p>DatePicker</p>
-        <kendo-datepicker [activeView]="'decade'" [(value)]="value" />
+        <kendo-datepicker [activeView]="'decade'"
+                          [(value)]="value" />
         <p>(use <code>Alt</code>+<code>↓</code> to open the Calendar)</p>
 
         <p>TimePicker</p>
@@ -458,8 +460,6 @@
     </div>
 
   </div>
-
-
 
   <svg id="clouds"
        alt="Gray Clouds Background"

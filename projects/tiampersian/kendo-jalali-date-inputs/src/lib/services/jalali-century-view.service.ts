@@ -15,7 +15,7 @@ export class JalaliCenturyViewService extends CenturyViewService {
     super();
   }
 
-  title(current) {
+  override title(current) {
     if (!current) {
       return '';
     }
@@ -24,12 +24,12 @@ export class JalaliCenturyViewService extends CenturyViewService {
     return `${this._intlService.getDayJsValue(firstDecadeOfCentury(current, this._intlService.localeIdByDatePickerType)).format('YYYY')} - ${temp}`;
   }
 
-  navigationTitle(value) {
+  override  navigationTitle(value) {
     return `${this._intlService.getDayJsValue(firstDecadeOfCentury(value, this._intlService.localeIdByDatePickerType)).format('YYYY')}`;
   }
 
 
-  data(options) {
+  override  data(options) {
     const { cellUID, focusedDate, isActiveView, max, min, selectedDate, selectionRange = {}, viewDate } = options;
     if (!viewDate) {
       return EMPTY_DATA;
@@ -70,10 +70,10 @@ export class JalaliCenturyViewService extends CenturyViewService {
       });
     });
 
-    return data;
+    return data as any;
   }
 
-  isInRange(candidate, min, max) {
+  override isInRange(candidate, min, max) {
     const year = firstYearOfDecade(candidate, this._intlService.localeIdByDatePickerType).getFullYear();
     const aboveMin = !min || firstYearOfDecade(min, this._intlService.localeIdByDatePickerType).getFullYear() <= year;
     const belowMax = !max || year <= firstYearOfDecade(max, this._intlService.localeIdByDatePickerType).getFullYear();

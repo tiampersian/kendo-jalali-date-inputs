@@ -11,7 +11,6 @@ import { IConfig } from './models/config.model';
 import { Providers } from './providers';
 import { DateTimeNumberService } from './services/date-time-number.service';
 import './utils/string-prototypes';
-import { MonthViewService } from '@progress/kendo-angular-dateinputs';
 import { JalaliMonthViewService } from './services/jalali-month-view.service';
 import { JalaliWeekNamesService } from './services/jalali-week-names.service';
 import { JalaliYearViewService } from './services/jalali-year-view.service';
@@ -23,8 +22,8 @@ dayjs.extend(updateLocale);
 dayjs.extend(jalaliday);
 
 const meridiem = (hour: number) => {
-  return hour > 12 ? 'ب.ظ' : 'ق.ظ'
-}
+  return hour > 12 ? 'ب.ظ' : 'ق.ظ';
+};
 dayjs.updateLocale('fa', {
   meridiem
 });

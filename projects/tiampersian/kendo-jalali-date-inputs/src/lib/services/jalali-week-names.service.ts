@@ -9,7 +9,7 @@ export class JalaliWeekNamesService extends WeekNamesService {
     super(_intlService);
   }
 
-  getWeekNames(includeWeekNumber: boolean, nameType: WeekDaysFormat | 'wide'): string[] {
+  override getWeekNames(includeWeekNumber: boolean, nameType: WeekDaysFormat | 'wide'): string[] {
     return super.getWeekNames(includeWeekNumber, nameType);
   }
 }

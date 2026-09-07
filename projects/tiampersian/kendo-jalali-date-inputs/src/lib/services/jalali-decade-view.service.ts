@@ -16,11 +16,11 @@ export class JalaliDecadeViewService extends DecadeViewService {
   }
 
 
-  title(value) {
+  override title(value) {
     if (!value) {
       return '';
     }
-    
+
     const firstYear = this._intlService.getDayJsValue(firstYearOfDecade(value, this._intlService.localeIdByDatePickerType)).format('YYYY');
     const lastYear = this._intlService.getDayJsValue(lastYearOfDecade(value, this._intlService.localeIdByDatePickerType)).format('YYYY');
     if (this._intlService.isLocaleIran) {
@@ -29,13 +29,13 @@ export class JalaliDecadeViewService extends DecadeViewService {
     return `${firstYear} - ${lastYear}`;
   }
 
-  navigationTitle(value) {
+  override navigationTitle(value) {
     if (!value) {
       return '';
     }
     return `${this._intlService.getDayJsValue(firstYearOfDecade(value, this._intlService.localeIdByDatePickerType)).format('YYYY')}`;
   }
-  data(options) {
+  override data(options) {
     const { cellUID, focusedDate, isActiveView, max, min, selectedDates, selectionRange = EMPTY_SELECTIONRANGE, viewDate } = options;
     if (!viewDate) {
       return EMPTY_DATA;
@@ -76,6 +76,6 @@ export class JalaliDecadeViewService extends DecadeViewService {
         };
       });
     });
-    return data;
+    return data as any;
   }
 }
